@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from './base.entity';
+import { Role } from './role.enum';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -17,9 +19,9 @@ export class User {
     @Column() 
     password: string;
 
-    @Column()
-    role: string;
+    @Column({type: 'enum', enum: Role, default: Role.USER})
+    role: Role;
 
-    @Column()
+    @Column({ nullable: true })
     phone: string;
 }
