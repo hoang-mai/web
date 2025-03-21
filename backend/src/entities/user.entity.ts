@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn,OneToMany} from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Role } from './role.enum';
+import { Cart } from './cart.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -24,4 +25,7 @@ export class User extends BaseEntity {
 
     @Column({ nullable: true })
     phone: string;
+
+    @OneToMany(() => Cart, (cart) => cart.user)
+    carts: Cart[];
 }
