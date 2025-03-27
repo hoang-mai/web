@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, Request, Get } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Request, Get, Res, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/request/register.dto';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -14,8 +14,12 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Request() req: any) {
-    return this.authService.login(req.user);
+   login(@Request() req: any) {
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: 'Đăng nhập thành công',
+      data:  this.authService.login(req.user),
+    };
   }
 
   @UseGuards(JwtAuthGuard)

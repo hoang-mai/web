@@ -19,7 +19,6 @@ export class UsersService {
   findOneByEmail(email: string) {
     return this.userRepository.findOneBy({ email });
   }
-
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findOneBy({ email });
     if(!user) {

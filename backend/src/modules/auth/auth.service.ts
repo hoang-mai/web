@@ -16,7 +16,7 @@ export class AuthService {
     return this.usersService.validateUser(email, password)
   }
 
-  async login(user: any) {
+  login(user: any) {
 
     const payload = { email: user.email, sub: user.id };
     return {

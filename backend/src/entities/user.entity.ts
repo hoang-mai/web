@@ -1,9 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn,OneToMany} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany} from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Role } from './role.enum';
 import { Cart } from './cart.entity';
-
-@Entity()
+import { SearchHistory } from './search_history.entity';
+import { Order } from './order.entity';
+import { Review } from './review.entity';
+import { ReviewComment } from './review_comment.entity';
+import { Chat } from './chat.entity';
+import { Message } from './message.entity';
+@Entity('users')
 export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -26,6 +31,30 @@ export class User extends BaseEntity {
     @Column({ nullable: true })
     phone: string;
 
-    @OneToMany(() => Cart, (cart) => cart.user)
-    carts: Cart[];
+    @Column()
+    imageUrl: string;
+
+    @Column()
+    address: string;
+
+    @OneToOne(() => Cart, (cart) => cart.user)
+    cart: Cart;
+
+    @OneToOne(()=> SearchHistory, (searchHistory) => searchHistory.user)
+    searchHistory: SearchHistory;
+
+    @OneToMany(() =>Order, (order) => order.user)
+    orders: Order[];
+
+    @OneToMany(()=> Review, (review) => review.user)
+    reviews: Review[];
+
+    @OneToMany(()=> ReviewComment , (reviewComment) => reviewComment.user)
+    reviewComments: ReviewComment[];
+
+    @OneToMany(()=>Chat , (chat) => chat.user)
+    chats: Chat[];
+
+    @OneToMany(()=> Message, (message) => message.sender)
+    messages: Message[];
 }

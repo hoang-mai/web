@@ -1,6 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { CartProduct } from "./cart_product.entity";
+import { OrderItem } from "./order_item.entity";
+import { Review } from "./review.entity";
+import { Category } from "./category.enum";
 
 @Entity("products")
 export class Product extends BaseEntity {
@@ -22,6 +25,24 @@ export class Product extends BaseEntity {
     @Column({ nullable: true })
     imageUrl: string;
 
-    @OneToMany(() => CartProduct, (cartProduct) => cartProduct.product)// one product can be in multiple carts
+    @Column()
+    totalRating: number;
+
+    @Column({ default: false })
+    isDeleted: boolean;
+
+    @Column()
+    discount: number;
+
+    @Column({type:'enum', enum: Category})
+    category: Category;
+
+    @OneToMany(() => CartProduct, (cartProduct) => cartProduct.product)
     cartProducts: CartProduct[];
+
+    @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+    orderItems: OrderItem[];
+
+    @OneToMany(() => Review, (review) => review.product)
+    reviews: Review[];
 }
