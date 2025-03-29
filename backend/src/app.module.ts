@@ -6,7 +6,8 @@ import { UsersModule } from './modules/users/users.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CartProductModule } from './modules/cart_product/cart_product.module';
 import { CartsModule } from './modules/carts/carts.module';
-
+import {OrdersModule} from './modules/orders/orders.module';
+import { OrderItemsModule } from './modules/order_item/order_item.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -32,7 +33,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     AuthModule,
     ProductsModule,
     CartsModule,
-    CartProductModule
+    CartProductModule,
+    OrdersModule,
+    OrderItemsModule
   ],
   controllers: [AppController],
   providers: [AppService],
