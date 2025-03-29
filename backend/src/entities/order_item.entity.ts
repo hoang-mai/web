@@ -8,14 +8,14 @@ export class OrderItem extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @JoinColumn({name: 'order_id'})
-    @ManyToOne(() => Order, (order) => order.orderItems,{onDelete: 'CASCADE'})
+    @ManyToOne(() => Order, (order) => order.orderItems, { nullable: false, onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'order_id' })
     order: Order;
 
-    @JoinColumn({name: 'product_id'})
-    @ManyToOne(() => Product, (product) => product.orderItems)
+    @ManyToOne(() => Product, (product) => product.orderItems, { nullable: false, onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'product_id' })
     product: Product;
 
-    @Column()
+    @Column({ type: 'int', default: 1 })
     quantity: number;
 }
