@@ -14,7 +14,7 @@ export class Order extends BaseEntity {
     @ManyToOne(() => User, (user) => user.orders)
     user: User;
 
-    @Column()
+    @Column({ type: "decimal", precision: 10, scale: 2 })
     totalPrice: number;
 
     @Column({type : 'enum', enum:OrderStatus, default: OrderStatus.PENDING})
