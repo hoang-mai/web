@@ -15,17 +15,17 @@ export class UsersService {
     data.password = await bcrypt.hash(data.password!, 10);
     return this.userRepository.save(data);
   }
-  
+
   findOneByEmail(email: string) {
     return this.userRepository.findOneBy({ email });
   }
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findOneBy({ email });
-    if(!user) {
+    if (!user) {
       throw new Error('User not found');
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if(!isPasswordValid) {
+    if (!isPasswordValid) {
       throw new Error('Invalid password');
     }
     return user;
