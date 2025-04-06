@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
@@ -12,6 +12,10 @@ export class UsersService {
   ) {}
 
   async create(data: Partial<User>): Promise<User> {
+    const existingUser = await this.userRepository.findOneBy({ email: data.email });
+    if (existingUser) {
+      throw new BadRequestException('Email đã tồn tại');
+    }
     data.password = await bcrypt.hash(data.password!, 10);
     return this.userRepository.save(data);
   }
@@ -22,11 +26,11 @@ export class UsersService {
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findOneBy({ email });
     if(!user) {
-      throw new Error('User not found');
+      throw new UnauthorizedException('Không tìm thấy người dùng');
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if(!isPasswordValid) {
-      throw new Error('Invalid password');
+      throw new UnauthorizedException('Mật khẩu không chính xác');
     }
     return user;
   }
