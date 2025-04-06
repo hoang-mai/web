@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
@@ -12,6 +16,12 @@ export class UsersService {
   ) {}
 
   async create(data: Partial<User>): Promise<User> {
+    const existingUser = await this.userRepository.findOneBy({
+      email: data.email,
+    });
+    if (existingUser) {
+      throw new BadRequestException('Email đã tồn tại');
+    }
     data.password = await bcrypt.hash(data.password!, 10);
     return this.userRepository.save(data);
   }

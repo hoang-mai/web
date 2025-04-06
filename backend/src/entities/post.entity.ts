@@ -1,14 +1,10 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import {
-  Column,
-  CreateDateColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
+import { BaseEntity } from './base.entity';
 
-export class Post {
+@Entity('post')
+export class Post extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,14 +18,4 @@ export class Post {
 
   @ManyToOne(() => User, (user) => user.posts, { eager: true })
   author: User;
-
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-  })
-  updatedAt: Date;
 }
