@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Role } from './role.enum';
 import { Cart } from './cart.entity';
@@ -10,51 +16,51 @@ import { Chat } from './chat.entity';
 import { Message } from './message.entity';
 @Entity('users')
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    firstName: string;
+  @Column()
+  firstName: string;
 
-    @Column()
-    lastName: string;
+  @Column()
+  lastName: string;
 
-    @Column({ unique: true })
-    email: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column() 
-    password: string;
+  @Column()
+  password: string;
 
-    @Column({type: 'enum', enum: Role, default: Role.USER})
-    role: Role;
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  role: Role;
 
-    @Column({ nullable: true })
-    phone: string;
+  @Column({ nullable: true })
+  phone: string;
 
-    @Column()
-    imageUrl: string;
+  @Column({ nullable: true })
+  imageUrl: string;
 
-    @Column()
-    address: string;
+  @Column({ nullable: true })
+  address: string;
 
-    @OneToOne(() => Cart, (cart) => cart.user)
-    cart: Cart;
+  @OneToOne(() => Cart, (cart) => cart.user)
+  cart: Cart;
 
-    @OneToOne(()=> SearchHistory, (searchHistory) => searchHistory.user)
-    searchHistory: SearchHistory;
+  @OneToOne(() => SearchHistory, (searchHistory) => searchHistory.user)
+  searchHistory: SearchHistory;
 
-    @OneToMany(() =>Order, (order) => order.user)
-    orders: Order[];
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 
-    @OneToMany(()=> Review, (review) => review.user)
-    reviews: Review[];
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 
-    @OneToMany(()=> ReviewComment , (reviewComment) => reviewComment.user)
-    reviewComments: ReviewComment[];
+  @OneToMany(() => ReviewComment, (reviewComment) => reviewComment.user)
+  reviewComments: ReviewComment[];
 
-    @OneToMany(()=>Chat , (chat) => chat.user)
-    chats: Chat[];
+  @OneToMany(() => Chat, (chat) => chat.user)
+  chats: Chat[];
 
-    @OneToMany(()=> Message, (message) => message.sender)
-    messages: Message[];
+  @OneToMany(() => Message, (message) => message.sender)
+  messages: Message[];
 }
