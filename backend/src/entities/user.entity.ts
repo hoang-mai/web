@@ -14,6 +14,7 @@ import { Review } from './review.entity';
 import { ReviewComment } from './review_comment.entity';
 import { Chat } from './chat.entity';
 import { Message } from './message.entity';
+import { Post } from './post.entity';
 @Entity('users')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -36,6 +37,8 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   phone: string;
+
+
 
   @Column({ nullable: true })
   imageUrl: string;
@@ -63,4 +66,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Message, (message) => message.sender)
   messages: Message[];
+
+
+  @OneToMany(() => Post, (post) => post.author)
+  posts: Post[];
+
 }
