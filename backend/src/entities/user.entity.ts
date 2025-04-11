@@ -38,10 +38,12 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   phone: string;
 
-  @Column()
+
+
+  @Column({ nullable: true })
   imageUrl: string;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
   @OneToOne(() => Cart, (cart) => cart.user)
@@ -65,6 +67,8 @@ export class User extends BaseEntity {
   @OneToMany(() => Message, (message) => message.sender)
   messages: Message[];
 
+
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
+
 }

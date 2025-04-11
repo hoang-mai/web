@@ -1,8 +1,10 @@
+
 import {
   BadRequestException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
@@ -16,6 +18,7 @@ export class UsersService {
   ) {}
 
   async create(data: Partial<User>): Promise<User> {
+
     const existingUser = await this.userRepository.findOneBy({
       email: data.email,
     });
@@ -31,12 +34,14 @@ export class UsersService {
   }
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findOneBy({ email });
-    if (!user) {
-      throw new Error('User not found');
+
+    if(!user) {
+      throw new UnauthorizedException('Không tìm thấy người dùng');
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new Error('Invalid password');
+    if(!isPasswordValid) {
+      throw new UnauthorizedException('Mật khẩu không chính xác');
+
     }
     return user;
   }
