@@ -11,6 +11,7 @@ import { OrderItemsModule } from './modules/order_item/order_item.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PushNotificationModule } from './modules/push_notification/push_notification.module';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PushNotificationModule } from './modules/push_notification/push_notific
     OrdersModule,
     OrderItemsModule,
     PushNotificationModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
