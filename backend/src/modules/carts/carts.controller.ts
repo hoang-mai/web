@@ -1,31 +1,38 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CartsService } from './carts.service';
 
-
 @Controller('carts')
 export class CartsController {
-  constructor(private readonly cartService: CartsService) {}
+  constructor(private readonly cartsService: CartsService) {}
 
+  // Tạo mới giỏ hàng (thường được tạo tự động cho user mới, nhưng vẫn có endpoint này cho admin nếu cần)
   @Post()
   create() {
-    return this.cartService.create();
+    return this.cartsService.create();
   }
 
+  // Lấy danh sách tất cả các giỏ hàng (dành cho admin)
   @Get()
   findAll() {
-    return this.cartService.findAll();
+    return this.cartsService.findAll();
   }
 
+  // Lấy giỏ hàng theo id
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.cartService.findOne(+id);
+    return this.cartsService.findOne(+id);
   }
+
+  // Xóa giỏ hàng theo id
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.cartService.remove(+id);
+    return this.cartsService.remove(+id);
   }
+
+  // Checkout giỏ hàng: cập nhật isCheckedOut = true cho giỏ hàng có id tương ứng
+  // Vì checkout là hành động luôn đặt isCheckedOut thành true, nên không cần truyền body.
   @Patch(':id/checkout')
-    checkout(@Param('id') id: string, @Body('isCheckedOut') isCheckedOut: boolean) {
-    return this.cartService.checkout(+id, isCheckedOut);
-}
+  checkout(@Param('id') id: string) {
+    return this.cartsService.checkout(+id);
+  }
 }
