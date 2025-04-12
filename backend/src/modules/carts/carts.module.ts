@@ -12,4 +12,4 @@ import { User } from "src/entities/user.entity";
   providers: [CartsService],
   exports: [CartsService],
 })
-export class CartModule {}
+export class CartsModule {}
