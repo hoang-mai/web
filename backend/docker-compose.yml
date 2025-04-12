@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: myapp:latest
+    container_name: myapp
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=mydtb
+
+
+  db:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: mydtb
+      MYSQL_PASSWORD: 123456
+    ports:
+      - '3307:3306'  # Đây là port bên ngoài => bên trong app dùng 3306
+
+
+
