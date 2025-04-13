@@ -1,3 +1,4 @@
+
 import Header from './components/Header'
 import Footer from './components/Footer'
 import LocationSelector from "./components/LocationSelector";
@@ -17,8 +18,7 @@ function App() {
         {/* Nội dung trang chính sẽ ở đây */}
       </main>
       <Footer />
-    </div>
-  )
-}
 
-export default App
+    </div>
+  );
+}

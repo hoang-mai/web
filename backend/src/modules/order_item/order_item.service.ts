@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderItem } from 'src/entities/order_item.entity';
@@ -21,8 +21,9 @@ export class OrderItemsService {
     });
 
     if (!orderItem) {
-      throw new Error(`OrderItem with id ${id} not found`);
+      throw new NotFoundException(`OrderItem with id ${id} not found`);
     }
+
     return orderItem;
   }
 
@@ -32,11 +33,14 @@ export class OrderItemsService {
   }
 
   async update(id: number, updateData: Partial<OrderItem>): Promise<OrderItem> {
-    await this.orderItemRepository.update(id, updateData);
-    return this.findOne(id);
+    const orderItem = await this.findOne(id); // will throw if not found
+
+    Object.assign(orderItem, updateData);
+    return this.orderItemRepository.save(orderItem);
   }
 
   async delete(id: number): Promise<void> {
-    await this.orderItemRepository.delete(id);
+    const orderItem = await this.findOne(id);
+    await this.orderItemRepository.remove(orderItem);
   }
 }
