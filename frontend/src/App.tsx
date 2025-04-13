@@ -1,14 +1,9 @@
-import './App.css'
-function App() {
+import Navbar from "./components/Navbar";
 
+export default function App() {
   return (
     <div>
-      
-        
-   
-     
+      <Navbar></Navbar>
     </div>
-  )
+  );
 }
-
-export default App
