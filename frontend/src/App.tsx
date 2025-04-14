@@ -14,6 +14,7 @@ function App() {
     <div className="bg-white text-black min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
+      <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Khuyến mãi Online</h1>
         {/* Nội dung trang chính sẽ ở đây */}
       </main>
       <Footer />
