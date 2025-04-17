@@ -74,4 +74,43 @@ export class CartProductService {
       throw new NotFoundException(`Cart item with ID ${id} not found`);
     }
   }
+
+  async findAll(): Promise<CartProduct[]> {
+    return this.cartProductRepo.find({
+      relations: ['cart', 'product'], // Load các quan hệ nếu cần
+    });
+  }
+  
+  async findOne(id: number): Promise<CartProduct> {
+    const item = await this.cartProductRepo.findOne({
+      where: { id },
+      relations: ['cart', 'product'], // Load các quan hệ nếu cần
+    });
+    if (!item) {
+      throw new NotFoundException(`Cart item with ID ${id} not found`);
+    }
+    return item;
+  }
+  
+  async update(id: number, dto: UpdateCartProductDto): Promise<CartProduct> {
+    const item = await this.findOne(id); // Tái sử dụng phương thức findOne
+    if (dto.quantity !== undefined) {
+      item.quantity = dto.quantity;
+    }
+    return this.cartProductRepo.save(item);
+  }
+  
+  async remove(id: number): Promise<void> {
+    const result = await this.cartProductRepo.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Cart item with ID ${id} not found`);
+    }
+  }
+  
+  async clearCart(cartId: number): Promise<void> {
+    const result = await this.cartProductRepo.delete({ cart: { id: cartId } });
+    if (result.affected === 0) {
+      throw new NotFoundException(`No items found in cart with ID ${cartId}`);
+    }
+  }
 }
