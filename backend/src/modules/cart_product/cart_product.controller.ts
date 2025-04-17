@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
 import { CartProductService } from './cart_product.service';
 import { CreateCartProductDto } from './dtos/createCart_Product.dto';
 import { UpdateCartProductDto } from './dtos/updateCart_Product.dto';
@@ -9,7 +9,11 @@ export class CartProductController {
 
   @Post()
   create(@Body() createCartProductDto: CreateCartProductDto) {
-    return this.cartProductService.addToCart(createCartProductDto);
+    return {
+      message: 'Product đã được add thành công vào giỏ hàng',
+      data: createCartProductDto,
+      status_code: HttpStatus.OK,
+    };
   }
 
   @Get()
