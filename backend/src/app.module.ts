@@ -13,6 +13,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PushNotificationModule } from './modules/push_notification/push_notification.module';
 import { PostModule } from './modules/post/post.module';
 
+import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
