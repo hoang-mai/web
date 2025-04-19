@@ -6,6 +6,7 @@ export class CreateProductDto {
     name: string;
 
     @IsNumber()
+    @IsNotEmpty( { message: "Bắt buộc cần có giá tiền" })
     price: number;
 
     @IsNumber()
