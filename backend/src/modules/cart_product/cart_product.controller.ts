@@ -7,33 +7,33 @@ import { UpdateCartProductDto } from './dtos/updateCart_Product.dto';
 export class CartProductController {
   constructor(private readonly cartProductService: CartProductService) {}
 
-  @Post()
-  create(@Body() createCartProductDto: CreateCartProductDto) {
-    return this.cartProductService.create(createCartProductDto);
-  }
+  // @Post()
+  // create(@Body() createCartProductDto: CreateCartProductDto) {
+  //   return this.cartProductService.create(createCartProductDto);
+  // }
 
-  @Get()
-  findAll() {
-    return this.cartProductService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.cartProductService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartProductService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.cartProductService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartProductDto: UpdateCartProductDto) {
-    return this.cartProductService.update(+id, updateCartProductDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateCartProductDto: UpdateCartProductDto) {
+  //   return this.cartProductService.update(+id, updateCartProductDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartProductService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.cartProductService.remove(+id);
+  // }
 
-  @Delete('/cart/:cartId')
-  clearCart(@Param('cartId') cartId: string) {
-    return this.cartProductService.clearCart(+cartId);
-  }
+  // @Delete('/cart/:cartId')
+  // clearCart(@Param('cartId') cartId: string) {
+  //   return this.cartProductService.clearCart(+cartId);
+  // }
 }
