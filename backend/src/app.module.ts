@@ -12,6 +12,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PushNotificationModule } from './modules/push_notification/push_notification.module';
 import { PostModule } from './modules/post/post.module';
+import { ReviewModule } from './modules/review/review.module';
+import { ReviewCommentModule } from './modules/review_comment/review_comment.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { PostModule } from './modules/post/post.module';
     OrderItemsModule,
     PushNotificationModule,
     PostModule,
+    ReviewModule,
+    ReviewCommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

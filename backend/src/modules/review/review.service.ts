@@ -1,0 +1,98 @@
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { CreateReviewDto } from './dto/create-review.dto';
+import { UpdateReviewDto } from './dto/update-review.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Review } from 'src/entities/review.entity';
+import { Product } from 'src/entities/product.entity';
+import { User } from 'src/entities/user.entity';
+import { Repository } from 'typeorm';
+
+@Injectable()
+export class ReviewService {
+  constructor(
+    @InjectRepository(Review)
+    private readonly reviewRepo: Repository<Review>,
+
+    @InjectRepository(Product)
+    private readonly productRepo: Repository<Product>,
+
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
+  ) {}
+
+  async create(user: User, createReviewDto: CreateReviewDto) {
+    const product = await this.productRepo.findOneByOrFail({
+      id: createReviewDto.productId,
+    });
+
+    const review = this.reviewRepo.create({
+      rating: createReviewDto.rating,
+      review: createReviewDto.review,
+      imageUrl: createReviewDto.imageUrl,
+      user,
+      product,
+    });
+    return await this.reviewRepo.save(review);
+  }
+
+  async getReviewsByProduct(productId: number) {
+    return await this.reviewRepo.find({
+      where: { product: { id: productId } },
+      relations: ['user', 'reviewComments'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async getProductReviewStats(productId: number) {
+    const reviews = await this.reviewRepo.find({
+      where: { product: { id: productId } },
+    });
+
+    const total = reviews.length;
+    const average =
+      total > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / total : 0;
+
+    return {
+      totalReviews: total,
+      averageRating: parseFloat(average.toFixed(1)),
+    };
+  }
+
+  findAll() {
+    return `This action returns all review`;
+  }
+
+  async findOne(id: number) {
+    return this.reviewRepo.findOne({
+      where: { id },
+      relations: ['user', 'reviewComments'],
+    });
+  }
+
+  async update(id: number, userId: number, dto: UpdateReviewDto) {
+    const review = await this.reviewRepo.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+
+    if (!review || review.user.id !== userId) {
+      throw new ForbiddenException('Bạn không được phép sửa bình luận này');
+    }
+
+    Object.assign(review, dto);
+    return this.reviewRepo.save(review);
+  }
+
+  async remove(id: number, userId: number) {
+    const review = await this.reviewRepo.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+
+    if (!review || review.user.id !== userId) {
+      throw new ForbiddenException('Bạn không được phép sửa bình luận này');
+    }
+
+    return this.reviewRepo.delete(id);
+  }
+}
