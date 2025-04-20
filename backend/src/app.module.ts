@@ -15,6 +15,8 @@ import { PostModule } from './modules/post/post.module';
 import { ReviewModule } from './modules/review/review.module';
 import { ReviewCommentModule } from './modules/review_comment/review_comment.module';
 
+import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

@@ -25,13 +25,13 @@ export class Product extends BaseEntity {
     @Column({ nullable: true })
     imageUrl: string;
 
-    @Column()
+    @Column({ nullable: true })
     totalRating: number;
 
     @Column({ default: false })
     isDeleted: boolean;
 
-    @Column()
+    @Column({ nullable: true })
     discount: number;
 
     @Column({type:'enum', enum: Category})

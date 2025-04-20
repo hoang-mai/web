@@ -6,11 +6,11 @@ export class PushNotificationController {
   constructor(
     private readonly pushNotificationService: PushNotificationService,
   ) {}
-  private subscriptions: PushSubscription[] = [];
+  private readonly subscriptions: PushSubscription[] = [];
   @Post('subscribe')
   subscribe(@Body() body: { subscription: PushSubscription }) {
     this.subscriptions.push(body.subscription);
-    return { message: 'Subscribed successfully' };
+    return { message: 'Đăng ký thành công' };
   }
 
   @Post('notify')
