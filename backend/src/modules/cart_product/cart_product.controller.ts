@@ -10,7 +10,7 @@ export class CartProductController {
   @Post()
   create(@Body() createCartProductDto: CreateCartProductDto) {
     return {
-      message: 'Product đã được add thành công vào giỏ hàng',
+      message: 'Product đã được add thành công',
       data: createCartProductDto,
       status_code: HttpStatus.OK,
     };
