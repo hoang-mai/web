@@ -11,7 +11,7 @@ describe('CartProductController', () => {
     findAll: jest.fn(),
     findOne: jest.fn(),
     updateCartItem: jest.fn(),
-    remove: jest.fn(),
+    removeFromCart: jest.fn(),
     clearCart: jest.fn(),
   };
 
@@ -58,10 +58,10 @@ describe('CartProductController', () => {
     expect(service.updateCartItem).toHaveBeenCalledWith(+id, dto);
   });
 
-  it('should call remove when remove is called', async () => {
+  it('should call removeFromCart when remove is called', async () => {
     const id = '1';
     await controller.remove(id);
-    expect(service.remove).toHaveBeenCalledWith(+id);
+    expect(service.removeFromCart).toHaveBeenCalledWith(+id);
   });
 
   it('should call clearCart when clearCart is called', async () => {
