@@ -7,7 +7,6 @@ const axiosInstance = axios.create({
         'Accept-Language': 'vi',
     },
 })
-
 export const get = (path: string, params?: Record<string, any>): Promise<AxiosResponse<any, any>> => {
     return axiosInstance.get(path, { params });
 };
