@@ -34,4 +34,10 @@ export class AuthController {
   getProfile(@Request() req: any) {
     return req.user;
   }
+
+  @Post('checkToken')
+  checkToken(@Body('token') token: string) {
+    return this.authService.checkToken(token);
+  }
+
 }

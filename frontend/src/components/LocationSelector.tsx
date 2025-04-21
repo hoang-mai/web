@@ -1,6 +1,7 @@
 // components/LocationSelector.tsx
 import { useState, useEffect } from "react";
 import addressData from "./addressData";
+import location from '../assets/images/location.png'; // Import your location image here
 
 const LocationSelector = () => {
   const [showModal, setShowModal] = useState(false);
@@ -73,7 +74,7 @@ const LocationSelector = () => {
         onClick={() => setShowModal(true)}
         className="flex items-center gap-1 border px-3 py-1 rounded-full hover:shadow"
       >
-        <img src="/icons/location.svg" alt="Location" className="w-4 h-4" />
+        <img src={location} alt="Location" className="w-4 h-4" />
         <span className="truncate max-w-[200px]">{getSelectedAddress()}</span>
       </button>
 

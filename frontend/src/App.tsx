@@ -1,17 +1,22 @@
 
-import Header from './components/Header'
 import Footer from './components/Footer'
-import LocationSelector from "./components/LocationSelector";
-
+import Navbar from './components/Navbar';
+import { Route, Routes } from 'react-router-dom';
+import Login from './page/Login';
+import Home from './page/Home';
 function App() {
   return (
     <div className="bg-white text-black min-h-screen flex flex-col">
-      <Header />
-      <div className="p-4">
-        <LocationSelector />
-      </div>
+      
+      
+      {/* Header: Navbar( ten web+searchbar+login button+location selector)*/}
+      <Navbar/>
+      {/* Muon link den page nao thi them route vao day*/}
+        <Routes>
+            <Route path="/" element={<Home/>} /> 
+            <Route path="/login" element={<Login />} /> {/* Định tuyến đến trang login */}
+        </Routes>
       <main className="flex-grow">
-        {/* Nội dung trang chính sẽ ở đây */}
       </main>
       <Footer />
 
