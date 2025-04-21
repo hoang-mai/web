@@ -2,8 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Product } from "src/entities/product.entity";
-import { CreateProductDto } from "./dtos/createProduct.dto"
+import { CreateProductDto } from "./dtos/createProduct.dto";
 import { UpdateProductDto } from "./dtos/updateProduct.dto";
+import { paginate, IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 
 
 @Injectable()
@@ -22,6 +23,13 @@ export class ProductsService {
         return { data, total };
     }
 
+    async paginate(options: IPaginationOptions): Promise<Pagination<Product>> {
+        const queryBuilder = this.productRepository.createQueryBuilder("product");
+        queryBuilder.where("product.isDeleted = :isDeleted", { isDeleted: false });
+        queryBuilder.orderBy('product.id', 'DESC');
+        return paginate<Product>(queryBuilder, options);
+    }
+
     async findOne(id: number): Promise<Product> {
         const product = await this.productRepository.findOne({
             where: { id, isDeleted: false },
@@ -32,16 +40,16 @@ export class ProductsService {
         return product;
     }
 
-async create(createProductDto: CreateProductDto): Promise<Product> {
-    const existingProduct = await this.productRepository.findOne({
-        where: { name: createProductDto.name, isDeleted: false },
-    });
-    if (existingProduct) {
-        throw new Error("Tồn tại sản phẩm trùng tên");
+    async create(createProductDto: CreateProductDto): Promise<Product> {
+        const existingProduct = await this.productRepository.findOne({
+            where: { name: createProductDto.name, isDeleted: false },
+        });
+        if (existingProduct) {
+            throw new Error("Tồn tại sản phẩm trùng tên");
+        }
+        const newProduct = this.productRepository.create(createProductDto);
+        return this.productRepository.save(newProduct);
     }
-    const newProduct = this.productRepository.create(createProductDto);
-    return this.productRepository.save(newProduct);
-}
 
     async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
         const product = await this.findOne(id);
