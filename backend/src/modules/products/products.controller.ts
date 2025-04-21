@@ -3,6 +3,7 @@ import { ProductsService } from "./products.service";
 import { CreateProductDto } from "./dtos/createProduct.dto";
 import { UpdateProductDto } from "./dtos/updateProduct.dto";
 import { Product } from "src/entities/product.entity";
+import { PaginationQueryDto } from "./dtos/pagination-query.dto";
 
 @Controller("products")
 export class ProductsController {
@@ -13,12 +14,29 @@ export class ProductsController {
         return this.productsService.create(createProductDto);
     }
 
-    @Get()
+    @Get('all')
     async findAll(
         @Query("page") page: number = 1,
         @Query("limit") limit: number = 10
-    ): Promise<{ data: Product[]; total: number }> {
-        return this.productsService.findAll(page, limit);
+    ): Promise<{ message: string; code: number; data: Product[]; total: number }> {
+        const {data, total} = await this.productsService.findAll(page, limit);
+        return {
+            message: "Products fetched successfully",
+            code: 200,
+            data,
+            total,
+        }
+    }
+
+    @Get()
+    async pagination(@Query() query: PaginationQueryDto) {
+        const {page=1, limit=10} = query;
+        
+        return this.productsService.paginate({
+            page,
+            limit,
+            route: 'http://localhost:8080/products',
+        });
     }
 
     @Get(":id")
