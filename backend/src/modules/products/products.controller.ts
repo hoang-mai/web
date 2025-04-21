@@ -1,64 +1,60 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
-import { ProductsService } from "./products.service";
-import { CreateProductDto } from "./dtos/createProduct.dto";
-import { UpdateProductDto } from "./dtos/updateProduct.dto";
-import { Product } from "src/entities/product.entity";
-import { PaginationQueryDto } from "./dtos/pagination-query.dto";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  HttpStatus,
+} from '@nestjs/common';
+import { ProductsService } from './products.service';
+import { CreateProductDto } from './dtos/request/createProduct.dto';
+import { UpdateProductDto } from './dtos/request/updateProduct.dto';
+import { Product } from 'src/entities/product.entity';
+import { PageDto } from './dtos/response/page.dto';
+import { Http } from 'winston/lib/winston/transports';
 
-@Controller("products")
+@Controller('products')
 export class ProductsController {
-    constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) {}
 
-    @Post()
-    create(@Body() createProductDto: CreateProductDto): Promise<Product> {
-        return this.productsService.create(createProductDto);
-    }
+  @Post()
+  create(@Body() createProductDto: CreateProductDto): Promise<Product> {
+    return this.productsService.create(createProductDto);
+  }
 
-    @Get('all')
-    async findAll(
-        @Query("page") page: number = 1,
-        @Query("limit") limit: number = 10
-    ): Promise<{ message: string; code: number; data: Product[]; total: number }> {
-        const {data, total} = await this.productsService.findAll(page, limit);
-        return {
-            message: "Products fetched successfully",
-            code: 200,
-            data,
-            total,
-        }
-    }
+  @Get()
+  async findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+    const data = await this.productsService.findAll(page, limit);
+    return {
+      message: 'Lấy danh sách sản phẩm thành công',
+      status_code: HttpStatus.OK,
+      data,
+    };
+  }
 
-    @Get()
-    async pagination(@Query() query: PaginationQueryDto) {
-        const {page=1, limit=10} = query;
-        
-        return this.productsService.paginate({
-            page,
-            limit,
-            route: 'http://localhost:8080/products',
-        });
-    }
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<Product> {
+    return this.productsService.findOne(id);
+  }
 
-    @Get(":id")
-    findOne(@Param("id") id: number): Promise<Product> {
-        return this.productsService.findOne(id);
-    }
+  @Patch(':id')
+  update(
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<Product> {
+    return this.productsService.update(id, updateProductDto);
+  }
 
-    @Patch(":id")
-    update(
-        @Param("id") id: number,
-        @Body() updateProductDto: UpdateProductDto
-    ): Promise<Product> {
-        return this.productsService.update(id, updateProductDto);
-    }
+  @Patch(':id/restore')
+  restore(@Param('id') id: number): Promise<Product> {
+    return this.productsService.restore(id);
+  }
 
-    @Patch(":id/restore")
-    restore(@Param("id") id: number): Promise<Product> {
-        return this.productsService.restore(id);
-    }
-
-    @Delete(":id")
-    remove(@Param("id") id: number): Promise<void> {
-        return this.productsService.remove(id);
-    }
+  @Delete(':id')
+  remove(@Param('id') id: number): Promise<void> {
+    return this.productsService.remove(id);
+  }
 }
