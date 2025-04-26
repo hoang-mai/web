@@ -1,5 +1,5 @@
-import { useState,useEffect } from "react";
-import { login, register,checkToken } from "../Services/login_register"; 
+import { useState, useEffect } from "react";
+import { login, register, checkToken } from "../services/login_register";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,13 +26,13 @@ const Login = () => {
     if (token) {
       checkToken(token)
         .then((res) => {
-         if(res){
-          navigate("/"); // Chuyển hướng về trang chính nếu token hợp lệ
-         }else{
-          sessionStorage.removeItem("access_token"); // Xóa token nếu không hợp lệ
-         }
+          if (res) {
+            navigate("/"); // Chuyển hướng về trang chính nếu token hợp lệ
+          } else {
+            sessionStorage.removeItem("access_token"); // Xóa token nếu không hợp lệ
+          }
         })
-     
+
     }
   }, []);
 
@@ -45,8 +45,8 @@ const Login = () => {
         const data = await login(formData.email, formData.password);
         sessionStorage.setItem("access_token", data.access_token);
         navigate("/"); // Chuyển hướng về trang chính sau khi đăng nhập thành công
-        alert("Đăng nhập thành công!");   
-       
+        alert("Đăng nhập thành công!");
+
       } else {
         // 🔵 Gọi hàm register từ auth.api
         const data = await register({

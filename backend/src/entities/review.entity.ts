@@ -16,13 +16,13 @@ export class Review extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   rating: number;
 
-  @Column()
+  @Column({ nullable: true })
   review: string;
 
-  @Column()
+  @Column({ nullable: true })
   imageUrl: string;
 
   @JoinColumn({ name: 'product_id' })
