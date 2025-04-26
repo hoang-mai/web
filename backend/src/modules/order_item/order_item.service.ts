@@ -1,7 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderItem } from 'src/entities/order_item.entity';
+import e from 'express';
 
 @Injectable()
 export class OrderItemsService {
@@ -42,5 +47,52 @@ export class OrderItemsService {
   async delete(id: number): Promise<void> {
     const orderItem = await this.findOne(id);
     await this.orderItemRepository.remove(orderItem);
+  }
+
+  /**
+   * Thống kê doanh thu sản phẩm
+   * @param productId ID của sản phẩm
+   * @param year Năm thống kê (nếu có)
+   * @param month Tháng thống kê (nếu có)
+   * @returns Doanh thu sản phẩm theo loại thống kê
+   * @throws NotFoundException nếu không tìm thấy sản phẩm
+   */
+  async statisticRevenueProduct(
+    productId: number,
+    year?: number,
+    month?: number,
+  ) {
+    const result = this.orderItemRepository
+      .createQueryBuilder('orderItem')
+      .select('SUM(orderItem.price * orderItem.quantity)', 'revenue')
+      .where('orderItem.productId = :productId', { productId });
+    if (month && year) {
+      result
+        .addSelect('WEEK(orderItem.createdAt)', 'week')
+        .andWhere('MONTH(orderItem.createdAt) = :month', { month })
+        .andWhere('YEAR(orderItem.createdAt) = :year', { year })
+        .groupBy('week')
+        .orderBy('week', 'ASC');
+    } else if (month && !year) {
+      result
+        .addSelect('WEEK(orderItem.createdAt)', 'week')
+        .andWhere('MONTH(orderItem.createdAt) = :month', { month })
+        .andWhere('YEAR(orderItem.createdAt) = YEAR(CURDATE())')
+        .groupBy('week')
+        .orderBy('week', 'ASC');
+    } else if (!month && year) {
+      result
+        .addSelect('MONTH(orderItem.createdAt)', 'month')
+        .andWhere('YEAR(orderItem.createdAt) = :year', { year })
+        .groupBy('month')
+        .orderBy('month', 'ASC');
+    } else {
+      result
+        .addSelect('YEAR(orderItem.createdAt)', 'year')
+        .groupBy('year')
+        .orderBy('year', 'ASC');
+    }
+    const data = await result.getRawMany();
+    return data;
   }
 }

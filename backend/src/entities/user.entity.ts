@@ -39,7 +39,6 @@ export class User extends BaseEntity {
   phone: string;
 
 
-
   @Column({ nullable: true })
   imageUrl: string;
 
