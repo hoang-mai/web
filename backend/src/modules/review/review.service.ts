@@ -22,7 +22,7 @@ export class ReviewService {
 
   async create(user: User, createReviewDto: CreateReviewDto) {
     const product = await this.productRepo.findOneByOrFail({
-      id: createReviewDto.productId,
+      name: createReviewDto.productName,
     });
 
     const review = this.reviewRepo.create({
@@ -35,17 +35,17 @@ export class ReviewService {
     return await this.reviewRepo.save(review);
   }
 
-  async getReviewsByProduct(productId: number) {
+  async getReviewsByProduct(productName: string) {
     return await this.reviewRepo.find({
-      where: { product: { id: productId } },
+      where: { product: { name: productName } },
       relations: ['user', 'reviewComments'],
       order: { createdAt: 'DESC' },
     });
   }
 
-  async getProductReviewStats(productId: number) {
+  async getProductReviewStats(productName: string) {
     const reviews = await this.reviewRepo.find({
-      where: { product: { id: productId } },
+      where: { product: { name: productName } },
     });
 
     const total = reviews.length;
@@ -69,9 +69,9 @@ export class ReviewService {
     });
   }
 
-  async update(id: number, userId: number, dto: UpdateReviewDto) {
+  async update(userId: number, dto: UpdateReviewDto) {
     const review = await this.reviewRepo.findOne({
-      where: { id },
+      where: { id: dto.id },
       relations: ['user'],
     });
 
