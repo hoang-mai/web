@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { login, register, checkToken } from "../services/login_register";
+import { login, register, checkToken } from "../../services/login_register";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
