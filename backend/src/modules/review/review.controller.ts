@@ -45,9 +45,14 @@ export class ReviewController {
     return this.reviewService.findOne(+id);
   }
 
-  @Patch()
-  update(@Req() req, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewService.update(req.user.id, updateReviewDto);
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  update(
+    @Req() req,
+    @Body() updateReviewDto: UpdateReviewDto,
+    @Param('id') id: number,
+  ) {
+    return this.reviewService.update(+id, req.user.id, updateReviewDto);
   }
 
   @UseGuards(JwtAuthGuard)

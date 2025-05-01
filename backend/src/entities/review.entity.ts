@@ -35,4 +35,10 @@ export class Review extends BaseEntity {
 
   @OneToMany(() => ReviewComment, (reviewComment) => reviewComment.review)
   reviewComments: ReviewComment[];
+
+  @Column({ default: 0 })
+  likeCount: number;
+
+  @Column({ default: false })
+  reported: boolean;
 }

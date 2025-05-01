@@ -22,24 +22,23 @@ export class ReviewCommentController {
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Req() req, @Body() dto: CreateReviewCommentDto) {
-    const userId = req.user.id;
-    return this.commentService.createComment(userId, dto);
+    return this.commentService.createComment(req.user.id, dto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':id/like')
+  @Put('like/:id')
   like(@Param('id') id: number) {
     return this.commentService.likeComment(+id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':id/report')
+  @Put('report/:id')
   report(@Param('id') id: number) {
     return this.commentService.reportComment(+id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id/edit')
+  @Patch('edit/:id')
   edit(
     @Param('id') id: number,
     @Req() req,

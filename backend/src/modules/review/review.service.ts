@@ -70,12 +70,12 @@ export class ReviewService {
     });
   }
 
-  async update(userId: number, dto: UpdateReviewDto) {
+  async update(id: number, userId: number, dto: UpdateReviewDto) {
     const review = await this.reviewRepo.findOne({
-      where: { id: dto.id },
+      where: { id: id },
       relations: ['user'],
     });
-
+    console.log(review, userId);
     if (!review || review.user.id !== userId) {
       throw new ForbiddenException('Bạn không được phép sửa bình luận này');
     }

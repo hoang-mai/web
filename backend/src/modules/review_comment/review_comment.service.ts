@@ -7,6 +7,7 @@ import { ReviewComment } from 'src/entities/review_comment.entity';
 import { Review } from 'src/entities/review.entity';
 import { User } from 'src/entities/user.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Role } from 'src/entities/role.enum';
 
 @Injectable()
 export class ReviewCommentService {
@@ -66,22 +67,26 @@ export class ReviewCommentService {
   ) {
     const comment = await this.commentRepo.findOne({
       where: { id, user: { id: userId } },
+      relations: ['user', 'review', 'replies'],
     });
-
-    if (!comment)
+    if (!comment || comment.user.id !== userId)
       throw new ForbiddenException('Bạn không thể sửa bình luận này.');
-
-    comment.comment = updateReviewCommentDto.comment;
-    comment.imageUrl = updateReviewCommentDto.imageUrl;
+    Object.assign(comment, updateReviewCommentDto);
     return this.commentRepo.save(comment);
   }
 
   async deleteComment(id: number, userId: number) {
     const comment = await this.commentRepo.findOne({
-      where: { id, user: { id: userId } },
+      where: { id },
+      relations: ['user'],
     });
 
-    if (!comment)
+    const userReq = await this.userRepo.findOne({
+      where: { id: userId },
+    });
+    if (comment && userReq && userReq.role === Role.ADMIN)
+      return this.commentRepo.delete(id);
+    else if (!comment || comment.user.id !== userId)
       throw new ForbiddenException('Bạn không thể xoá bình luận này.');
 
     return this.commentRepo.delete(id);

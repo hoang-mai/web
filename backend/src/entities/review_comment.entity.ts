@@ -28,7 +28,7 @@ export class ReviewComment extends BaseEntity {
   @Column()
   comment: string;
 
-  @Column()
+  @Column({ nullable: true })
   imageUrl: string;
 
   @ManyToOne(() => ReviewComment, (reviewComment) => reviewComment.replies, {
