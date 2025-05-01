@@ -6,6 +6,7 @@ import { Review } from 'src/entities/review.entity';
 import { Product } from 'src/entities/product.entity';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
+import { Role } from 'src/entities/role.enum';
 
 @Injectable()
 export class ReviewService {
@@ -88,9 +89,14 @@ export class ReviewService {
       where: { id },
       relations: ['user'],
     });
+    const userReq = await this.userRepo.findOne({
+      where: { id: userId },
+    });
 
-    if (!review || review.user.id !== userId) {
-      throw new ForbiddenException('Bạn không được phép sửa bình luận này');
+    if (review && userReq && userReq.role === Role.ADMIN)
+      return this.reviewRepo.delete(id);
+    else if (!review || review.user.id !== userId) {
+      throw new ForbiddenException('Bạn không được phép xóa bình luận này');
     }
 
     return this.reviewRepo.delete(id);

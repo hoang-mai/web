@@ -15,6 +15,8 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ProductsService } from '../products/products.service';
 import { CreateProductDto } from '../products/dtos/request/createProduct.dto';
+import { Role } from 'src/entities/role.enum';
+import { Roles } from 'src/guard/roles.decorator';
 
 @Controller('reviews')
 export class ReviewController {
@@ -51,6 +53,6 @@ export class ReviewController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Req() req, @Param('id') id: string) {
-    return this.reviewService.remove(+id, req.user);
+    return this.reviewService.remove(+id, req.user.id);
   }
 }

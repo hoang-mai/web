@@ -16,6 +16,7 @@ import { ReviewModule } from './modules/review/review.module';
 import { ReviewCommentModule } from './modules/review_comment/review_comment.module';
 
 import { join } from 'path';
+import { StatisticsModule } from './modules/statistics/statistics.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { join } from 'path';
     PostModule,
     ReviewModule,
     ReviewCommentModule,
+    StatisticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
