@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { login, register, checkToken } from "../../services/login_register";
 import { useNavigate } from "react-router-dom";
+import { get } from "@/services/callApi";
+import { checkTokenRoute } from "@/services/api";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
@@ -22,18 +24,18 @@ const Login = () => {
     }));
   };
   useEffect(() => {
-    const token = sessionStorage.getItem("access_token");
-    if (token) {
-      checkToken(token)
-        .then((res) => {
-          if (res) {
-            navigate("/"); // Chuyển hướng về trang chính nếu token hợp lệ
-          } else {
-            sessionStorage.removeItem("access_token"); // Xóa token nếu không hợp lệ
-          }
-        })
-
-    }
+    const token = localStorage.getItem("access_token");
+        if (token) {
+          get(checkTokenRoute).then((res) => {
+            if (res.data.data.role === "user") {
+              navigate("/", { replace: true });
+            } else if (res.data.data.role === "admin") {
+              navigate("/admin", { replace: true });
+            }
+          }).catch(() => {
+            localStorage.removeItem("access_token");
+          });
+        }
   }, []);
 
 

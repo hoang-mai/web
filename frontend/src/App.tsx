@@ -3,17 +3,25 @@ import Home from "./page/user/Home";
 import Login from "./page/user/Login";
 import Layout from "./page/user/Layout";
 import LoginAdmin from "./page/admin/LoginAdmin";
+import LayoutAdmin from "./page/admin/Layout";
+import HomeAdmin from "./page/admin/Home";
 
 function App() {
   return (
     /* Thêm router vào đây */
     <Routes>
+      {/* Đường dẫn cho người dùng */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/login" element={<Login />} />
       </Route>
 
+
+      {/* Đường dẫn cho admin */}
       <Route path="/admin/login" element={<LoginAdmin />} />
+      <Route path="/admin" element={<LayoutAdmin />}>
+        <Route index element={<HomeAdmin />} />
+      </Route>
     </Routes>
   );
 }

@@ -1,5 +1,5 @@
 // src/api/auth.api.ts
-import { post } from "./callApi"; // Đường dẫn tới file axios của bạn
+import { get, post } from "./callApi"; // Đường dẫn tới file axios của bạn
 import {loginRoute,registerRoute,checkTokenRoute} from './api'
 
 
@@ -8,8 +8,8 @@ export const login = async (email: string, password: string) => {
   return response.data.data; // chứa access_token
 };
 
-export const checkToken = async (token: string) => {
-  const response = await post(checkTokenRoute, { token })
+export const checkToken = async () => {
+  const response = await get(checkTokenRoute)
   return response.data.valid; 
 }
 

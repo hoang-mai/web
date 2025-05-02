@@ -1,9 +1,9 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { toast } from "react-toastify";
-import { post } from "@/services/callApi";
-import { loginRoute } from "@/services/api";
+import { get, post } from "@/services/callApi";
+import { checkTokenRoute, loginRoute } from "@/services/api";
 
 interface LoginCredentials {
   email: string;
@@ -39,7 +39,7 @@ const LoginAdmin: React.FC = () => {
       }
     }
 
-    setError('');
+    setError("");
     setCredentials((prev) => ({
       ...prev,
       [name]: value,
@@ -61,26 +61,50 @@ const LoginAdmin: React.FC = () => {
     setIsLoading(true);
 
     // Gọi API đăng nhập
-    toast.promise(
-      post(loginRoute, {
-        email: credentials.email,
-        password: credentials.password,
-      }),
-      {
-        pending: "Đang đăng nhập...",
-        success: "Đăng nhập thành công!",
-        error: "Đăng nhập thất bại!",
-      }
-    ).finally(() => {
-      setIsLoading(false);
-    })
+    toast
+      .promise(
+        post(loginRoute, {
+          email: credentials.email,
+          password: credentials.password,
+        }),
+        {
+          pending: "Đang đăng nhập...",
+          success: "Đăng nhập thành công!",
+          error: "Đăng nhập thất bại!",
+        }
+      )
+      .then((res) => {
+        localStorage.setItem("access_token", res.data.data.access_token);
+        navigate("/admin");
+      })
+      .catch((err: ErrorResponse) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      get(checkTokenRoute).then((res) => {
+        if (res.data.data.role === "user") {
+          navigate("/", { replace: true });
+        } else if (res.data.data.role === "admin") {
+          navigate("/admin", { replace: true });
+        }
+      }).catch(() => {
+        localStorage.removeItem("access_token");
+      });
+    }
+  }, [navigate]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[var(--color-tertiary)]">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h1 className="mb-6 text-2xl font-bold text-center text-gray-800">
-          Đăng Nhập{" "}
+          Đăng Nhập
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="mb-2">
@@ -135,13 +159,11 @@ const LoginAdmin: React.FC = () => {
                   <Visibility className="h-5 w-5" />
                 )}
               </button>
-              
             </div>
           </div>
           <div className="h-4 text-sm text-red-700">
             {error || errorPassword}
           </div>
-          
 
           <button
             type="submit"

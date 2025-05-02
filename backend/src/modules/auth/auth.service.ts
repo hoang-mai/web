@@ -22,12 +22,5 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
-  checkToken(token: string) {
-    try {
-      const decoded = this.jwtService.verify(token);
-      return { valid: true, payload: decoded };
-    } catch (error) {
-      return { valid: false, message: 'Token không hợp lệ hoặc đã hết hạn' };
-    }
-  }
+  
 }
