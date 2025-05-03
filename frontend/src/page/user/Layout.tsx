@@ -18,9 +18,6 @@ function Layout() {
     }, [navigate]);
     return (
         <div className="bg-white text-black min-h-screen flex flex-col">
-
-
-            {/* Header: Navbar( ten web+searchbar+login button+location selector)*/}
             <Navbar />
             {/* Muon link den page nao thi them route vao day*/}
             <Outlet />

@@ -54,9 +54,11 @@ export const put = (
   return axiosInstance.put(path, body, { params });
 };
 
-export const del = (
-  path: string,
-  params?: Record<string, any>
-): Promise<AxiosResponse<any, any>> => {
-  return axiosInstance.delete(path, { params });
+export const del = (path: string, params?: Record<string, any>): Promise<AxiosResponse<any, any>> => {
+    return axiosInstance.delete(path, { params });
 };
+
+export const patch = (path: string, body: object, params?: Record<string, any>): Promise<AxiosResponse<any, any>> => {
+    return axiosInstance.patch(path, body, { params });
+};
+

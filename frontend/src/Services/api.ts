@@ -7,3 +7,9 @@ export const loginRoute = '/auth/login';
 export const registerRoute = '/auth/register';
 
 export const checkTokenRoute = '/auth/check-token'; 
+
+
+//user
+export const findUserByIdRoute = '/users/:id';
+export const updateUserRoute = '/users/:id';
+
