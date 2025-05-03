@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateReviewCommentDto } from './dto/create-review_comment.dto';
 import { UpdateReviewCommentDto } from './dto/update-review_comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,7 +6,6 @@ import { IsNull, Repository } from 'typeorm';
 import { ReviewComment } from 'src/entities/review_comment.entity';
 import { Review } from 'src/entities/review.entity';
 import { User } from 'src/entities/user.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Role } from 'src/entities/role.enum';
 
 @Injectable()

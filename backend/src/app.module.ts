@@ -17,6 +17,7 @@ import { ReviewCommentModule } from './modules/review_comment/review_comment.mod
 
 import { join } from 'path';
 import { StatisticsModule } from './modules/statistics/statistics.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
     ReviewModule,
     ReviewCommentModule,
     StatisticsModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
