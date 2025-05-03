@@ -19,8 +19,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto) {
+    return {
+      status_code: HttpStatus.CREATED,
+      message: 'Đăng ký thành công',
+      data: await this.authService.register(registerDto),
+    }
   }
 
   @UseGuards(LocalAuthGuard)

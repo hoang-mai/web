@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { get, patch } from "../../services/callApi";
-import { checkToken } from "../../services/checkToken";
-import { findUserByIdRoute,updateUserRoute } from "@/services/api";
+import {
+  checkTokenRoute,
+  findUserByIdRoute,
+  updateUserRoute,
+} from "@/services/api";
 import {
   UserIcon,
   MapPinIcon,
@@ -26,32 +29,29 @@ const UserDetail = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("access_token");
+    const token = localStorage.getItem("access_token");
     if (token) {
-      checkToken(token)
+      get(checkTokenRoute)
         .then((res) => {
-          if (res.valid) {
-            const userId = res.payload.sub;
-            const userRoute = findUserByIdRoute.replace(":id", userId);
-            get(userRoute)
-              .then((response) => {
-                setUser(response.data);
-                setEditData(response.data);
-                setLoading(false);
-              })
-              .catch((err) => {
-                toast.error("Failed to fetch user details.");
-                setLoading(false);
-              });
-          } else {
-            toast.error("Token is not valid!");
-            sessionStorage.removeItem("access_token");
-            navigate("/login");
-          }
+          const userId = res.data.data.id;
+          const userRoute = findUserByIdRoute.replace(":id", userId);
+          get(userRoute)
+            .then((response) => {
+              setUser(response.data);
+              setEditData(response.data);
+              setLoading(false);
+            })
+            .catch((err) => {
+              toast.error("Failed to fetch user details.");
+              setLoading(false);
+            });
         })
         .catch(() => {
+          localStorage.removeItem("access_token");
           toast.error("Error checking token.");
+          navigate("/login");
           setLoading(false);
+
         });
     } else {
       toast.error("No token found!");
@@ -65,20 +65,23 @@ const UserDetail = () => {
       toast.error("Mật khẩu xác nhận không khớp!");
       return;
     }
-  
+
     // Nếu có thay đổi mật khẩu, thêm nó vào dữ liệu cập nhật
     if (newPassword) {
       editData.password = newPassword;
     }
-  
+
     // Thực hiện gọi API để cập nhật thông tin người dùng
     try {
-      const response = await patch(updateUserRoute.replace(":id", user.id), editData);
+      const response = await patch(
+        updateUserRoute.replace(":id", user.id),
+        editData
+      );
       console.log(response.data); // In ra dữ liệu trả về từ API
       // Kiểm tra nếu API trả về thành công
       if (response.data.affected === 1) {
-        toast.success("Cập nhật thông tin thành công!"); 
-        setIsEditing(false); 
+        toast.success("Cập nhật thông tin thành công!");
+        setIsEditing(false);
         setUser({ ...user, ...editData }); // Cập nhật lại thông tin người dùng
       } else {
         toast.error(response.data.message); // Nếu thất bại, hiển thị thông báo lỗi
@@ -87,8 +90,6 @@ const UserDetail = () => {
       toast.error("Có lỗi xảy ra khi cập nhật!");
     }
   };
-  
-  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
@@ -106,14 +107,18 @@ const UserDetail = () => {
             />
           </div>
           <h3 className="text-lg font-semibold text-gray-800">
-            {user ? `${user.firstName || "Tên"} ${user.lastName || "Họ"}` : "Loading..."}
+            {user
+              ? `${user.firstName || "Tên"} ${user.lastName || "Họ"}`
+              : "Loading..."}
           </h3>
         </div>
         <div className="mt-4 space-y-2">
           <button
             onClick={() => setIsOrders(true)}
             className={`w-full text-left px-3 py-2 rounded transition flex items-center gap-2 text-gray-700 ${
-              isOrders ? "bg-blue-50 text-blue-600 font-semibold" : "hover:bg-gray-100"
+              isOrders
+                ? "bg-blue-50 text-blue-600 font-semibold"
+                : "hover:bg-gray-100"
             }`}
           >
             🛍️ Đơn hàng đã mua
@@ -121,7 +126,9 @@ const UserDetail = () => {
           <button
             onClick={() => setIsOrders(false)}
             className={`w-full text-left px-3 py-2 rounded transition flex items-center gap-2 text-gray-700 ${
-              !isOrders ? "bg-blue-50 text-blue-600 font-semibold" : "hover:bg-gray-100"
+              !isOrders
+                ? "bg-blue-50 text-blue-600 font-semibold"
+                : "hover:bg-gray-100"
             }`}
           >
             🏠 Thông tin và số địa chỉ
@@ -238,7 +245,7 @@ const UserDetail = () => {
                     </button>
                   </div>
                 </div>
-                 {/* Mật khẩu mới */}
+                {/* Mật khẩu mới */}
                 <div>
                   <label className="flex items-center gap-2 font-semibold text-gray-700">
                     <LockClosedIcon className="w-5 h-5" /> Mật khẩu mới
@@ -304,10 +311,18 @@ const UserDetail = () => {
             ) : (
               <>
                 {/* Chỉ hiển thị thông tin người dùng */}
-                <p><strong>Họ tên:</strong> {user?.lastName} {user?.firstName}</p>
-                <p><strong>Địa chỉ:</strong> {user?.address}</p>
-                <p><strong>Email:</strong> {user?.email}</p>
-                <p><strong>Điện thoại:</strong> {user?.phone}</p>
+                <p>
+                  <strong>Họ tên:</strong> {user?.lastName} {user?.firstName}
+                </p>
+                <p>
+                  <strong>Địa chỉ:</strong> {user?.address}
+                </p>
+                <p>
+                  <strong>Email:</strong> {user?.email}
+                </p>
+                <p>
+                  <strong>Điện thoại:</strong> {user?.phone}
+                </p>
                 {/* Nút chỉnh sửa */}
                 <div className="text-right mt-4">
                   <button
