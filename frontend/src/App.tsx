@@ -1,26 +1,35 @@
+import { Route, Routes } from "react-router-dom";
+import Home from "./page/user/Home";
+import Login from "./page/user/Login";
+import Layout from "./page/user/Layout";
+import LoginAdmin from "./page/admin/LoginAdmin";
+import UserDetail from "./page/user/UserDetail";
+import LayoutAdmin from "./page/admin/Layout";
+import HomeAdmin from "./page/admin/Home";
+import Statistics from "./page/admin/Statistics";
+import ProductAdmin from "./page/admin/ProductAdmin";
 
-import Footer from './components/Footer'
-import Navbar from './components/Navbar';
-import { Route, Routes } from 'react-router-dom';
-import Login from './page/Login';
-import Home from './page/Home';
 function App() {
   return (
-    <div className="bg-white text-black min-h-screen flex flex-col">
-      
-      
-      {/* Header: Navbar( ten web+searchbar+login button+location selector)*/}
-      <Navbar/>
-      {/* Muon link den page nao thi them route vao day*/}
-        <Routes>
-            <Route path="/" element={<Home/>} /> 
-            <Route path="/login" element={<Login />} /> {/* Định tuyến đến trang login */}
-        </Routes>
-      <main className="flex-grow">
-      </main>
-      <Footer />
+    /* Thêm router vào đây */
+    <Routes>
+      {/* Đường dẫn cho người dùng */}
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/userdetail" element={<UserDetail />} />
+      </Route>
 
-    </div>
+
+      {/* Đường dẫn cho admin */}
+      <Route path="/admin/login" element={<LoginAdmin />} />
+      {/* Thêm các route khác ở đây */}
+      <Route path="/admin" element={<LayoutAdmin />}>
+        <Route index element={<HomeAdmin />} />
+        <Route path="statistics" element={<Statistics/>} />
+        <Route path="products" element={<ProductAdmin />} />
+      </Route>
+    </Routes>
   );
 }
 export default App;

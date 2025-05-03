@@ -1,9 +1,31 @@
 import { useState, useEffect } from "react";
-import { login, register, checkToken } from "../services/login_register";
+import { checkToken } from "../../services/checkToken";
+import { post } from "../../services/callApi"; 
+import { loginRoute,registerRoute } from "@/services/api";
 import { useNavigate } from "react-router-dom";
+
+import { get } from "@/services/callApi";
+import { checkTokenRoute } from "@/services/api";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const login = async (email: string, password: string) => {
+    const response = await post(loginRoute, { email, password });
+    return response.data.data; // chứa access_token
+  };
+
+   const register = async (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    phone: string;
+    address: string;
+  }) => {
+    const response = await post(registerRoute, data);
+    return response.data;
+  };
+  
 
   // Form state dùng chung
   const [formData, setFormData] = useState({
@@ -22,18 +44,18 @@ const Login = () => {
     }));
   };
   useEffect(() => {
-    const token = sessionStorage.getItem("access_token");
-    if (token) {
-      checkToken(token)
-        .then((res) => {
-          if (res) {
-            navigate("/"); // Chuyển hướng về trang chính nếu token hợp lệ
-          } else {
-            sessionStorage.removeItem("access_token"); // Xóa token nếu không hợp lệ
-          }
-        })
-
-    }
+    const token = localStorage.getItem("access_token");
+        if (token) {
+          get(checkTokenRoute).then((res) => {
+            if (res.data.data.role === "user") {
+              navigate("/", { replace: true });
+            } else if (res.data.data.role === "admin") {
+              navigate("/admin", { replace: true });
+            }
+          }).catch(() => {
+            localStorage.removeItem("access_token");
+          });
+        }
   }, []);
 
 
@@ -43,7 +65,7 @@ const Login = () => {
       if (isLogin) {
         // 🟡 Gọi hàm login từ auth.api
         const data = await login(formData.email, formData.password);
-        sessionStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("access_token", data.access_token);
         navigate("/"); // Chuyển hướng về trang chính sau khi đăng nhập thành công
         alert("Đăng nhập thành công!");
 
@@ -152,7 +174,6 @@ const Login = () => {
             {isLogin ? "Đăng nhập" : "Đăng ký"}
           </button>
         </form>
-
         <p className="text-center text-sm text-gray-500 mt-4">
           {isLogin ? "Chưa có tài khoản?" : "Đã có tài khoản?"}{" "}
           <button

@@ -37,9 +37,16 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() userData: Partial<User>) {
-    return this.usersService.update(+id, userData);
+  async update(@Param('id') id: string, @Body() userData: Partial<User>) {
+    const result = await this.usersService.update(+id, userData);
+
+    if (result.affected === 1) {
+      return { success: true, message: 'Cập nhật thành công!' };
+    } else {
+      return { success: false, message: 'Không có thay đổi nào được thực hiện!' };
+    }
   }
+
 
   @Delete(':id')
   delete(@Param('id') id: string) {

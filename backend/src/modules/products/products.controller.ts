@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dtos/request/createProduct.dto';
@@ -15,6 +16,10 @@ import { UpdateProductDto } from './dtos/request/updateProduct.dto';
 import { Product } from 'src/entities/product.entity';
 import { PageDto } from './dtos/response/page.dto';
 import { Http } from 'winston/lib/winston/transports';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from 'src/guard/roles.decorator';
+import { Role } from 'src/entities/role.enum';
+import { RolesGuard } from 'src/guard/roles.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -35,6 +40,26 @@ export class ProductsController {
       message: 'Lấy danh sách sản phẩm thành công',
       status_code: HttpStatus.OK,
       data,
+    };
+  }
+
+  /**
+   *  Lấy danh sách sản phẩm cho admin
+   * @param page 
+   * @param limit 
+   * @returns Trả về danh sách sản phẩm
+   */
+  @Get('/admin')
+  @Roles([Role.ADMIN])
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async findAllByAdmin(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return {
+      message: 'Lấy danh sách sản phẩm thành công',
+      status_code: HttpStatus.OK,
+      data: await this.productsService.findAllByAdmin(page, limit),
     };
   }
 

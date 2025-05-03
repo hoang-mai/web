@@ -1,3 +1,11 @@
 @import "tailwindcss";
 
+:root {
+  --color-primary: #ffd400;
+  --color-secondary: #ffe14c;
+  --color-tertiary: #fff6d8;
+}
 
+button{
+  cursor: pointer;
+}
