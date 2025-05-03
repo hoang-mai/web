@@ -14,7 +14,7 @@ import { PushNotificationModule } from './modules/push_notification/push_notific
 import { PostModule } from './modules/post/post.module';
 import { ReviewModule } from './modules/review/review.module';
 import { ReviewCommentModule } from './modules/review_comment/review_comment.module';
-
+import { DatabaseModule } from './database/database.module';
 import { join } from 'path';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 
@@ -48,6 +48,7 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
     ReviewModule,
     ReviewCommentModule,
     StatisticsModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
