@@ -65,7 +65,7 @@ const Login = () => {
       if (isLogin) {
         // 🟡 Gọi hàm login từ auth.api
         const data = await login(formData.email, formData.password);
-        sessionStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("access_token", data.access_token);
         navigate("/"); // Chuyển hướng về trang chính sau khi đăng nhập thành công
         alert("Đăng nhập thành công!");
 
