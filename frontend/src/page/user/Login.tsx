@@ -1,9 +1,29 @@
 import { useState, useEffect } from "react";
-import { login, register, checkToken } from "../../services/login_register";
+import { checkToken } from "../../services/checkToken";
+import { post } from "../../services/callApi"; 
+import { loginRoute,registerRoute } from "@/services/api";
 import { useNavigate } from "react-router-dom";
+
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const login = async (email: string, password: string) => {
+    const response = await post(loginRoute, { email, password });
+    return response.data.data; // chứa access_token
+  };
+
+   const register = async (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    phone: string;
+    address: string;
+  }) => {
+    const response = await post(registerRoute, data);
+    return response.data;
+  };
+  
 
   // Form state dùng chung
   const [formData, setFormData] = useState({
@@ -26,8 +46,8 @@ const Login = () => {
     if (token) {
       checkToken(token)
         .then((res) => {
-          if (res) {
-            navigate("/"); // Chuyển hướng về trang chính nếu token hợp lệ
+          if (res.valid) {
+            navigate("/userdetail"); // Chuyển hướng về trang chính nếu token hợp lệ
           } else {
             sessionStorage.removeItem("access_token"); // Xóa token nếu không hợp lệ
           }

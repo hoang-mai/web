@@ -21,3 +21,7 @@ export const put = (path: string, body: object, params?: Record<string, any>): P
 export const del = (path: string, params?: Record<string, any>): Promise<AxiosResponse<any, any>> => {
     return axiosInstance.delete(path, { params });
 };
+
+export const patch = (path: string, body: object, params?: Record<string, any>): Promise<AxiosResponse<any, any>> => {
+    return axiosInstance.patch(path, body, { params });
+};
