@@ -25,9 +25,6 @@ export class Product extends BaseEntity {
     @Column({ nullable: true })
     imageUrl: string;
 
-    @Column({ nullable: true })
-    totalRating: number;
-
     @Column({ default: false })
     isDeleted: boolean;
 

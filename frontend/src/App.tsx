@@ -6,6 +6,8 @@ import LoginAdmin from "./page/admin/LoginAdmin";
 import UserDetail from "./page/user/UserDetail";
 import LayoutAdmin from "./page/admin/Layout";
 import HomeAdmin from "./page/admin/Home";
+import Statistics from "./page/admin/Statistics";
+import ProductAdmin from "./page/admin/ProductAdmin";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
       {/* Thêm các route khác ở đây */}
       <Route path="/admin" element={<LayoutAdmin />}>
         <Route index element={<HomeAdmin />} />
+        <Route path="statistics" element={<Statistics/>} />
+        <Route path="products" element={<ProductAdmin />} />
       </Route>
     </Routes>
   );
