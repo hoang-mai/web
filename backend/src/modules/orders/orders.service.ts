@@ -4,12 +4,13 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository,Between,FindOptionsWhere } from 'typeorm';
 import { Order } from 'src/entities/order.entity';
 import { OrderItem } from 'src/entities/order_item.entity';
 import { Product } from 'src/entities/product.entity';
 import { User } from 'src/entities/user.entity';
 import { CreateOrderDto } from './dtos/createOrder.dto';
+import { OrderStatus } from 'src/entities/order_status.enum';
 
 @Injectable()
 export class OrdersService {
@@ -99,7 +100,29 @@ export class OrdersService {
         await this.productRepository.save(product);
       }
     }
-
     await this.orderRepository.remove(order); // cascade deletes orderItems if set up
   }
+
+  async findOrders(
+    userId: number,
+    status: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Order[]> {
+    const where: FindOptionsWhere<Order> = {
+      user: { id: userId },
+      createdAt: Between(startDate, endDate),
+    };
+  
+    if (status.toLowerCase() !== 'all') {
+      where.status = status as OrderStatus;
+    }
+  
+    return this.orderRepository.find({
+      where,
+      relations: ['user', 'orderItems', 'orderItems.product'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+  
 }

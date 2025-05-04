@@ -10,3 +10,6 @@ export const checkTokenRoute = '/auth/checkToken';
 //user
 export const findUserByIdRoute = '/users/:id';
 export const updateUserRoute = '/users/:id';
+
+//orders
+export const findOrdersRoute = '/orders/filter';

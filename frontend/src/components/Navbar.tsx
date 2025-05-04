@@ -7,13 +7,32 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import LocationSelector from './LocationSelector';
 import logo from '../assets/images/logo2.png';
+import { checkToken } from '../services/checkToken';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userName, setUserName] = useState<any>(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = sessionStorage.getItem("access_token");
+      if (!token) return;
+  
+      try {
+        const userData = await checkToken(token);
+        if (userData) {
+          setUserName(userData.payload.firstName+" "+userData.payload.lastName);  
+        }
+      } catch (error) {
+        console.error("Lỗi khi xác thực token:", error);
+      }
+    };
+  
+    fetchUser();
+  }, []);
 
   return (
     <nav className="bg-yellow-400 text-black py-2 px-4 shadow-md font-semibold">
@@ -57,14 +76,28 @@ export default function Navbar() {
 
           {/* Right: User + Cart */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/login"
-              className="flex items-center space-x-1 hover:text-blue-600"
-              onClick={() => navigate('/page/login')}
-            >
-              <UserIcon className="h-5 w-5" />
-              <span>Đăng nhập</span>
-            </Link>
+          {userName ? (
+              <Link
+                to="/userdetail"
+                className="flex items-center space-x-2 hover:text-blue-600"
+                onClick={() => setMenuOpen(false)}
+              >
+                <UserIcon className="h-5 w-5" />
+                <span>{userName}</span>
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center space-x-2 hover:text-blue-600"
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate('/page/login');
+                }}
+              >
+                <UserIcon className="h-5 w-5" />
+                <span>Đăng nhập</span>
+              </Link>
+            )}
             <Link to="/cart" className="flex items-center space-x-1 hover:text-blue-600">
               <ShoppingCartIcon className="h-5 w-5" />
               <span>Giỏ hàng</span>
@@ -84,17 +117,28 @@ export default function Navbar() {
               />
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
             </div>
-            <Link
-              to="/login"
-              className="flex items-center space-x-2 hover:text-blue-600"
-              onClick={() => {
-                setMenuOpen(false);
-                navigate('/page/login');
-              }}
-            >
-              <UserIcon className="h-5 w-5" />
-              <span>Đăng nhập</span>
-            </Link>
+              {userName ? (
+              <Link
+                to="/userdetail"
+                className="flex items-center space-x-2 hover:text-blue-600"
+                onClick={() => setMenuOpen(false)}
+              >
+                <UserIcon className="h-5 w-5" />
+                <span>{userName}</span>
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center space-x-2 hover:text-blue-600"
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate('/page/login');
+                }}
+              >
+                <UserIcon className="h-5 w-5" />
+                <span>Đăng nhập</span>
+              </Link>
+            )}
             <Link
               to="/cart"
               className="flex items-center space-x-2 hover:text-blue-600"
