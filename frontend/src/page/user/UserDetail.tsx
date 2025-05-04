@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { get, patch } from "../../services/callApi";
-import {
-  checkTokenRoute,
-  findUserByIdRoute,
-  updateUserRoute,
-} from "@/services/api";
+import { findUserByIdRoute,updateUserRoute,findOrdersRoute,checkTokenRoute } from "@/services/api";
 import {
   UserIcon,
   MapPinIcon,
@@ -17,37 +13,61 @@ import {
   LockClosedIcon,
 } from "@heroicons/react/24/outline";
 
+import OrderComponent from "@/components/Order";
 const UserDetail = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [editData, setEditData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
-  const [isOrders, setIsOrders] = useState<boolean>(false);
+  const [isOrders, setIsOrders] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [orders, setOrders] = useState<any[]>([]);
+
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(today.getDate() - 7);
+
+  const [filters, setFilters] = useState({
+    status: 'all', 
+    startDate: sevenDaysAgo.toISOString().split('T')[0], 
+    endDate: tomorrow.toISOString().split('T')[0], 
+  });
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+  
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (token) {
       get(checkTokenRoute)
         .then((res) => {
-          const userId = res.data.data.id;
-          const userRoute = findUserByIdRoute.replace(":id", userId);
-          get(userRoute)
-            .then((response) => {
-              setUser(response.data);
-              setEditData(response.data);
-              setLoading(false);
-            })
-            .catch((err) => {
-              toast.error("Failed to fetch user details.");
-              setLoading(false);
-            });
+          if (res) {
+            const userId = res.data.data.id;
+            const userRoute = findUserByIdRoute.replace(":id", userId);
+            get(userRoute)
+              .then((response) => {
+                setUser(response.data);
+                setEditData(response.data);
+                handleFindOrders(response.data.id); // Fetch orders for the user
+                setLoading(false);
+              })
+              .catch((err) => {
+                toast.error("Failed to fetch user details.");
+                setLoading(false);
+              });
+          } else {
+            toast.error("Token is not valid!");
+            navigate("/login");
+          }
         })
         .catch(() => {
-          localStorage.removeItem("access_token");
           toast.error("Error checking token.");
           navigate("/login");
           setLoading(false);
@@ -59,6 +79,26 @@ const UserDetail = () => {
     }
   }, [navigate]);
 
+  const handleFindOrders = async (id:number) => {
+    try {
+      const response = await get(findOrdersRoute, {
+        userId: id, // Flat params object
+        status:filters.status,
+        start:filters.startDate,
+        end:filters.endDate,
+      });
+      // Check if response contains orders
+      if (response.data && Array.isArray(response.data)) {
+        setOrders(response.data);
+      } else {
+        toast.error('Không tìm thấy đơn hàng!');
+      }
+    } catch (error) {
+      toast.error('Có lỗi xảy ra khi lấy danh sách đơn hàng!');
+      console.error('Error fetching orders:', error);
+    }
+  };
+  
   const handleUpdate = async () => {
     // Kiểm tra xem mật khẩu mới và xác nhận mật khẩu có khớp không
     if (newPassword && newPassword !== confirmPassword) {
@@ -94,15 +134,25 @@ const UserDetail = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
+  const handleCancelOrder = (orderId: string) => {
+    // Update the status for the given orderId to 'canceled'
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order.id === orderId ? { ...order, status: "canceled" } : order
+      )
+    );
+    console.log(`Order ID: ${orderId} has been canceled.`);
+  };
+  
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row p-4 gap-4 max-w-6xl">
+    <div className="min-h-screen flex flex-col lg:flex-row p-4 gap-4 max-w-6xl lg:ml-15">
       {/* Sidebar */}
-      <div className="w-full lg:w-1/4 bg-white p-4 rounded-lg shadow-sm">
+      <div className="w-full lg:w-1/4 bg-white p-4 rounded-lg shadow-sm ">
         <div className="text-center">
           <div className="w-24 h-24 mx-auto rounded-full bg-gray-300 mb-2 overflow-hidden">
             <img
-              src="https://i.imgur.com/padyuTG_d.png?maxwidth=520&shape=thumb&fidelity=high"
+              src={user?.imageUrl || "https://via.placeholder.com/150"}
               alt="avatar"
             />
           </div>
@@ -136,7 +186,7 @@ const UserDetail = () => {
         </div>
         <button
           onClick={() => {
-            sessionStorage.removeItem("access_token");
+            localStorage.removeItem("access_token");
             navigate("/login");
           }}
           className="mt-6 w-full text-center text-red-600 border border-red-500 px-3 py-2 rounded hover:bg-red-50"
@@ -154,7 +204,62 @@ const UserDetail = () => {
         {loading ? (
           <div className="flex justify-center">Đang tải dữ liệu...</div>
         ) : isOrders ? (
-          <p>Hiện chưa có đơn hàng nào được hiển thị.</p>
+        <div>
+        <div className="mb-4 flex flex-col md:flex-row gap-4 items-center">
+          <input
+            type="date"
+            name="startDate"
+            value={filters.startDate}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1"
+          />
+          <input
+            type="date"
+            name="endDate"
+            value={filters.endDate}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1"
+          />
+          <select
+            name="status"
+            value={filters.status}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1"
+          >
+            <option value="all">Tất cả</option>
+            <option value="pending">Chờ xác nhận</option>
+            <option value="confirmed">Đã xác nhận</option>
+            <option value="shipping">Đang giao</option>
+            <option value="delivered">Đã giao</option>
+            <option value="canceled">Đã hủy</option>
+            <option value="returned">Hoàn trả</option>
+          </select>
+          <button
+            onClick={() => handleFindOrders(user.id)}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Lọc
+          </button>
+        </div>
+        <div>
+            {orders.length===0?
+             <div className="text-center text-gray-500 py-4">
+             <p>Không tìm thấy đơn hàng nào.</p>
+             <button
+               onClick={() => navigate("/")}
+               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+             >
+               Về trang chủ
+             </button>
+           </div>
+            :orders.map((order) => (
+              <div className="mb-4" key={order.id}> 
+              <OrderComponent key={order.id} order={order} onCancelOrder={handleCancelOrder}/>
+              </div>
+            ))}
+          </div>
+        </div>
+        
         ) : (
           <div className="space-y-5">
             {/* Hiển thị thông tin hoặc form chỉnh sửa */}
@@ -190,7 +295,7 @@ const UserDetail = () => {
                     name="address"
                     value={editData.address || ""}
                     onChange={handleInputChange}
-                    className="ml-7 border rounded px-3 py-1 w-full"
+                    className="ml-7 border rounded px-3 py-1 w-3/4"
                   />
                 </div>
 
@@ -203,7 +308,7 @@ const UserDetail = () => {
                     name="email"
                     value={editData.email}
                     onChange={handleInputChange}
-                    className="ml-7 border rounded px-3 py-1 w-full"
+                    className="ml-7 border rounded px-3 py-1 w-1/2"
                   />
                 </div>
 
@@ -216,35 +321,10 @@ const UserDetail = () => {
                     name="phone"
                     value={editData.phone || ""}
                     onChange={handleInputChange}
-                    className="ml-7 border rounded px-3 py-1 w-full"
+                    className="ml-7 border rounded px-3 py-1 w-1/4"
                   />
                 </div>
-
-                {/* Mật khẩu */}
-                <div>
-                  <label className="flex items-center gap-2 font-semibold text-gray-700">
-                    <LockClosedIcon className="w-5 h-5" /> Mật khẩu
-                  </label>
-                  <div className="relative ml-7 w-1/2">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value="**********"
-                      readOnly
-                      className="w-full pr-10 border border-gray-300 rounded px-3 py-1.5 bg-gray-100"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute top-1/2 right-2 -translate-y-1/2"
-                    >
-                      {showPassword ? (
-                        <EyeSlashIcon className="w-5 h-5 text-gray-600" />
-                      ) : (
-                        <EyeIcon className="w-5 h-5 text-gray-600" />
-                      )}
-                    </button>
-                  </div>
-                </div>
+               
                 {/* Mật khẩu mới */}
                 <div>
                   <label className="flex items-center gap-2 font-semibold text-gray-700">
@@ -256,7 +336,7 @@ const UserDetail = () => {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Nhập mật khẩu mới"
-                      className="border rounded px-3 py-1 w-full pr-10"
+                      className="border rounded px-3 py-1 w-1/2 pr-10"
                     />
                   </div>
                 </div>
@@ -272,12 +352,12 @@ const UserDetail = () => {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Xác nhận mật khẩu"
-                      className="border rounded px-3 py-1 w-full pr-10"
+                      className="border rounded px-3 py-1 w-1/2 pr-10"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute top-1/2 right-2 -translate-y-1/2"
+                      className="relative -ml-6 top-1"
                     >
                       {showPassword ? (
                         <EyeSlashIcon className="w-5 h-5 text-gray-600" />

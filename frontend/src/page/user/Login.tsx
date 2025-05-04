@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { checkToken } from "../../services/checkToken";
 import { post } from "../../services/callApi"; 
-import { loginRoute,registerRoute } from "@/services/api";
+import { loginRoute,registerRoute,findUserByIdRoute } from "@/services/api";
 import { useNavigate } from "react-router-dom";
 
 import { get } from "@/services/callApi";
@@ -48,7 +47,7 @@ const Login = () => {
         if (token) {
           get(checkTokenRoute).then((res) => {
             if (res.data.data.role === "user") {
-              navigate("/", { replace: true });
+              navigate("/userdetail", { replace: true });
             } else if (res.data.data.role === "admin") {
               navigate("/admin", { replace: true });
             }
@@ -66,6 +65,8 @@ const Login = () => {
         // 🟡 Gọi hàm login từ auth.api
         const data = await login(formData.email, formData.password);
         localStorage.setItem("access_token", data.access_token);
+       
+       
         navigate("/"); // Chuyển hướng về trang chính sau khi đăng nhập thành công
         alert("Đăng nhập thành công!");
 

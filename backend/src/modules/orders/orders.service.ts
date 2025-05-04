@@ -4,12 +4,13 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository,Between,FindOptionsWhere } from 'typeorm';
 import { Order } from 'src/entities/order.entity';
 import { OrderItem } from 'src/entities/order_item.entity';
 import { Product } from 'src/entities/product.entity';
 import { User } from 'src/entities/user.entity';
 import { CreateOrderDto } from './dtos/createOrder.dto';
+import { OrderStatus } from 'src/entities/order_status.enum';
 
 @Injectable()
 export class OrdersService {
@@ -77,12 +78,25 @@ export class OrdersService {
     return order;
   }
 
-  // ✅ UPDATE (basic fields — customize as needed)
-  async update(id: number, updateData: Partial<Order>): Promise<Order | null> {
+  async update(id: number, updateData: Partial<Order>): Promise<Order> {
     const order = await this.findOne(id);
-    if (!order) throw new NotFoundException(`Order with id ${id} not found`);
-
-    Object.assign(order, updateData);
+    if (!order) {
+      throw new NotFoundException(`Order with id ${id} not found`);
+    }
+  
+    // ❌ Không cho phép cập nhật nếu đơn đã giao hoặc đã hủy
+    if ([OrderStatus.DELIVERED, OrderStatus.CANCELED].includes(order.status)) {
+      throw new BadRequestException(`Cannot update order with status: ${order.status}`);
+    }
+  
+    // ✅ Chỉ cập nhật các trường hợp lệ
+    const allowedFields: (keyof Order)[] = ['status', 'totalPrice'];
+    for (const key of allowedFields) {
+      if (updateData[key] !== undefined) {
+        (order as any)[key] = updateData[key];
+      }
+    }
+  
     return this.orderRepository.save(order);
   }
 
@@ -99,7 +113,29 @@ export class OrdersService {
         await this.productRepository.save(product);
       }
     }
-
     await this.orderRepository.remove(order); // cascade deletes orderItems if set up
   }
+
+  async findOrders(
+    userId: number,
+    status: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Order[]> {
+    const where: FindOptionsWhere<Order> = {
+      user: { id: userId },
+      createdAt: Between(startDate, endDate),
+    };
+  
+    if (status.toLowerCase() !== 'all') {
+      where.status = status as OrderStatus;
+    }
+  
+    return this.orderRepository.find({
+      where,
+      relations: ['orderItems', 'orderItems.product'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+  
 }

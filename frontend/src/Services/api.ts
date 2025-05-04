@@ -12,7 +12,9 @@ export const checkTokenRoute = '/auth/check-token';
 export const findUserByIdRoute = '/users/:id';
 export const updateUserRoute = '/users/:id';
 
-
+//orders
+export const findOrdersRoute = '/orders/filter';
+export const updateOrderRoute = '/orders/update/:id';
 
 
 //admin
