@@ -115,7 +115,18 @@ export class OrdersService {
     }
     await this.orderRepository.remove(order); // cascade deletes orderItems if set up
   }
+   // ✅ FIND ALL BY USER ID
+   async findAllByUserId(userId: number): Promise<Order[]> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException(`User with id ${userId} not found`);
 
+    return this.orderRepository.find({
+      where: { user: { id: userId } },
+      relations: ['orderItems', 'orderItems.product'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+  
   async findOrders(
     userId: number,
     status: string,

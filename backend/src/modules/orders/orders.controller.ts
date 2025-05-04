@@ -28,6 +28,10 @@ export class OrdersController {
     const endDate = new Date(end);
     return this.ordersService.findOrders(userId, status, startDate, endDate);
   }
+  @Get('all/:userId')
+  async findAllByUserId(@Param('userId') userId: number): Promise<Order[]> {
+    return this.ordersService.findAllByUserId(userId);
+  }
 
   @Get(':id')
   async getOne(@Param('id', ParseIntPipe) id: number): Promise<Order | null> {

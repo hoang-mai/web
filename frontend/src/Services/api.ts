@@ -19,3 +19,5 @@ export const updateOrderRoute = '/orders/update/:id';
 
 //admin
 export const productAdmin='/products/admin';
+export const getUserRoute='/users';
+export const getOrderRoute='/orders/all/:userId';

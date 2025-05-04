@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -45,8 +44,14 @@ export class UsersService {
     return user;
   }
 
-  findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(offset: number, limit: number): Promise<{ data: User[], total: number }> {
+    const users = await this.userRepository.find({
+      skip: offset,
+      take: limit,
+      select: ['id', 'email', 'firstName', 'lastName', 'role','phone','imageUrl','address'],
+    });
+    const total = await this.userRepository.count();
+    return { data: users, total };  // Trả về một đối tượng với dữ liệu và tổng số
   }
 
   async findOne(id: number): Promise<User | null> {

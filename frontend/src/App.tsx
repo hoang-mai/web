@@ -8,6 +8,7 @@ import LayoutAdmin from "./page/admin/Layout";
 import HomeAdmin from "./page/admin/Home";
 import Statistics from "./page/admin/Statistics";
 import ProductAdmin from "./page/admin/ProductAdmin";
+import UserAdmin from "./page/admin/UserAdmin";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route index element={<HomeAdmin />} />
         <Route path="statistics" element={<Statistics/>} />
         <Route path="products" element={<ProductAdmin />} />
+        <Route path="users" element={<UserAdmin />} />
       </Route>
     </Routes>
   );

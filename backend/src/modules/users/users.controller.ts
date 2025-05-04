@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Query 
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../../entities/user.entity';
@@ -27,8 +28,11 @@ export class UsersController {
   @Roles([Role.ADMIN])
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return this.usersService.findAll(page, limit);
   }
   
   @Get(':id')
