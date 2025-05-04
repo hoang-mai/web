@@ -34,7 +34,6 @@ export class UsersService {
   }
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findOneBy({ email });
-
     if(!user) {
       throw new UnauthorizedException('Không tìm thấy người dùng');
     }
@@ -51,8 +50,19 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<User | null> {
-    return this.userRepository.findOneBy({ id });
+    // Tìm người dùng theo id và loại bỏ trường password
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: ['id', 'email', 'firstName', 'lastName', 'role','phone','imageUrl','address'], // Chọn các trường cần thiết, không bao gồm password
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
   }
+
 
   async update(id: number, data: Partial<User>): Promise<any> {
     const result = await this.userRepository.update(id, data);

@@ -7,33 +7,62 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect,useState } from 'react';
+import { useState,useEffect } from 'react';
 import LocationSelector from './LocationSelector';
 import logo from '../assets/images/logo2.png';
-import { checkToken } from '../services/checkToken';
+import { get } from '@/services/callApi';
+import { checkTokenRoute, findUserByIdRoute } from '@/services/api';
+
+
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [userName, setUserName] = useState<any>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+
+  // Hàm lấy thông tin người dùng
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (token) {
+        const tokenRes = await get(checkTokenRoute);
+        const userData = tokenRes.data.data;
+        const userId = userData.id;
+        const userRoute = findUserByIdRoute.replace(":id", userId);
+        const userRes = await get(userRoute);
+        const user = userRes.data;
+
+        setUserName(`${user.firstName} ${user.lastName}`);
+      } else {
+        setUserName(null); // Reset nếu không có token
+      }
+    } catch (err) {
+      console.error("Lỗi khi lấy thông tin người dùng:", err);
+    }
+  };
+
+  // Lấy thông tin người dùng khi component mount
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = sessionStorage.getItem("access_token");
-      if (!token) return;
-  
-      try {
-        const userData = await checkToken(token);
-        if (userData) {
-          setUserName(userData.payload.firstName+" "+userData.payload.lastName);  
-        }
-      } catch (error) {
-        console.error("Lỗi khi xác thực token:", error);
+    fetchUser();
+    
+    // Lắng nghe sự thay đổi trong localStorage (token bị xóa)
+    const handleStorageChange = () => {
+      if (!localStorage.getItem("access_token")) {
+        setUserName(null); // Reset khi token bị xóa
+        navigate("/login", { replace: true }); // Điều hướng tới trang login
       }
     };
-  
-    fetchUser();
-  }, []);
 
+    // Thêm event listener để lắng nghe sự thay đổi trong localStorage
+    window.addEventListener("storage", handleStorageChange);
+
+    // Cleanup khi component unmount
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [navigate]);
+  
+  
   return (
     <nav className="bg-yellow-400 text-black py-2 px-4 shadow-md font-semibold">
       <div className="flex flex-col w-full">

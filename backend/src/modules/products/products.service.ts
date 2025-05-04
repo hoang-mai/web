@@ -71,6 +71,24 @@ export class ProductsService {
     return this.productRepository.save(product);
   }
 
+
+  /**
+   * Lấy danh sách sản phẩm theo trang và số lượng sản phẩm trên mỗi trang bởi admin.
+   * @param page - Số trang hiện tại.
+   * @param limit - Số lượng sản phẩm trên mỗi trang.
+   * Sắp xếp theo thời gian tạo sản phẩm giảm dần.
+   * @returns Danh sách sản phẩm theo trang và số lượng sản phẩm trên mỗi trang.
+   */
+  async findAllByAdmin(page: number, limit: number) {
+    const [data, total] = await this.productRepository.findAndCount({
+      order: { createdAt: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return new PageDto(page, limit, total, data);
+  }
+
   /**
    * Thống kê thông tin chi tiết của một sản phẩm.
    *

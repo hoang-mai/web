@@ -5,7 +5,8 @@ export const pushNotificationNotify = 'push-notification/notify';
 //auth
 export const loginRoute = '/auth/login';
 export const registerRoute = '/auth/register';
-export const checkTokenRoute = '/auth/checkToken';
+export const checkTokenRoute = '/auth/check-token'; 
+
 
 //user
 export const findUserByIdRoute = '/users/:id';
@@ -13,3 +14,8 @@ export const updateUserRoute = '/users/:id';
 
 //orders
 export const findOrdersRoute = '/orders/filter';
+export const updateOrderRoute = '/orders/update/:id';
+
+
+//admin
+export const productAdmin='/products/admin';

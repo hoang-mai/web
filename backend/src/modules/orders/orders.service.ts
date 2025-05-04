@@ -78,12 +78,25 @@ export class OrdersService {
     return order;
   }
 
-  // ✅ UPDATE (basic fields — customize as needed)
-  async update(id: number, updateData: Partial<Order>): Promise<Order | null> {
+  async update(id: number, updateData: Partial<Order>): Promise<Order> {
     const order = await this.findOne(id);
-    if (!order) throw new NotFoundException(`Order with id ${id} not found`);
-
-    Object.assign(order, updateData);
+    if (!order) {
+      throw new NotFoundException(`Order with id ${id} not found`);
+    }
+  
+    // ❌ Không cho phép cập nhật nếu đơn đã giao hoặc đã hủy
+    if ([OrderStatus.DELIVERED, OrderStatus.CANCELED].includes(order.status)) {
+      throw new BadRequestException(`Cannot update order with status: ${order.status}`);
+    }
+  
+    // ✅ Chỉ cập nhật các trường hợp lệ
+    const allowedFields: (keyof Order)[] = ['status', 'totalPrice'];
+    for (const key of allowedFields) {
+      if (updateData[key] !== undefined) {
+        (order as any)[key] = updateData[key];
+      }
+    }
+  
     return this.orderRepository.save(order);
   }
 
@@ -120,7 +133,7 @@ export class OrdersService {
   
     return this.orderRepository.find({
       where,
-      relations: ['user', 'orderItems', 'orderItems.product'],
+      relations: ['orderItems', 'orderItems.product'],
       order: { createdAt: 'DESC' },
     });
   }

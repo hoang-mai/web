@@ -34,18 +34,18 @@ export class OrdersController {
     return this.ordersService.findOne(id);
   }
 
-
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     return this.ordersService.create(createOrderDto);
   }
-  @Patch(':id')
+  @Patch('/update/:id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateData: Partial<Order>, // You can use UpdateOrderDto here if needed
+    @Body() updateData: Partial<Order>, // Nên dùng DTO nếu muốn kiểm soát field
   ): Promise<Order | null> {
     return this.ordersService.update(id, updateData);
   }
+
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.ordersService.delete(id);
