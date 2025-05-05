@@ -11,7 +11,7 @@ export class StatisticsService {
   ) {}
 
   statisticProduct(productId: number) {
-    return this.productsService.statisticProduct(productId);
+    return this.productsService.statisticProductById(productId);
   }
   statisticRevenueProduct(productId: number, year?: number, month?: number) {
     this.productsService.checkProductExists(productId);
