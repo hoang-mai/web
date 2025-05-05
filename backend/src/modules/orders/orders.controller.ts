@@ -7,11 +7,16 @@ import {
   Patch,
   Delete,
   ParseIntPipe,
-  Query 
+  Query,
+  UseGuards
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { Order } from 'src/entities/order.entity';
 import { CreateOrderDto } from './dtos/createOrder.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from 'src/guard/roles.guard';
+import { Role } from 'src/entities/role.enum';
+import { Roles } from 'src/guard/roles.decorator';
 
 @Controller('orders')
 export class OrdersController {
@@ -45,15 +50,18 @@ export class OrdersController {
   @Patch('/update/:id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateData: Partial<Order>, // Nên dùng DTO nếu muốn kiểm soát field
-  ): Promise<Order | null> {
+    @Body() updateData: Partial<Order>,
+  ): Promise<string> {
     return this.ordersService.update(id, updateData);
   }
-
+  
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.ordersService.delete(id);
   }
+
+  @Roles([Role.ADMIN])
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async getAll(): Promise<Order[]> {
     return this.ordersService.findAll();

@@ -28,11 +28,11 @@ interface Order {
 
 interface OrderComponentProps {
   order: Order;
-  onCancelOrder?: (orderId: string) => void;
+  updateStatus?: (orderId: string) => void;
 }
 
 // Order Component
-const OrderComponent: React.FC<OrderComponentProps> = ({ order, onCancelOrder }) => {
+const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -86,7 +86,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, onCancelOrder })
   const handleCancel = async () => {
     if (window.confirm("Bạn có chắc muốn hủy đơn hàng này?")) {
       await cancelOrderApi(order.id); // Gọi API PATCH
-      onCancelOrder?.(order.id); // Gọi callback nếu có
+      updateStatus?.(order.id); // Gọi callback nếu có
       alert("Đã hủy đơn hàng thành công");
       
     }
@@ -114,7 +114,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, onCancelOrder })
             </span>
             <span className="font-semibold text-gray-900">{formatCurrency(order.totalPrice)}</span>
 
-          {onCancelOrder&&(<button
+          {updateStatus&&(<button
             onClick={handleCancel}
             className={`px-3 py-1 text-sm font-medium border rounded transition 
               ${canCancel(order.status)

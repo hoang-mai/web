@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { get, patch } from "../../services/callApi";
-import { findUserByIdRoute,updateUserRoute,findOrdersRoute,checkTokenRoute } from "@/services/api";
+import { findUserByIdRoute,updateUserRoute,findOrdersRoute,checkTokenRoute,updateOrderRoute } from "@/services/api";
 import {
   UserIcon,
   MapPinIcon,
@@ -134,14 +134,13 @@ const UserDetail = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
-  const handleCancelOrder = (orderId: string) => {
-    // Update the status for the given orderId to 'canceled'
+  const handleCancelOrder = async (orderId: string) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
         order.id === orderId ? { ...order, status: "canceled" } : order
       )
     );
-    console.log(`Order ID: ${orderId} has been canceled.`);
+    toast.success("Đơn hàng đã được hủy!");
   };
   
 
@@ -254,7 +253,7 @@ const UserDetail = () => {
            </div>
             :orders.map((order) => (
               <div className="mb-4" key={order.id}> 
-              <OrderComponent key={order.id} order={order} onCancelOrder={handleCancelOrder}/>
+              <OrderComponent key={order.id} order={order} updateStatus={handleCancelOrder}/>
               </div>
             ))}
           </div>

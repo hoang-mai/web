@@ -64,7 +64,7 @@ export class OrdersService {
   // ✅ FIND ALL
   async findAll(): Promise<Order[]> {
     return this.orderRepository.find({
-      relations: ['user', 'orderItems', 'orderItems.product'],
+      relations: [ 'orderItems', 'orderItems.product'],
     });
   }
 
@@ -78,18 +78,16 @@ export class OrdersService {
     return order;
   }
 
-  async update(id: number, updateData: Partial<Order>): Promise<Order> {
+  async update(id: number, updateData: Partial<Order>): Promise<string> {
     const order = await this.findOne(id);
     if (!order) {
       throw new NotFoundException(`Order with id ${id} not found`);
     }
   
-    // ❌ Không cho phép cập nhật nếu đơn đã giao hoặc đã hủy
     if ([OrderStatus.DELIVERED, OrderStatus.CANCELED].includes(order.status)) {
       throw new BadRequestException(`Cannot update order with status: ${order.status}`);
     }
   
-    // ✅ Chỉ cập nhật các trường hợp lệ
     const allowedFields: (keyof Order)[] = ['status', 'totalPrice'];
     for (const key of allowedFields) {
       if (updateData[key] !== undefined) {
@@ -97,7 +95,8 @@ export class OrdersService {
       }
     }
   
-    return this.orderRepository.save(order);
+    await this.orderRepository.save(order);
+    return 'Order updated successfully';
   }
 
   // ✅ DELETE

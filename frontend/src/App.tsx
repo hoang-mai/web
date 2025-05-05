@@ -9,6 +9,7 @@ import HomeAdmin from "./page/admin/Home";
 import Statistics from "./page/admin/Statistics";
 import ProductAdmin from "./page/admin/ProductAdmin";
 import UserAdmin from "./page/admin/UserAdmin";
+import OrderManagement from "./page/admin/OrderAdmin";
 
 function App() {
   return (
@@ -30,6 +31,8 @@ function App() {
         <Route path="statistics" element={<Statistics/>} />
         <Route path="products" element={<ProductAdmin />} />
         <Route path="users" element={<UserAdmin />} />
+        <Route path="orders" element={<OrderManagement />} />
+
       </Route>
     </Routes>
   );
