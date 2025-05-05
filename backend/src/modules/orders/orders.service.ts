@@ -84,7 +84,8 @@ export class OrdersService {
       throw new NotFoundException(`Order with id ${id} not found`);
     }
   
-    if ([OrderStatus.DELIVERED, OrderStatus.CANCELED].includes(order.status)) {
+    // ❌ Không cho phép cập nhật nếu đơn đã giao hoặc đã hủy
+    if ([OrderStatus.DELIVERED, OrderStatus.CANCELLED].includes(order.status)) {
       throw new BadRequestException(`Cannot update order with status: ${order.status}`);
     }
   

@@ -25,7 +25,14 @@ export class Product extends BaseEntity {
     @Column({ nullable: true })
     imageUrl: string;
 
-    @Column({ default: false })
+    @Column({
+        default: false,
+        type: 'tinyint',
+        transformer: {
+          to: (value: boolean) => value ? 1 : 0,
+          from: (value: number) => value === 1
+        }
+      })
     isDeleted: boolean;
 
     @Column({ nullable: true })

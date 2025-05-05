@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  Generated,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -26,7 +25,7 @@ export class Order extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
 
-  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
+  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.SHIPPING })
   status: OrderStatus;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)

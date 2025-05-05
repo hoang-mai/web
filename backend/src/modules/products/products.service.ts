@@ -187,7 +187,6 @@ export class ProductsService {
    * @throws {NotFoundException} - Nếu không tìm thấy sản phẩm với ID đã cho.
    */
   async statisticProductById(productId: number): Promise<StatisticProductDto> {
-    console.log('productId', productId);
     const result: StatisticProductDto | undefined = await this.productRepository
       .createQueryBuilder('product')
       .select('product.id', 'id')
@@ -198,11 +197,16 @@ export class ProductsService {
       .addSelect('product.imageUrl', 'imageUrl')
       .addSelect('product.discount', 'discount')
       .addSelect('product.category', 'category')
+      .addSelect('product.isDeleted', 'isDeleted')
       .addSelect('SUM(orderItem.quantity)', 'quantitySold')
       .addSelect('COUNT(review.rating)', 'totalRating')
       .addSelect('AVG(review.rating)', 'avgRating')
       .addSelect('COUNT(review.id)', 'totalReview')
       .addSelect('SUM(orderItem.quantity * orderItem.price)', 'totalSold')
+      .addSelect("SUM(CASE WHEN order.status = 'shipping' THEN orderItem.quantity ELSE 0 END)", 'quantityPending')
+      .addSelect("SUM(CASE WHEN order.status = 'cancelled' THEN orderItem.quantity ELSE 0 END)", 'quantityCancelled')
+      .addSelect("SUM(CASE WHEN order.status = 'returned' THEN orderItem.quantity ELSE 0 END)", 'quantityReturned')
+      .addSelect("SUM(CASE WHEN order.status = 'delivered' THEN orderItem.quantity ELSE 0 END)", 'quantityDelivered')
       .leftJoin('product.orderItems', 'orderItem')
       .leftJoin('orderItem.order', 'order')
       .leftJoin('product.reviews', 'review')

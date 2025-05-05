@@ -64,11 +64,30 @@ interface Product {
   stock: number;
   isDeleted: boolean;
 }
-
+interface StatisticProduct {
+  id: number;
+  name: string;
+  price: number;
+  stock: number;
+  description: string;
+  imageUrl: string;
+  discount: number;
+  category: string;
+  isDeleted: boolean;
+  totalSold: number;
+  totalRating: number;
+  avgRating: number;
+  totalReview: number;
+  quantitySold: number;
+  quantityDelivered: number;
+  quantityPending: number;
+  quantityCancelled: number;
+  quantityReturned: number;
+}
 interface UpdateProductModalProps {
   open: boolean;
   onClose: React.Dispatch<React.SetStateAction<boolean>>;
-  product: Product;
+  product: Product | StatisticProduct;
   setReload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -80,7 +99,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
   product,
   setReload,
 }) => {
-  const [formData, setFormData] = useState<Product>(product);
+  const [formData, setFormData] = useState<Product | StatisticProduct>(product);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -133,7 +152,8 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
     else if (formData.stock < 0) newErrors.stock = "Số lượng không được âm";
 
     if (formData.discount < 0) newErrors.discount = "Giảm giá không được âm";
-    else if (formData.discount > 100) newErrors.discount = "Giảm giá không được lớn hơn 100%";
+    else if (formData.discount > 100)
+      newErrors.discount = "Giảm giá không được lớn hơn 100%";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

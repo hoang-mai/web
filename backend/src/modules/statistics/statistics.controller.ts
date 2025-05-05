@@ -31,13 +31,12 @@ export class StatisticsController {
   }
 
   @Get('/admin/revenue/product/:productId')
-  statisticRevenueProduct(
+  async statisticRevenueProduct(
     @Param('productId') productId: number,
     @Query('year') year?: number,
     @Query('month') month?: number,
-    @Query('week') week?: number,
   ) {
-    const data = this.statisticsService.statisticRevenueProduct(
+    const data =await this.statisticsService.statisticRevenueProduct(
       productId,
       year,
       month,
