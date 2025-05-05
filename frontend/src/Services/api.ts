@@ -31,3 +31,4 @@ export const statisticRevenueProduct='statistics/admin/revenue/product';
 export const getUserRoute='/users';
 export const getOrderRoute='/orders/all/:userId';
 
+export const getAllOrderRoute='/orders';
