@@ -24,6 +24,7 @@ export const productAdmin='/products/admin';
 export const productStatistic='/products/admin/statistic';
 
 // statistics
+export const statisticRevenue='statistics/admin/revenue';
 export const statisticProductDetail='statistics/admin/product';
 export const statisticRevenueProduct='statistics/admin/revenue/product';
 

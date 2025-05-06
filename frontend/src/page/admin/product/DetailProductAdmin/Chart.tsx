@@ -44,7 +44,6 @@ const Chart = () => {
   // Fetch chart data
   useEffect(() => {
     const fetchRevenueData = async () => {
-      setIsLoading(true);
 
       let url = `${statisticRevenueProduct}/${id}`;
       const params = [];

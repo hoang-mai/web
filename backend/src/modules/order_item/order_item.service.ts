@@ -69,10 +69,7 @@ export class OrderItemsService {
       .where('orderItem.product_id = :productId', { productId });
 
     if (month && year) {
-      qb.addSelect(
-        'FLOOR((DAY(orderItem.createdAt) - 1) / 7) + 1',
-        'week',
-      )
+      qb.addSelect('FLOOR((DAY(orderItem.createdAt) - 1) / 7) + 1', 'week')
         .addSelect('MONTH(orderItem.createdAt)', 'month')
         .addSelect('YEAR(orderItem.createdAt)', 'year')
         .andWhere('MONTH(orderItem.createdAt) = :month', { month })
@@ -98,4 +95,6 @@ export class OrderItemsService {
 
     return data;
   }
+
+  
 }
