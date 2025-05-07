@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+// frontend/src/App.tsx
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./page/user/Home";
 import Login from "./page/user/Login";
 import Layout from "./page/user/Layout";
@@ -11,32 +12,29 @@ import ProductAdmin from "./page/admin/product/ProductAdmin";
 import DetailProductAdmin from "./page/admin/product/DetailProductAdmin";
 import UserAdmin from "./page/admin/UserAdmin";
 import OrderManagement from "./page/admin/OrderAdmin";
+import ProductList from "./components/ProductList";
 
 function App() {
   return (
-    /* Thêm router vào đây */
-    <Routes>
-      {/* Đường dẫn cho người dùng */}
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/userdetail" element={<UserDetail />} />
-      </Route>
+      <Routes>
+        {/* Đường dẫn cho người dùng*/}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="userdetail" element={<UserDetail />} />
+        </Route>
 
-
-      {/* Đường dẫn cho admin */}
+      {/* Đường dẫn cho admin*/}
       <Route path="/admin/login" element={<LoginAdmin />} />
-      {/* Thêm các route khác ở đây */}
-      <Route path="/admin" element={<LayoutAdmin />}>
-        <Route index element={<HomeAdmin />} />
-        <Route path="statistics" element={<Statistics/>} />
-        <Route path="products" element={<ProductAdmin />} />
-        <Route path="products/:id" element={<DetailProductAdmin />} />
-        <Route path="users" element={<UserAdmin />} />
-        <Route path="orders" element={<OrderManagement />} />
-
-      </Route>
-    </Routes>
+        <Route path="/admin" element={<LayoutAdmin />}>
+          <Route index element={<HomeAdmin />} />
+          <Route path="statistics" element={<Statistics />} />
+          <Route path="products" element={<ProductAdmin />} />
+          <Route path="products/:id" element={<DetailProductAdmin />} />
+          <Route path="users" element={<UserAdmin />} />
+          <Route path="orders" element={<OrderManagement />} />
+        </Route>
+      </Routes>
   );
 }
 export default App;

@@ -1,3 +1,4 @@
+//product.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { CartProduct } from "./cart_product.entity";
