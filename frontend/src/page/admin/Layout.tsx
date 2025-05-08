@@ -5,10 +5,11 @@ import { Box, Modal } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router";
 import LeftSideBar from "./LeftSideBar";
+import { useSessionExpired } from "@/store/useSessionExpired";
 
 function LayoutAdmin() {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const { isSessionExpired, hideSessionExpiredModal } = useSessionExpired();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
@@ -18,9 +19,6 @@ function LayoutAdmin() {
           navigate("/", { replace: true });
         }
       })
-      .catch(() => {
-        setShowModal(true);
-      });
   }, []);
 
   if (!localStorage.getItem("access_token")) {
@@ -30,8 +28,8 @@ function LayoutAdmin() {
   return (
     <>
       <Modal
-        open={showModal}
-        onClose={() => setShowModal(false)}
+        open={isSessionExpired}
+        onClose={hideSessionExpiredModal}
         className="flex items-center justify-center "
       >
         <Box className="flex items-center justify-center outline-none">
@@ -41,6 +39,8 @@ function LayoutAdmin() {
             <button
               onClick={() => {
                 localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
+                hideSessionExpiredModal();
                 navigate("/admin/login", { replace: true });
               }}
               className="mt-6 px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] text-black rounded"

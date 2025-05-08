@@ -6,6 +6,7 @@ export const pushNotificationNotify = 'push-notification/notify';
 export const loginRoute = '/auth/login';
 export const registerRoute = '/auth/register';
 export const checkTokenRoute = '/auth/check-token'; 
+export const refreshTokenRoute = '/auth/refresh-token';
 
 
 //user
