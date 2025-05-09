@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 
 import { TokenExpiredError } from 'jsonwebtoken'; // cần nếu muốn phân loại rõ
+import { User } from 'src/entities/user.entity';
 
 
 @Injectable()
@@ -48,6 +49,16 @@ refreshToken(token: string) {
     throw new UnauthorizedException('Refresh token không hợp lệ');
   }
 }
-
+  /**
+   * Đổi mật khẩu cho người dùng
+   * @param userId id của người dùng
+   * @param newPassword mật khẩu mới
+   * @param oldPassword mật khẩu cũ
+   * @throws UnauthorizedException nếu mật khẩu cũ không đúng
+   * @returns Promise<void> 
+   */
+  async changePassword(userId: number, newPassword: string , oldPassword : string): Promise<void> {
+    return this.usersService.changePassword(userId, newPassword, oldPassword);
+  }
   
 }

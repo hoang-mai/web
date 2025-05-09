@@ -14,6 +14,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/request/login.dto';
 import { RefreshTokenDto } from './dto/request/refreshToken.dto';
+import { ChangePasswordDto } from './dto/request/changePassword.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -65,6 +66,18 @@ export class AuthController {
       status_code: HttpStatus.OK,
       message: 'Làm mới token thành công',
       data: this.authService.refreshToken(refreshTokenDto.refreshToken),
+    };
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  async changePassword(@Request() req: any, @Body() body: ChangePasswordDto) {
+    const userId = req.user.id;
+    const newPassword = body.newPassword;
+    const oldPassword = body.oldPassword;
+    await this.authService.changePassword(userId, newPassword, oldPassword);
+    return {
+      status_code: HttpStatus.OK,
+      message: 'Đổi mật khẩu thành công',
     };
   }
 }

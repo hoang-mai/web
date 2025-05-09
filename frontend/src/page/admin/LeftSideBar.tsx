@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+
+import { Link, NavLink, useLocation } from "react-router-dom";
 import {
   Dashboard,
   Inventory2,
@@ -10,6 +10,7 @@ import {
   MenuOpen,
   Menu,
 } from "@mui/icons-material";
+import { useProfileAdmin } from "@/store/useProfileAdmin";
 
 interface NavItem {
   label: string;
@@ -24,6 +25,7 @@ interface LeftSideBarProps {
 
 const LeftSideBar = ({ collapsed, setCollapsed }: LeftSideBarProps) => {
   const location = useLocation();
+  const admin = useProfileAdmin((state) => state.admin);
 
   const navItems: NavItem[] = [
     { label: "Trang chủ", path: "/admin", icon: <Dashboard /> },
@@ -46,7 +48,9 @@ const LeftSideBar = ({ collapsed, setCollapsed }: LeftSideBarProps) => {
     >
       <div className="flex items-center justify-between p-4 border-b">
         {!collapsed && (
-          <h2 className="text-xl font-bold text-gray-800 overflow-hidden  whitespace-nowrap">Quản trị viên</h2>
+          <h2 className="text-xl font-bold text-gray-800 overflow-hidden  whitespace-nowrap">
+            Quản trị viên
+          </h2>
         )}
         <button
           onClick={toggleSidebar}
@@ -75,7 +79,9 @@ const LeftSideBar = ({ collapsed, setCollapsed }: LeftSideBarProps) => {
                     {item.icon}
                   </div>
                   {!collapsed && (
-                    <span className="font-medium whitespace-nowrap overflow-hidden ">{item.label}</span>
+                    <span className="font-medium whitespace-nowrap overflow-hidden ">
+                      {item.label}
+                    </span>
                   )}
                 </NavLink>
               </li>
@@ -90,10 +96,14 @@ const LeftSideBar = ({ collapsed, setCollapsed }: LeftSideBarProps) => {
             <span className="font-bold text-black">Q</span>
           </div>
           {!collapsed && (
-            <div className="ml-3">
-              <p className="font-medium text-gray-800">Quản trị viên</p>
-              <p className="text-xs text-gray-500">admin@example.com</p>
-            </div>
+            <Link to="/admin/profile">
+              <div className="ml-3 cursor-pointer">
+                <p className="font-medium text-gray-800">Quản trị viên</p>
+                <p className="text-xs text-gray-500">
+                  {admin?.email ?? "admin@example.com"}
+                </p>
+              </div>
+            </Link>
           )}
         </div>
       </div>
