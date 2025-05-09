@@ -9,7 +9,7 @@ import LayoutAdmin from "./page/admin/Layout";
 import HomeAdmin from "./page/admin/Home";
 import Statistics from "./page/admin/Statistics";
 import ProductAdmin from "./page/admin/product/ProductAdmin";
-import DetailProductAdmin from "./page/admin/product/DetailProductAdmin";
+import DetailProductAdmin from "./page/admin/product/DetailProductAdmin/DetailProductAdmin";
 import UserAdmin from "./page/admin/UserAdmin";
 import OrderManagement from "./page/admin/OrderAdmin";
 import ProductList from "./components/ProductList";

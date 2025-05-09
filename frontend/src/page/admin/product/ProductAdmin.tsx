@@ -142,7 +142,7 @@ function ProductAdmin() {
   const [openCreate, setOpenCreate] = useState(false);
 
   // Reload state
-  const [reload, setReload] = useState(true);
+  const [reload, setReload] = useState(false);
 
   // Handle sorting change
   const handleRequestSort = (property: SortField) => {

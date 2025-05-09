@@ -13,6 +13,7 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/request/login.dto';
+import { RefreshTokenDto } from './dto/request/refreshToken.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -56,6 +57,14 @@ export class AuthController {
         email: req.user.email,
         role: req.user.role,
       },
+    };
+  }
+  @Post('refresh-token')
+   refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return {
+      status_code: HttpStatus.OK,
+      message: 'Làm mới token thành công',
+      data: this.authService.refreshToken(refreshTokenDto.refreshToken),
     };
   }
 }

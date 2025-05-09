@@ -7,14 +7,17 @@ export class StatisticProductDto {
   price: number;
   stock: number;
   description: string;
-
-  @Expose({ name: 'image_url' })
   imageUrl: string;
   discount: number;
   category: Category;
+  isDeleted: boolean;
   totalSold: number;
   totalRating: number;
   avgRating: number;
   totalReview: number;
   quantitySold: number;
+  quantityDelivered: number;
+  quantityPending: number;
+  quantityCancelled: number;
+  quantityReturned: number;
 }

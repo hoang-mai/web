@@ -372,7 +372,7 @@ export class DatabaseSeederService {
       {
         user: users[2], // Jane
         totalPrice: 1999.99, // 1x MacBook Pro
-        status: OrderStatus.PENDING,
+        status: OrderStatus.SHIPPING,
       },
     ]);
 

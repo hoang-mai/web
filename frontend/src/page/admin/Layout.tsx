@@ -21,7 +21,7 @@ function LayoutAdmin() {
       .catch(() => {
         setShowModal(true);
       });
-  }, [navigate]);
+  }, []);
 
   if (!localStorage.getItem("access_token")) {
     return <Navigate to="/admin/login" replace={true} />;
