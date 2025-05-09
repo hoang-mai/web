@@ -1,3 +1,4 @@
+// File: backend/src/modules/products/products.controller.ts
 import {
   Controller,
   Get,

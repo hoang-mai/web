@@ -1,3 +1,4 @@
+// File: backend/src/main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
@@ -24,8 +25,6 @@ async function bootstrap() {
     }),
   );
   
-
-
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Thế giới di động API')

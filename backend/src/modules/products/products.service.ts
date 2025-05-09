@@ -1,3 +1,4 @@
+// File: backend/src/modules/products/products.service.ts
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';

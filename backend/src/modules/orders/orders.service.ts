@@ -39,9 +39,7 @@ export class OrdersService {
     const orderItems: OrderItem[] = [];
 
     for (const item of items) {
-      const product = await this.productRepository.findOne({
-        where: { id: item.productId },
-      });
+      const product = await this.productRepository.findOne({ where: { id: item.productId, isDeleted: false } });
       if (!product)
         throw new NotFoundException(
           `Product with id ${item.productId} not found`,
@@ -58,8 +56,9 @@ export class OrdersService {
         product,
         quantity: item.quantity,
         order,
+        price: product.price* item.quantity * product.discount ,
       });
-
+      order.totalPrice += product.price * item.quantity * product.discount;
       orderItems.push(orderItem);
     }
 
