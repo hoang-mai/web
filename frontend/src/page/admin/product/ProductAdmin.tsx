@@ -77,7 +77,7 @@ interface Product {
   id: number;
   name: string;
   price: string;
-  description: string;
+  description: string | null;
   imageUrl: string;
   createdAt: string;
   updatedAt: string;
@@ -682,7 +682,7 @@ function ProductAdmin() {
                             noWrap
                             sx={{ maxWidth: 200, display: "block" }}
                           >
-                            {product.description.substring(0, 50)}...
+                            {product.description?.substring(0, 50) ?? "Không có mô tả"}...
                           </Typography>
                         </Box>
                       </Box>

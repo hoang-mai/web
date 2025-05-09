@@ -55,7 +55,7 @@ interface Product {
   id: number;
   name: string;
   price: string;
-  description: string;
+  description: string | null;
   imageUrl: string;
   createdAt: string;
   updatedAt: string;
@@ -69,7 +69,7 @@ interface StatisticProduct {
   name: string;
   price: number;
   stock: number;
-  description: string;
+  description: string | null;
   imageUrl: string;
   discount: number;
   category: string;
@@ -361,7 +361,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
               fullWidth
               label="Mô Tả"
               name="description"
-              value={formData.description || ""}
+              value={formData.description ?? ""}
               onChange={handleInputChange}
               variant="outlined"
               multiline
