@@ -18,7 +18,16 @@ export const updateOrderRoute = '/orders/update/:id';
 
 
 //admin
+
+//product
 export const productAdmin='/products/admin';
+export const productStatistic='/products/admin/statistic';
+
+// statistics
+export const statisticProductDetail='statistics/admin/product';
+export const statisticRevenueProduct='statistics/admin/revenue/product';
+
+// user
 export const getUserRoute='/users';
 export const getOrderRoute='/orders/all/:userId';
 export const getAllOrderRoute='/orders';

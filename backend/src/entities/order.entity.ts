@@ -31,4 +31,8 @@ export class Order extends BaseEntity {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   orderItems: OrderItem[];
+
+  @Column({ type: 'varchar', nullable: false, default: ' ' })
+  address: string;
+
 }

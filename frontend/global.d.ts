@@ -6,5 +6,6 @@ declare global {
     message: string;
     timestamp: Date;
     path: string;
+    errors: any[];
   }
 }

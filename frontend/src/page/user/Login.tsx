@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { get } from "@/services/callApi";
 import { checkTokenRoute } from "@/services/api";
+import { toast } from "react-toastify";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ const Login = () => {
        
        
         navigate("/"); // Chuyển hướng về trang chính sau khi đăng nhập thành công
-        alert("Đăng nhập thành công!");
+        toast.success("Đăng nhập thành công!");
 
       } else {
         // 🔵 Gọi hàm register từ auth.api
@@ -80,11 +81,11 @@ const Login = () => {
           phone: formData.phone,
           address: formData.address,
         });
-        alert("Đăng ký thành công!");
+        toast.success("Đăng ký thành công!");
         setIsLogin(true);
       }
     } catch (err: any) {
-      alert(err?.response?.data?.message || "Có lỗi xảy ra khi gửi request");
+     toast.error(err.response.data.message);
     }
   };
   return (

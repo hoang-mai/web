@@ -5,6 +5,7 @@ import { LoggerMiddleware } from './middleware/logger/logger.middleware';
 import { winstonLogger } from './logger/winston.logger';
 import { HttpExceptionFilter } from './exceptions/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
 
   // Create the app with the logger
@@ -15,6 +16,14 @@ async function bootstrap() {
 
   // Add the global filter
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
+  
 
 
   // Swagger
