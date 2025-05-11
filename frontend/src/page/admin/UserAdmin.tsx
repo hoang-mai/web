@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { get } from '@/services/callApi';
 import { getUserRoute, getOrderRoute } from '@/services/api';
 import OrderComponent from "@/components/Order";
+import { toast } from 'react-toastify';
 
 interface User {
   id: number;
@@ -38,6 +39,7 @@ const UserAdmin: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to fetch users:', error);
+      toast.error('Failed to fetch users');
     }
     setLoading(false);
   };
