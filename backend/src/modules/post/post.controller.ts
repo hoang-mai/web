@@ -7,6 +7,7 @@ import {
   Delete,
   Request,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -14,6 +15,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from 'src/guard/roles.guard';
 import { Role } from 'src/entities/role.enum';
 import { Roles } from 'src/guard/roles.decorator';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 export class PostController {
@@ -31,15 +33,15 @@ export class PostController {
     return this.postService.findAll();
   }
 
-  @Get(':id')
+  @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([Role.ADMIN])
   update(
     @Param('id') id: number,
-    @Body() createPostDto: CreatePostDto,
+    @Body() updatePostDto: UpdatePostDto,
     @Request() req,
   ) {
-    return this.postService.update(+id, createPostDto, req.user);
+    return this.postService.update(+id, updatePostDto, req.user);
   }
 
   @Delete(':id')

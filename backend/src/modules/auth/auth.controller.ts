@@ -13,14 +13,19 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/request/login.dto';
+import { RefreshTokenDto } from './dto/request/refreshToken.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto) {
+    return {
+      status_code: HttpStatus.CREATED,
+      message: 'Đăng ký thành công',
+      data: await this.authService.register(registerDto),
+    };
   }
 
   @UseGuards(LocalAuthGuard)
@@ -33,7 +38,6 @@ export class AuthController {
       data: this.authService.login(req.user),
     };
   }
-
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
@@ -52,6 +56,14 @@ export class AuthController {
         email: req.user.email,
         role: req.user.role,
       },
+    };
+  }
+  @Post('refresh-token')
+  refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return {
+      status_code: HttpStatus.OK,
+      message: 'Làm mới token thành công',
+      data: this.authService.refreshToken(refreshTokenDto.refreshToken),
     };
   }
 }

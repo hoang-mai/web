@@ -7,13 +7,13 @@ import { checkTokenRoute } from "@/services/api";
 
 function Layout() {
     const navigate = useNavigate();
-    
     useEffect(() => {
         get(checkTokenRoute)
           .then((res) => {
             if (res.data.data.role === "admin") {
               navigate("/admin", { replace: true });
             }
+ 
           });
     }, [navigate]);
     return (

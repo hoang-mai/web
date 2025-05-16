@@ -9,23 +9,24 @@ import {
 import { Role } from 'src/entities/role.enum';
 
 export class RegisterDto {
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Họ phải là một chuỗi' })
+  @IsNotEmpty({ message: 'Họ không được để trống' })
   @ApiProperty({ description: 'The first name of the user', example: 'John' })
   firstName: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Tên phải là một chuỗi' })
+  @IsNotEmpty({ message: 'Tên không được để trống' })
   @ApiProperty({ description: 'The last name of the user', example: 'Doe' })
   lastName: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'Email không hợp lệ' })
+  @IsString({ message: 'Email phải là một chuỗi' })
   @IsNotEmpty()
   @ApiProperty({ description: 'email', example: 'user@example.com' })
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Mật khẩu phải là một chuỗi' })
+  @IsNotEmpty({ message: 'Mật khẩu không được để trống' })
   @ApiProperty({
     description: 'The password of the user',
     example: 'password123',

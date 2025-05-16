@@ -47,6 +47,8 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
     PostModule,
     ReviewModule,
     ReviewCommentModule,
+    StatisticsModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

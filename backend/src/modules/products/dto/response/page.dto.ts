@@ -13,6 +13,6 @@ export class PageDto {
         this.total = total;
         this.data = data;
         this.hasNextPage = (page + 1) * limit < total;
-        this.hasPreviousPage = page > 0;
+        this.hasPreviousPage = page > 1;
     }
 }

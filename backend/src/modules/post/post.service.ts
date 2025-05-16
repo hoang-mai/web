@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostService {
@@ -17,10 +18,12 @@ export class PostService {
   ) {}
 
   async create(createPostDto: CreatePostDto, admin: User) {
+    console.log(createPostDto);
     const post = this.postRepository.create({
       ...createPostDto,
       author: admin,
     });
+    console.log(post);
     return await this.postRepository.save(post);
   }
 
@@ -30,7 +33,7 @@ export class PostService {
     });
   }
 
-  async update(id: number, createPostDto: CreatePostDto, admin: User) {
+  async update(id: number, updatePostDto: UpdatePostDto, admin: User) {
     const post = await this.postRepository.findOneBy({ id });
     if (!post) {
       throw new NotFoundException('Bài viết không tồn tại');
@@ -40,7 +43,7 @@ export class PostService {
       throw new ForbiddenException('Bạn không có quyền sửa bài viết này');
     }
 
-    Object.assign(post, createPostDto);
+    Object.assign(post, updatePostDto);
     return await this.postRepository.save(post);
   }
 

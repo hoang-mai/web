@@ -3,7 +3,14 @@
 :root {
   --color-primary: #ffd400;
   --color-secondary: #ffe14c;
-  --color-tertiary: #fff6d8;
+  --color-tertiary: #ffe180;
+  --color-quaternary: #fff3cd;
+  --color-quinary: #fffaeb;
+
+  --color-success: #4caf50;
+  --color-error: #f44336;
+  --color-warning: #ff9800;
+  --color-info: #2196f3;
 }
 
 button{
