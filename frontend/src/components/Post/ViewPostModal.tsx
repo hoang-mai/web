@@ -29,6 +29,10 @@ const ViewPostModal: React.FC<ViewPostModalProps> = ({
           width: 500,
           maxHeight: "90vh",
           overflowY: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
           boxShadow: 24,
         }}
       >
@@ -40,8 +44,8 @@ const ViewPostModal: React.FC<ViewPostModalProps> = ({
           src={post.imgUrl}
           alt={post.title}
           sx={{
-            width: 250,
-            height: 250,
+            width: 400,
+            height: 400,
             objectFit: "fill",
             borderRadius: 1,
             mb: 2,

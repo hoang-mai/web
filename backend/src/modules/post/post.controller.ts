@@ -21,7 +21,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Post()
+  @Post('/create')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([Role.ADMIN])
   create(@Body() createPostDto: CreatePostDto, @Request() req) {

@@ -16,16 +16,17 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageFile] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSubmit = async () => {
-    if (!title || !description || !imageFile) return;
+    if (!title || !description || !imageUrl) return;
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("image", imageFile);
+    formData.append("imgUrl", imageUrl);
 
     await onSubmit(formData);
     setTitle("");
@@ -36,11 +37,25 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
     onClose();
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImageFile(file);
+      setLoading(true);
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "Posts_imgs");
+      data.append("cloud_name", "dhituyxjn");
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dhituyxjn/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const uploadedImageUrl = await res.json();
+      setImageFile(uploadedImageUrl.url);
       setPreviewUrl(URL.createObjectURL(file));
+      setLoading(false);
     }
   };
 
@@ -95,13 +110,17 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
               overflow: "hidden",
             }}
           >
-            {previewUrl ? (
+            {previewUrl && !loading ? (
               <Box
                 component="img"
                 src={previewUrl}
                 alt="preview"
                 sx={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
+            ) : loading ? (
+              <Typography color="textSecondary" align="center">
+                Đang tải ảnh...
+              </Typography>
             ) : (
               <Typography color="textSecondary" align="center">
                 Chưa có ảnh sản phẩm

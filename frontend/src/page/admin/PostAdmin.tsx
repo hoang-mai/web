@@ -36,7 +36,7 @@ const PostAdmin: React.FC = () => {
 
   const handleCreate = async (formData: FormData) => {
     try {
-      await post(postsRoute, formData);
+      await post(postsRoute + "/create", formData);
       toast.success("Đăng bài viết thành công!");
       fetchPosts();
     } catch {
