@@ -47,7 +47,7 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token không hợp lệ');
     }
   }
-}
+
   /**
    * Đổi mật khẩu cho người dùng
    * @param userId id của người dùng
