@@ -17,7 +17,6 @@ export class UsersService {
   ) {}
 
   async create(data: Partial<User>): Promise<User> {
-
     const existingUser = await this.userRepository.findOneBy({
       email: data.email,
     });
@@ -33,32 +32,52 @@ export class UsersService {
   }
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findOneBy({ email });
-    if(!user) {
+    if (!user) {
       throw new UnauthorizedException('Không tìm thấy người dùng');
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if(!isPasswordValid) {
+    if (!isPasswordValid) {
       throw new UnauthorizedException('Mật khẩu không chính xác');
-
     }
     return user;
   }
 
-  async findAll(offset: number, limit: number): Promise<{ data: User[], total: number }> {
+  async findAll(
+    offset: number,
+    limit: number,
+  ): Promise<{ data: User[]; total: number }> {
     const users = await this.userRepository.find({
       skip: offset,
       take: limit,
-      select: ['id', 'email', 'firstName', 'lastName', 'role','phone','imageUrl','address'],
+      select: [
+        'id',
+        'email',
+        'firstName',
+        'lastName',
+        'role',
+        'phone',
+        'imageUrl',
+        'address',
+      ],
     });
     const total = await this.userRepository.count();
-    return { data: users, total };  // Trả về một đối tượng với dữ liệu và tổng số
+    return { data: users, total }; // Trả về một đối tượng với dữ liệu và tổng số
   }
 
   async findOne(id: number): Promise<User | null> {
     // Tìm người dùng theo id và loại bỏ trường password
     const user = await this.userRepository.findOne({
       where: { id },
-      select: ['id', 'email', 'firstName', 'lastName', 'role','phone','imageUrl','address'], // Chọn các trường cần thiết, không bao gồm password
+      select: [
+        'id',
+        'email',
+        'firstName',
+        'lastName',
+        'role',
+        'phone',
+        'imageUrl',
+        'address',
+      ], // Chọn các trường cần thiết, không bao gồm password
     });
 
     if (!user) {
@@ -67,7 +86,6 @@ export class UsersService {
 
     return user;
   }
-
 
   async update(id: number, data: Partial<User>): Promise<any> {
     const result = await this.userRepository.update(id, data);

@@ -15,4 +15,7 @@ export class CreatePostDto {
     example: 'Một bài viết về NestJS',
   })
   description: string;
+
+  @IsNotEmpty({ message: 'Ảnh không được để trống' })
+  imgUrl: string;
 }

@@ -13,10 +13,17 @@ import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ProductsService } from '../products/products.service';
+import { Role } from 'src/entities/role.enum';
+import { Roles } from 'src/guard/roles.decorator';
+import { CreateProductDto } from '../products/dto/request/createProduct.dto';
 
 @Controller('reviews')
 export class ReviewController {
-  constructor(private readonly reviewService: ReviewService) {}
+  constructor(
+    private readonly reviewService: ReviewService,
+    private readonly productService: ProductsService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -24,13 +31,13 @@ export class ReviewController {
     return this.reviewService.create(req.user, createReviewDto);
   }
 
-  @Get('products/:productId')
-  async getByProduct(@Param('productId') productId: number) {
-    return this.reviewService.getReviewsByProduct(productId);
+  @Get('products')
+  async getByProduct(@Body() productInfo: CreateProductDto) {
+    return this.reviewService.getReviewsByProduct(productInfo.name);
   }
-  @Get('products/:productId/stats')
-  getStats(@Param('productId') productId: number) {
-    return this.reviewService.getProductReviewStats(+productId);
+  @Get('products/stats')
+  getStats(@Body() productInfo: CreateProductDto) {
+    return this.reviewService.getProductReviewStats(productInfo.name);
   }
 
   @Get(':id')
@@ -38,18 +45,19 @@ export class ReviewController {
     return this.reviewService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Req() req,
-    @Param('id') id: string,
     @Body() updateReviewDto: UpdateReviewDto,
+    @Param('id') id: number,
   ) {
-    return this.reviewService.update(req.user, +id, updateReviewDto);
+    return this.reviewService.update(+id, req.user.id, updateReviewDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Req() req, @Param('id') id: string) {
-    return this.reviewService.remove(+id, req.user);
+    return this.reviewService.remove(+id, req.user.id);
   }
 }

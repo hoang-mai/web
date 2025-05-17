@@ -17,7 +17,11 @@ export class StatisticsService {
   }
   statisticRevenueProduct(productId: number, year?: number, month?: number) {
     this.productsService.checkProductExists(productId);
-    return this.orderItemsService.statisticRevenueProduct(productId, year, month);
+    return this.orderItemsService.statisticRevenueProduct(
+      productId,
+      year,
+      month,
+    );
   }
 
   statisticRevenue(year?: number, month?: number, week?: number) {

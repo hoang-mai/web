@@ -16,6 +16,10 @@ export class Post extends BaseEntity {
   @Column('text')
   description: string;
 
+  @IsNotEmpty({ message: 'Ảnh không được để trống' })
+  @Column()
+  imgUrl: string;
+
   @ManyToOne(() => User, (user) => user.posts, { eager: true })
   author: User;
 }

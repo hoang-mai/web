@@ -26,7 +26,7 @@ export class AuthController {
       status_code: HttpStatus.CREATED,
       message: 'Đăng ký thành công',
       data: await this.authService.register(registerDto),
-    }
+    };
   }
 
   @UseGuards(LocalAuthGuard)
@@ -39,7 +39,6 @@ export class AuthController {
       data: this.authService.login(req.user),
     };
   }
-
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
@@ -61,7 +60,7 @@ export class AuthController {
     };
   }
   @Post('refresh-token')
-   refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+  refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
     return {
       status_code: HttpStatus.OK,
       message: 'Làm mới token thành công',

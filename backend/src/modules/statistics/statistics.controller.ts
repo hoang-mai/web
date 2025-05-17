@@ -26,7 +26,7 @@ export class StatisticsController {
     return {
       message: 'Lấy chi tiết sản phẩm thành công',
       status_code: 200,
-      data: await this.statisticsService.statisticProduct(productId)
+      data: await this.statisticsService.statisticProduct(productId),
     };
   }
 
@@ -47,7 +47,6 @@ export class StatisticsController {
       data,
     };
   }
-  
 
   @Get('/admin/revenue/product/:productId')
   async statisticRevenueProduct(
@@ -66,5 +65,4 @@ export class StatisticsController {
       data,
     };
   }
-  
 }

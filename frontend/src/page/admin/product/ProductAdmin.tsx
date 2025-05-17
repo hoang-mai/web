@@ -682,7 +682,7 @@ function ProductAdmin() {
                             noWrap
                             sx={{ maxWidth: 200, display: "block" }}
                           >
-                            {product.description?.substring(0, 50) ?? "Không có mô tả"}...
+                            {product.description?.substring(0, 50) ?? "Không có mô tả"}
                           </Typography>
                         </Box>
                       </Box>

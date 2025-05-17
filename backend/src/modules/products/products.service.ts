@@ -204,10 +204,22 @@ export class ProductsService {
       .addSelect('AVG(review.rating)', 'avgRating')
       .addSelect('COUNT(review.id)', 'totalReview')
       .addSelect('SUM(orderItem.quantity * orderItem.price)', 'totalSold')
-      .addSelect("SUM(CASE WHEN order.status = 'shipping' THEN orderItem.quantity ELSE 0 END)", 'quantityPending')
-      .addSelect("SUM(CASE WHEN order.status = 'cancelled' THEN orderItem.quantity ELSE 0 END)", 'quantityCancelled')
-      .addSelect("SUM(CASE WHEN order.status = 'returned' THEN orderItem.quantity ELSE 0 END)", 'quantityReturned')
-      .addSelect("SUM(CASE WHEN order.status = 'delivered' THEN orderItem.quantity ELSE 0 END)", 'quantityDelivered')
+      .addSelect(
+        "SUM(CASE WHEN order.status = 'shipping' THEN orderItem.quantity ELSE 0 END)",
+        'quantityPending',
+      )
+      .addSelect(
+        "SUM(CASE WHEN order.status = 'cancelled' THEN orderItem.quantity ELSE 0 END)",
+        'quantityCancelled',
+      )
+      .addSelect(
+        "SUM(CASE WHEN order.status = 'returned' THEN orderItem.quantity ELSE 0 END)",
+        'quantityReturned',
+      )
+      .addSelect(
+        "SUM(CASE WHEN order.status = 'delivered' THEN orderItem.quantity ELSE 0 END)",
+        'quantityDelivered',
+      )
       .leftJoin('product.orderItems', 'orderItem')
       .leftJoin('orderItem.order', 'order')
       .leftJoin('product.reviews', 'review')

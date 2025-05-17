@@ -8,7 +8,6 @@ import { HttpExceptionFilter } from './exceptions/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
-
   // Create the app with the logger
   const app = await NestFactory.create(AppModule, {
     logger: winstonLogger,
@@ -24,7 +23,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  
+
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Thế giới di động API')

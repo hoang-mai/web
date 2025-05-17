@@ -13,10 +13,6 @@ import { JwtRefreshModule } from './jwt-refresh.module';
 @Module({
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
-  imports: [UsersModule,
-    PassportModule,
-    JwtAccessModule,
-    JwtRefreshModule,
-  ],
+  imports: [UsersModule, PassportModule, JwtAccessModule, JwtRefreshModule],
 })
 export class AuthModule {}

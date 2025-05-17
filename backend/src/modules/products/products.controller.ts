@@ -41,7 +41,7 @@ export class ProductsController {
       message: 'Tạo sản phẩm thành công',
       status_code: HttpStatus.CREATED,
       data: await this.productsService.create(createProductDto),
-    }
+    };
   }
 
   @Get()

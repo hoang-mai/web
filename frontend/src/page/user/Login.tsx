@@ -177,7 +177,6 @@ const Login = () => {
             {isLogin ? "Đăng nhập" : "Đăng ký"}
           </button>
         </form>
-
         <p className="text-center text-sm text-gray-500 mt-4">
           {isLogin ? "Chưa có tài khoản?" : "Đã có tài khoản?"}{" "}
           <button

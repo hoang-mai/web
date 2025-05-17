@@ -12,6 +12,7 @@ import ProductAdmin from "./page/admin/product/ProductAdmin";
 import DetailProductAdmin from "./page/admin/product/DetailProductAdmin/DetailProductAdmin";
 import UserAdmin from "./page/admin/UserAdmin";
 import OrderManagement from "./page/admin/OrderAdmin";
+import PostAdmin from "./page/admin/PostAdmin";
 import ProfileAdmin from "./page/admin/ProfileAdmin";
 import ProductList from "./components/ProductList";
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="products/:id" element={<DetailProductAdmin />} />
         <Route path="users" element={<UserAdmin />} />
         <Route path="orders" element={<OrderManagement />} />
+        <Route path="posts" element={<PostAdmin />} />
         <Route path='profile' element={<ProfileAdmin />} />
       </Route>
     </Routes>

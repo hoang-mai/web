@@ -63,27 +63,34 @@ axiosInstance.interceptors.response.use(
               originalRequest.headers["Authorization"] = "Bearer " + token;
               resolve(axiosInstance(originalRequest));
             },
-            reject:()=> {
+            reject: () => {
               reject(error.response.data);
-            }
+            },
           });
         });
       }
 
       isRefreshing = true;
       const refreshToken = localStorage.getItem("refresh_token");
-      axios.post(import.meta.env.VITE_API_HOST+refreshTokenRoute, {refreshToken}).then((res) => {
-        localStorage.setItem("access_token", res.data.data.access_token);
-        processSuccessQueue(res.data.data.access_token);
-        originalRequest.headers["Authorization"] = "Bearer " + res.data.data.access_token;
-        return axiosInstance(originalRequest);
-      }).catch((err) => {
-        processFailureQueue();
-        useSessionExpired.getState().showSessionExpiredModal();
-        return Promise.reject(err);
-      }).finally(() => {
-        isRefreshing = false;
-      });
+      axios
+        .post(import.meta.env.VITE_API_HOST + refreshTokenRoute, {
+          refreshToken,
+        })
+        .then((res) => {
+          localStorage.setItem("access_token", res.data.data.access_token);
+          processSuccessQueue(res.data.data.access_token);
+          originalRequest.headers["Authorization"] =
+            "Bearer " + res.data.data.access_token;
+          return axiosInstance(originalRequest);
+        })
+        .catch((err) => {
+          processFailureQueue();
+          useSessionExpired.getState().showSessionExpiredModal();
+          return Promise.reject(err);
+        })
+        .finally(() => {
+          isRefreshing = false;
+        });
     }
     return Promise.reject(error.response.data);
   }

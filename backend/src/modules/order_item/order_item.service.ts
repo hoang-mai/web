@@ -95,6 +95,4 @@ export class OrderItemsService {
 
     return data;
   }
-
-  
 }
