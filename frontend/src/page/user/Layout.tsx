@@ -1,4 +1,5 @@
-import { Outlet, useNavigate } from "react-router";
+// frontend/src/page/user/Layout.tsx
+import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { useEffect } from "react";
@@ -22,6 +23,7 @@ function Layout() {
             {/* Muon link den page nao thi them route vao day*/}
             <Outlet />
             <main className="flex-grow">
+              <Outlet />
             </main>
             <Footer />
 

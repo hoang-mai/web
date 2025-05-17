@@ -49,8 +49,10 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     const originalRequest = error.config;
+    console.log(error);
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry && (error.response?.data?.message === "Token không hợp lệ" || error.response?.data?.message === "Token đã hết hạn")) {
+
       originalRequest._retry = true;
 
       if (isRefreshing) {

@@ -1,11 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { BaseEntity } from './base.entity';
-import { CartProduct } from './cart_product.entity';
-import { OrderItem } from './order_item.entity';
-import { Review } from './review.entity';
-import { Category } from './category.enum';
 
-@Entity('products')
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { BaseEntity } from "./base.entity";
+import { CartProduct } from "./cart_product.entity";
+import { OrderItem } from "./order_item.entity";
+import { Review } from "./review.entity";
+import { Category } from "./category.enum";
+
+@Entity("products")
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
