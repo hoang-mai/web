@@ -14,7 +14,7 @@ import { PushNotificationModule } from './modules/push_notification/push_notific
 import { PostModule } from './modules/post/post.module';
 import { ReviewModule } from './modules/review/review.module';
 import { ReviewCommentModule } from './modules/review_comment/review_comment.module';
-
+import { DatabaseModule } from './database/database.module';
 import { join } from 'path';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { ChatModule } from './modules/chat/chat.module';
@@ -49,7 +49,7 @@ import { ChatModule } from './modules/chat/chat.module';
     ReviewModule,
     ReviewCommentModule,
     StatisticsModule,
-    ChatModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

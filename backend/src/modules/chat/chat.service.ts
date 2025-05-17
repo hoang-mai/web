@@ -1,4 +1,3 @@
-// src/modules/chat/chat.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Chat } from 'src/entities/chat.entity';
@@ -24,8 +23,7 @@ export class ChatService {
     if (!chat) {
       const user = await this.userRepo.findOneBy({ id: userId });
       const admin = await this.userRepo.findOneBy({ id: adminId });
-      if (!user || !admin)
-        throw new Error('Không tìm thấy người dùng hoặc Quản trị viên');
+      if (!user || !admin) throw new Error('User or Admin not found');
 
       chat = this.chatRepo.create({ user, admin });
       await this.chatRepo.save(chat);
@@ -36,12 +34,13 @@ export class ChatService {
   async createMessage(senderId: number, receiverId: number, content: string) {
     const sender = await this.userRepo.findOneBy({ id: senderId });
     const receiver = await this.userRepo.findOneBy({ id: receiverId });
-    if (!sender || !receiver) throw new Error('Invalid sender or receiver');
+    if (!sender || !receiver)
+      throw new Error('Không tìm thấy người dùng hoặc Quản trị viên');
 
     const isSenderAdmin = sender.role === Role.ADMIN;
-    const isReceiverAdmin = receiver.role === Role.ADMIN;
+    const isReceiverAdmin = receiver.role === Role.USER;
     if (isSenderAdmin === isReceiverAdmin)
-      throw new Error('Người dùng chỉ có thể nhắn với Quản trị viên');
+      throw new Error('Chỉ có thể gửi tin nhắn với Quản trị viên');
 
     const user = isSenderAdmin ? receiver : sender;
     const admin = isSenderAdmin ? sender : receiver;

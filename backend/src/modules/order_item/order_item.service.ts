@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderItem } from 'src/entities/order_item.entity';
 import e from 'express';
+import { StatisticRevenueProductDto } from '../statistics/dto/response/statisticReveneProduct.dto';
 
 @Injectable()
 export class OrderItemsService {
@@ -61,38 +62,37 @@ export class OrderItemsService {
     productId: number,
     year?: number,
     month?: number,
-  ) {
-    const result = this.orderItemRepository
+  ): Promise<StatisticRevenueProductDto[]> {
+    const qb = this.orderItemRepository
       .createQueryBuilder('orderItem')
       .select('SUM(orderItem.price * orderItem.quantity)', 'revenue')
-      .where('orderItem.productId = :productId', { productId });
+      .where('orderItem.product_id = :productId', { productId });
+
     if (month && year) {
-      result
-        .addSelect('WEEK(orderItem.createdAt)', 'week')
-        .andWhere('MONTH(orderItem.createdAt) = :month', { month })
-        .andWhere('YEAR(orderItem.createdAt) = :year', { year })
-        .groupBy('week')
-        .orderBy('week', 'ASC');
-    } else if (month && !year) {
-      result
-        .addSelect('WEEK(orderItem.createdAt)', 'week')
-        .andWhere('MONTH(orderItem.createdAt) = :month', { month })
-        .andWhere('YEAR(orderItem.createdAt) = YEAR(CURDATE())')
-        .groupBy('week')
-        .orderBy('week', 'ASC');
-    } else if (!month && year) {
-      result
+      qb.addSelect('FLOOR((DAY(orderItem.createdAt) - 1) / 7) + 1', 'week')
         .addSelect('MONTH(orderItem.createdAt)', 'month')
-        .andWhere('YEAR(orderItem.createdAt) = :year', { year })
-        .groupBy('month')
-        .orderBy('month', 'ASC');
-    } else {
-      result
         .addSelect('YEAR(orderItem.createdAt)', 'year')
-        .groupBy('year')
-        .orderBy('year', 'ASC');
+        .andWhere('MONTH(orderItem.createdAt) = :month', { month })
+        .andWhere('YEAR(orderItem.createdAt) = :year', { year })
+        .groupBy('week')
+        .addGroupBy('MONTH(orderItem.createdAt)')
+        .addGroupBy('YEAR(orderItem.createdAt)')
+        .orderBy('week', 'ASC');
+    } else if (year) {
+      qb.addSelect('MONTH(orderItem.createdAt)', 'month')
+        .addSelect('YEAR(orderItem.createdAt)', 'year')
+        .andWhere('YEAR(orderItem.createdAt) = :year', { year })
+        .groupBy('MONTH(orderItem.createdAt)')
+        .addGroupBy('YEAR(orderItem.createdAt)')
+        .orderBy('MONTH(orderItem.createdAt)', 'ASC');
+    } else {
+      qb.addSelect('YEAR(orderItem.createdAt)', 'year')
+        .groupBy('YEAR(orderItem.createdAt)')
+        .orderBy('YEAR(orderItem.createdAt)', 'ASC');
     }
-    const data = await result.getRawMany();
+
+    const data = await qb.getRawMany();
+
     return data;
   }
 }

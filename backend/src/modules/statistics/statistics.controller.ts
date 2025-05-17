@@ -21,24 +21,40 @@ import { Role } from 'src/entities/role.enum';
 export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
-  @Get('/product/:productId')
-  statisticProduct(@Param('productId') productId: number) {
-    const data = this.statisticsService.statisticProduct(productId);
+  @Get('/admin/product/:productId')
+  async statisticProduct(@Param('productId') productId: number) {
     return {
       message: 'Lấy chi tiết sản phẩm thành công',
+      status_code: 200,
+      data: await this.statisticsService.statisticProduct(productId),
+    };
+  }
+
+  @Get('/admin/revenue')
+  async statisticRevenue(
+    @Query('year') year?: number,
+    @Query('month') month?: number,
+    @Query('week') week?: number,
+  ) {
+    const data = await this.statisticsService.statisticRevenue(
+      year,
+      month,
+      week,
+    );
+    return {
+      message: 'Lấy doanh thu thành công',
       status_code: 200,
       data,
     };
   }
 
-  @Get('revenue/product/:productId')
-  statisticRevenueProduct(
+  @Get('/admin/revenue/product/:productId')
+  async statisticRevenueProduct(
     @Param('productId') productId: number,
     @Query('year') year?: number,
     @Query('month') month?: number,
-    @Query('week') week?: number,
   ) {
-    const data = this.statisticsService.statisticRevenueProduct(
+    const data = await this.statisticsService.statisticRevenueProduct(
       productId,
       year,
       month,
