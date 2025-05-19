@@ -40,15 +40,16 @@ const UserPostBannerCarousel: React.FC<Props> = ({ posts, onClick }) => {
     }, 250);
   };
 
+  const isSingle = visiblePosts.length === 1;
   const settings = {
     dots: true,
-    infinite: true, // 🔁 vòng lặp banner
+    infinite: !isSingle,        // chỉ lặp khi có nhiều post
+    autoplay: !isSingle,        // chỉ tự chạy nếu > 1 post
+    autoplaySpeed: 10000,
     speed: 400,
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: true,
-    autoplay: true,
-    autoplaySpeed: 10000, // ⏱ 10 giây tự chuyển
+    arrows: !isSingle,          // ẩn mũi tên nếu chỉ 1
 
     // Chấm tròn bên trái dưới ảnh
     appendDots: (dots: React.ReactNode) => (
