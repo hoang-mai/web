@@ -77,7 +77,6 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({
   const [formData, setFormData] = useState(defaultProductData);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
 
   const handleInputChange = (
@@ -99,12 +98,29 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
 
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+      setLoading(true);
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "Posts_imgs");
+      data.append("cloud_name", "dhituyxjn");
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dhituyxjn/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const uploadedImageUrl = await res.json();
+      setFormData({
+        ...formData,
+        imageUrl: uploadedImageUrl.url,
+      });
+      setLoading(false);
       if (errors.imageUrl) {
         setErrors({
           ...errors,
@@ -123,14 +139,14 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({
     else if (isNaN(Number(formData.price))) newErrors.price = "Giá phải là số";
     else if (Number(formData.price) < 0) newErrors.price = "Giá không được âm";
 
-    if (!formData.stock && formData.stock < 0)
+    if (formData.stock && formData.stock < 0)
       newErrors.stock = "Số lượng không được âm";
 
     if (formData.discount < 0) newErrors.discount = "Giảm giá không được âm";
     else if (formData.discount > 100)
       newErrors.discount = "Giảm giá không được lớn hơn 100";
 
-    if (!imageFile && !imagePreview)
+    if (!imagePreview)
       newErrors.imageUrl = "Hình ảnh sản phẩm là bắt buộc";
 
     setErrors(newErrors);
@@ -149,7 +165,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({
           category: formData.category,
           discount: Number(formData.discount),
           stock: Number(formData.stock),
-          imageUrl: formData.imageUrl || "https://example.com/placeholder.jpg",
+          imageUrl: formData.imageUrl,
         }),
         {
           pending: "Đang tạo sản phẩm mới...",

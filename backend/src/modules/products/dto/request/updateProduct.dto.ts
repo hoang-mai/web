@@ -21,7 +21,11 @@ export class UpdateProductDto {
     @Min(0, { message: "Số lượng sản phẩm phải lớn hơn hoặc bằng 0" })
     @IsNotEmpty({ message: "Số lượng sản phẩm không được để trống" })
     stock?: number;
+
+    @IsOptional()
     description?: string;
+
+    @IsOptional()
     imageUrl?: string;
 
     

@@ -24,102 +24,106 @@ import {
   MenuItem,
   Select,
   FormControl,
-  InputLabel
+  InputLabel,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestoreIcon from "@mui/icons-material/Restore";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import FilterListIcon from "@mui/icons-material/FilterList";
 
 interface Product {
-    id: number;
-    name: string;
-    price: string;
-    description: string;
-    imageUrl: string;
-    createdAt: string;
-    updatedAt: string;
-    category: string;
-    discount: number;
-    stock: number;
-    isDeleted: boolean;
+  id: number;
+  name: string;
+  price: string;
+  description: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  category: string;
+  discount: number;
+  stock: number;
+  isDeleted: boolean;
 }
 
 // Define types for sorting
-type SortDirection = 'asc' | 'desc';
-type SortField = 'id' | 'name' | 'price' | 'category' | 'stock' | 'status';
+type SortDirection = "asc" | "desc";
+type SortField = "id" | "name" | "price" | "category" | "stock" | "status";
 
 function ProductAdmin() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Pagination state - client-side
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  
+
   // Sorting state
-  const [orderBy, setOrderBy] = useState<SortField>('id');
-  const [orderDirection, setOrderDirection] = useState<SortDirection>('asc');
-  
+  const [orderBy, setOrderBy] = useState<SortField>("id");
+  const [orderDirection, setOrderDirection] = useState<SortDirection>("asc");
+
   // Filter state
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
 
   // Handle sorting change
   const handleRequestSort = (property: SortField) => {
-    const isAsc = orderBy === property && orderDirection === 'asc';
-    setOrderDirection(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && orderDirection === "asc";
+    setOrderDirection(isAsc ? "desc" : "asc");
     setOrderBy(property);
     setPage(0); // Reset to first page when sorting changes
   };
 
   // Handle pagination change
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        // Load all products at once
-        const res = await get(productAdmin);
-        setProducts(res.data.data.data);
-        setLoading(false);
-      } catch (err) {
+    setLoading(true);
+    get(productAdmin)
+      .then((response) => {
+        setProducts(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch products:", error);
         setError("Failed to load products");
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    };
-    
-    fetchProducts();
+      });
   }, []); // Only fetch once on component mount
 
   // Filter products by search term and filters
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
+    return products.filter((product) => {
       // Search by name
-      const matchesSearch = searchTerm === '' || 
+      const matchesSearch =
+        searchTerm === "" ||
         product.name.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       // Filter by status
-      const matchesStatus = statusFilter === 'all' || 
-                           (statusFilter === 'active' && !product.isDeleted) ||
-                           (statusFilter === 'inactive' && product.isDeleted);
-      
+      const matchesStatus =
+        statusFilter === "all" ||
+        (statusFilter === "active" && !product.isDeleted) ||
+        (statusFilter === "inactive" && product.isDeleted);
+
       // Filter by category
-      const matchesCategory = categoryFilter === 'all' || 
-                             product.category === categoryFilter;
-      
+      const matchesCategory =
+        categoryFilter === "all" || product.category === categoryFilter;
+
       return matchesSearch && matchesStatus && matchesCategory;
     });
   }, [products, searchTerm, statusFilter, categoryFilter]);
@@ -128,31 +132,36 @@ function ProductAdmin() {
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => {
       let comparison = 0;
-      
-      switch(orderBy) {
-        case 'id':
+
+      switch (orderBy) {
+        case "id":
           comparison = a.id - b.id;
           break;
-        case 'name':
+        case "name":
           comparison = a.name.localeCompare(b.name);
           break;
-        case 'price':
+        case "price":
           comparison = parseFloat(a.price) - parseFloat(b.price);
           break;
-        case 'category':
+        case "category":
           comparison = a.category.localeCompare(b.category);
           break;
-        case 'stock':
+        case "stock":
           comparison = a.stock - b.stock;
           break;
-        case 'status':
-          comparison = (a.isDeleted === b.isDeleted) ? 0 : a.isDeleted ? 1 : -1;
+        case "status":
+          // Extract nested ternary into clearer logic
+          if (a.isDeleted === b.isDeleted) {
+            comparison = 0;
+          } else if (a.isDeleted) {
+            comparison = 1;
+          } else {
+            comparison = -1;
+          }
           break;
-        default:
-          comparison = 0;
       }
-      
-      return orderDirection === 'asc' ? comparison : -comparison;
+
+      return orderDirection === "asc" ? comparison : -comparison;
     });
   }, [filteredProducts, orderBy, orderDirection]);
 
@@ -164,9 +173,25 @@ function ProductAdmin() {
 
   if (loading) {
     return (
-      <Box sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h4" gutterBottom>Products Admin</Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+      <Box
+        sx={{
+          p: 4,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Products Admin
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50vh",
+          }}
+        >
           <CircularProgress />
         </Box>
       </Box>
@@ -176,35 +201,52 @@ function ProductAdmin() {
   if (error) {
     return (
       <Box sx={{ p: 4 }}>
-        <Typography variant="h4" gutterBottom>Products Admin</Typography>
+        <Typography variant="h4" gutterBottom>
+          Products Admin
+        </Typography>
         <Alert severity="error">{error}</Alert>
       </Box>
     );
   }
 
   // Get unique categories for filter dropdown
-  const categories = [...new Set(products.map(product => product.category))];
+  const categories = [...new Set(products.map((product) => product.category))];
 
   return (
     <Box sx={{ p: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 3,
+        }}
+      >
         <Typography variant="h4">Products Admin</Typography>
-        <Button 
-          variant="contained" 
-          color="success" 
+        <Button
+          variant="contained"
+          color="success"
           startIcon={<AddIcon />}
-          sx={{ fontWeight: 'medium' }}
+          sx={{ fontWeight: "medium" }}
         >
           Add New Product
         </Button>
       </Box>
-      
+
       <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
         Manage your products here.
       </Typography>
-      
+
       {/* Filters */}
-      <Box sx={{ display: 'flex', gap: 2, mb: 3, alignItems: 'center', flexWrap: 'wrap' }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          mb: 3,
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
         <TextField
           placeholder="Search products..."
           value={searchTerm}
@@ -214,16 +256,18 @@ function ProductAdmin() {
           }}
           variant="outlined"
           size="small"
-          sx={{ flexGrow: 1, minWidth: '200px' }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" />
-              </InputAdornment>
-            ),
+          sx={{ flexGrow: 1, minWidth: "200px" }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            },
           }}
         />
-        
+
         <FormControl size="small" sx={{ minWidth: 120 }}>
           <InputLabel>Status</InputLabel>
           <Select
@@ -239,7 +283,7 @@ function ProductAdmin() {
             <MenuItem value="inactive">Inactive</MenuItem>
           </Select>
         </FormControl>
-        
+
         <FormControl size="small" sx={{ minWidth: 120 }}>
           <InputLabel>Category</InputLabel>
           <Select
@@ -251,8 +295,10 @@ function ProductAdmin() {
             label="Category"
           >
             <MenuItem value="all">All Categories</MenuItem>
-            {categories.map(category => (
-              <MenuItem key={category} value={category}>{category}</MenuItem>
+            {categories.map((category) => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -264,9 +310,9 @@ function ProductAdmin() {
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               <TableCell>
                 <TableSortLabel
-                  active={orderBy === 'id'}
-                  direction={orderBy === 'id' ? orderDirection : 'asc'}
-                  onClick={() => handleRequestSort('id')}
+                  active={orderBy === "id"}
+                  direction={orderBy === "id" ? orderDirection : "asc"}
+                  onClick={() => handleRequestSort("id")}
                 >
                   ID
                 </TableSortLabel>
@@ -274,45 +320,45 @@ function ProductAdmin() {
               <TableCell>Image</TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={orderBy === 'name'}
-                  direction={orderBy === 'name' ? orderDirection : 'asc'}
-                  onClick={() => handleRequestSort('name')}
+                  active={orderBy === "name"}
+                  direction={orderBy === "name" ? orderDirection : "asc"}
+                  onClick={() => handleRequestSort("name")}
                 >
                   Name
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={orderBy === 'category'}
-                  direction={orderBy === 'category' ? orderDirection : 'asc'}
-                  onClick={() => handleRequestSort('category')}
+                  active={orderBy === "category"}
+                  direction={orderBy === "category" ? orderDirection : "asc"}
+                  onClick={() => handleRequestSort("category")}
                 >
                   Category
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={orderBy === 'price'}
-                  direction={orderBy === 'price' ? orderDirection : 'asc'}
-                  onClick={() => handleRequestSort('price')}
+                  active={orderBy === "price"}
+                  direction={orderBy === "price" ? orderDirection : "asc"}
+                  onClick={() => handleRequestSort("price")}
                 >
                   Price
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={orderBy === 'stock'}
-                  direction={orderBy === 'stock' ? orderDirection : 'asc'}
-                  onClick={() => handleRequestSort('stock')}
+                  active={orderBy === "stock"}
+                  direction={orderBy === "stock" ? orderDirection : "asc"}
+                  onClick={() => handleRequestSort("stock")}
                 >
                   Stock
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={orderBy === 'status'}
-                  direction={orderBy === 'status' ? orderDirection : 'asc'}
-                  onClick={() => handleRequestSort('status')}
+                  active={orderBy === "status"}
+                  direction={orderBy === "status" ? orderDirection : "asc"}
+                  onClick={() => handleRequestSort("status")}
                 >
                   Status
                 </TableSortLabel>
@@ -330,13 +376,18 @@ function ProductAdmin() {
                       component="img"
                       src={product.imageUrl}
                       alt={product.name}
-                      sx={{ height: 48, width: 48, objectFit: 'cover', borderRadius: 1 }}
+                      sx={{
+                        height: 48,
+                        width: 48,
+                        objectFit: "cover",
+                        borderRadius: 1,
+                      }}
                     />
                   </TableCell>
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.category}</TableCell>
                   <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
                       ${Number(product.price).toFixed(2)}
                       {product.discount > 0 && (
                         <Chip
@@ -350,21 +401,27 @@ function ProductAdmin() {
                   </TableCell>
                   <TableCell>{product.stock}</TableCell>
                   <TableCell>
-                    <Chip 
-                      label={product.isDeleted ? 'Inactive' : 'Active'} 
-                      color={product.isDeleted ? 'error' : 'success'}
+                    <Chip
+                      label={product.isDeleted ? "Inactive" : "Active"}
+                      color={product.isDeleted ? "error" : "success"}
                       size="small"
                     />
                   </TableCell>
                   <TableCell>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box sx={{ display: "flex", gap: 1 }}>
                       <Tooltip title="Edit product">
                         <IconButton size="small" color="primary">
                           <EditIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
-                      
-                      <Tooltip title={product.isDeleted ? "Restore product" : "Delete product"}>
+
+                      <Tooltip
+                        title={
+                          product.isDeleted
+                            ? "Restore product"
+                            : "Delete product"
+                        }
+                      >
                         <IconButton
                           size="small"
                           color={product.isDeleted ? "success" : "error"}
@@ -390,7 +447,7 @@ function ProductAdmin() {
           </TableBody>
         </Table>
       </TableContainer>
-      
+
       {/* Pagination */}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25, 50]}
