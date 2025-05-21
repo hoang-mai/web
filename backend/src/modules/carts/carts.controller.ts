@@ -1,3 +1,4 @@
+// backend/src/modules/carts/carts.controller.ts
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CartsService } from './carts.service';
 
@@ -34,5 +35,10 @@ export class CartsController {
   @Patch(':id/checkout')
   checkout(@Param('id') id: string) {
     return this.cartsService.checkout(+id);
+  }
+
+  @Get('/user/:user_id')
+  findByUserId(@Param('user_id') user_id: string) {
+    return this.cartsService.findByUserId(+user_id);
   }
 }
