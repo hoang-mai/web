@@ -30,7 +30,7 @@ const CartPage: React.FC = () => {
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const userId = 2; // sau này bạn thay bằng ID lấy từ localStorage hoặc context
+  const userId = 2; // localStorage ...
 
   useEffect(() => {
     const fetchCart = async () => {
