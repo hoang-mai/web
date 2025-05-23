@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import {patch} from "@/services/callApi";
 import { updateOrderRoute} from "@/services/api";
+import {toast} from 'react-toastify';
+import { Box, Button, Modal, Typography } from '@mui/material';
+
+
 
 
 // TypeScript interfaces
@@ -24,6 +28,7 @@ interface Order {
   createdAt: string;
   totalPrice: number;
   orderItems: OrderItem[];
+  address: string;
 }
 
 interface OrderComponentProps {
@@ -34,6 +39,8 @@ interface OrderComponentProps {
 // Order Component
 const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) => {
   const [expanded, setExpanded] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   const toggleExpand = () => {
     setExpanded(!expanded);
@@ -83,15 +90,19 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) 
       status: 'canceled',
     });
   };
-  const handleCancel = async () => {
-    if (window.confirm("Bạn có chắc muốn hủy đơn hàng này?")) {
-      await cancelOrderApi(order.id); // Gọi API PATCH
-      updateStatus?.(order.id); // Gọi callback nếu có
-      alert("Đã hủy đơn hàng thành công");
-      
+ const handleCancel = async () => {
+ 
+    try {
+      await cancelOrderApi(order.id);
+      updateStatus?.(order.id);
+      toast.success("Đơn hàng đã được hủy thành công");
+    } catch (error) {
+      toast.error("Hủy đơn hàng thất bại");
+    } finally {
+      setOpenModal(false);
     }
+  
   };
-
   const canCancel=(status: string) => {
     if(status === "pending" || status === "confirmed"|| status === "shipping"){
       return true;
@@ -102,12 +113,45 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) 
   return (
     <div className="bg-gray-100 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
       {/* Order header */}
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" mb={2}>Xác nhận hủy đơn hàng</Typography>
+          <Typography mb={3}>
+            Bạn có chắc chắn muốn hủy đơn hàng #{order.id}?
+          </Typography>
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            <Button onClick={() => setOpenModal(false)} variant="outlined">
+              Thoát
+            </Button>
+            <Button
+              onClick={handleCancel}
+              variant="contained"
+              color='warning'
+            >
+              Xác nhận hủy
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <div className="p-4 border-b border-gray-200">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800">Đơn hàng #{order.id}</h3>
-            <p className="text-sm text-gray-500">{formatDate(order.createdAt)}</p>
-          </div>
+         <div>
+          <h3 className="text-lg font-semibold text-gray-800">Đơn hàng #{order.id}</h3>
+          <p className="text-sm text-gray-500">{formatDate(order.createdAt)}</p>
+          
+        </div>
           <div className="flex items-center gap-3 flex-wrap">
             <span className={`px-3 py-1 rounded-full text-xs font-medium ${getColorByStatus(order.status)}`}>
               {statusTranslations[order.status]}
@@ -115,7 +159,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) 
             <span className="font-semibold text-gray-900">{formatCurrency(order.totalPrice)}</span>
 
           {updateStatus&&(<button
-            onClick={handleCancel}
+            onClick={()=>setOpenModal(true)}
             className={`px-3 py-1 text-sm font-medium border rounded transition 
               ${canCancel(order.status)
                 ? "text-red-600 border-red-500 hover:bg-red-50"
@@ -157,7 +201,10 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) 
       >
         <div className="p-4 space-y-4">
           <h4 className="font-medium text-gray-700">Chi tiết sản phẩm</h4>
-          
+          <div>
+            <h4 className="font-medium text-gray-700">Địa chỉ giao hàng</h4>
+            <p className="text-sm text-gray-600">{order.address}</p>
+          </div>
           {order.orderItems.map((item) => (
             <div key={item.id} className="flex flex-col md:flex-row gap-4 p-3 border border-gray-100 rounded-lg">
               <div className="w-full md:w-24 h-24 flex-shrink-0">

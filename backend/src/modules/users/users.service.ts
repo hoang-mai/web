@@ -95,4 +95,26 @@ export class UsersService {
   async delete(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
+
+  /**
+   * Tìm người dùng theo ID.
+   * @param id ID của người dùng.
+   * @returns Người dùng nếu tìm thấy, ngược lại trả về null.
+   */
+  async findOneById(id: number): Promise<User | null> {
+    return this.userRepository.findOneBy({ id });
+  }
+
+  async changePassword(userId: number, newPassword: string, oldPassword: string): Promise<void> {
+    const user = await this.findOneById(userId);
+    if (!user) {
+      throw new UnauthorizedException('Người dùng không tồn tại');
+    }
+    const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isOldPasswordValid) {
+      throw new UnauthorizedException('Mật khẩu cũ không chính xác');
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    await this.userRepository.save(user);
+  }
 }

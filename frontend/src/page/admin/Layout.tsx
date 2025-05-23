@@ -6,18 +6,22 @@ import { useState, useEffect } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router";
 import LeftSideBar from "./LeftSideBar";
 import { useSessionExpired } from "@/store/useSessionExpired";
+import { useProfileAdmin } from "@/store/useProfileAdmin";
 
 function LayoutAdmin() {
   const navigate = useNavigate();
   const { isSessionExpired, hideSessionExpiredModal } = useSessionExpired();
   const [collapsed, setCollapsed] = useState(false);
-
+  const { clearAdmin } = useProfileAdmin.getState();
   useEffect(() => {
-    get(checkTokenRoute).then((res) => {
-      if (res.data.data.role === "user") {
-        navigate("/", { replace: true });
-      }
-    });
+    get(checkTokenRoute)
+      .then((res) => {
+        if (res.data.data.role === "user") {
+          navigate("/", { replace: true });
+          return;
+        }
+        useProfileAdmin.getState().setAdmin(res.data.data);
+      })
   }, []);
 
   if (!localStorage.getItem("access_token")) {
@@ -40,6 +44,7 @@ function LayoutAdmin() {
                 localStorage.removeItem("access_token");
                 localStorage.removeItem("refresh_token");
                 hideSessionExpiredModal();
+                clearAdmin();
                 navigate("/admin/login", { replace: true });
               }}
               className="mt-6 px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] text-black rounded"
@@ -49,7 +54,7 @@ function LayoutAdmin() {
           </div>
         </Box>
       </Modal>
-      <div className="flex">
+      <div className="flex min-h-screen">
         <LeftSideBar collapsed={collapsed} setCollapsed={setCollapsed} />
         <div
           className={`${

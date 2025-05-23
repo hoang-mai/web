@@ -43,7 +43,7 @@ interface StatisticProduct {
   name: string;
   price: number;
   stock: number;
-  description: string;
+  description: string | null;
   imageUrl: string;
   discount: number;
   category: string;

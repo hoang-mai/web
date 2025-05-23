@@ -12,22 +12,19 @@ import { postsRoute } from "@/services/api";
 
 const PostAdmin: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openView, setOpenView] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const fetchPosts = async () => {
-    setLoading(true);
     try {
-      const response = await get(postsRoute);
+      const response = await get(postsRoute + "/admin-side");
       setPosts(response.data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
       toast.error("Không thể tải danh sách bài viết");
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -75,7 +72,6 @@ const PostAdmin: React.FC = () => {
     setSelectedPost(post);
     setOpenEdit(true);
   };
-
   return (
     <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: "#f8f9fa" }}>
       <Typography

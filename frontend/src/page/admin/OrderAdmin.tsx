@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { patch,get } from '@/services/callApi';
 import { getAllOrderRoute,updateOrderRoute } from '@/services/api';
-import { stat } from 'fs';
-
+import { toast } from 'react-toastify';
 
 
 interface Product {
@@ -137,7 +136,7 @@ const OrderManagement: React.FC = () => {
             orders[orderIndex].status = newStatus;
             updateOrder(currentOrderId, newStatus);
             orders[orderIndex].updatedAt = new Date().toISOString();
-            alert(`Đơn hàng #${currentOrderId} đã được cập nhật trạng thái thành ${getStatusText(newStatus)}`);
+            toast.success(`Đơn hàng #${currentOrderId} đã được cập nhật trạng thái thành ${getStatusText(newStatus)}`);
             applyFilters();
         }
     };
@@ -148,7 +147,7 @@ const OrderManagement: React.FC = () => {
         if (orderIndex !== -1) {
             const order = orders[orderIndex];
             if (order.status === 'delivered' || order.status === 'canceled'||order.status === 'returned') {
-                alert('Không thể hủy đơn hàng này.');
+                toast.error(`Đơn hàng #${currentOrderId} không thể hủy vì đã được giao hoặc đã hủy.`);
                 return;
             }
             if (window.confirm(`Bạn có chắc chắn muốn hủy đơn hàng #${currentOrderId}?`)) {
@@ -156,7 +155,7 @@ const OrderManagement: React.FC = () => {
                 orders[orderIndex].updatedAt = new Date().toISOString();
                 updateOrder(currentOrderId, 'canceled');
                 (document.getElementById('detail-status') as HTMLSelectElement).value = 'canceled';
-                alert(`Đơn hàng #${currentOrderId} đã được hủy.`);
+                toast.success(`Đơn hàng #${currentOrderId} đã được hủy.`);
                 applyFilters();
             }
         }
@@ -668,6 +667,7 @@ const OrderManagement: React.FC = () => {
                                                 <p className="text-sm text-gray-500">Ngày cập nhật</p>
                                                 <p className="font-medium">{new Date(orders.find(o => o.id === currentOrderId)?.updatedAt || '').toLocaleDateString('vi-VN')}</p>
                                             </div>
+                                            
                                             <div>
                                                 <p className="text-sm text-gray-500">Trạng thái</p>
                                                 <select
