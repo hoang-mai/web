@@ -12,4 +12,4 @@ export class CreateCartProductDto {
   @IsInt()
   @Min(1)
   quantity: number;
-}
+    }

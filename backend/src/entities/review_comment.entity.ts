@@ -28,21 +28,14 @@ export class ReviewComment extends BaseEntity {
   @Column()
   comment: string;
 
-  @Column({ nullable: true })
+  @Column()
   imageUrl: string;
 
   @ManyToOne(() => ReviewComment, (reviewComment) => reviewComment.replies, {
-    nullable: true,
     onDelete: 'CASCADE',
   })
   parent: ReviewComment;
 
   @OneToMany(() => ReviewComment, (reviewComment) => reviewComment.parent)
   replies: ReviewComment[];
-
-  @Column({ default: 0 })
-  likeCount: number;
-
-  @Column({ default: false })
-  reported: boolean;
 }

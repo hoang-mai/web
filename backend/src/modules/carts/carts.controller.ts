@@ -1,44 +1,31 @@
-// backend/src/modules/carts/carts.controller.ts
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CartsService } from './carts.service';
 
+
 @Controller('carts')
 export class CartsController {
-  constructor(private readonly cartsService: CartsService) {}
+  constructor(private readonly cartService: CartsService) {}
 
-  // Tạo mới giỏ hàng (thường được tạo tự động cho user mới, nhưng vẫn có endpoint này cho admin nếu cần)
   @Post()
   create() {
-    return this.cartsService.create();
+    return this.cartService.create();
   }
 
-  // Lấy danh sách tất cả các giỏ hàng (dành cho admin)
   @Get()
   findAll() {
-    return this.cartsService.findAll();
+    return this.cartService.findAll();
   }
 
-  // Lấy giỏ hàng theo id
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.cartsService.findOne(+id);
+    return this.cartService.findOne(+id);
   }
-
-  // Xóa giỏ hàng theo id
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.cartsService.remove(+id);
+    return this.cartService.remove(+id);
   }
-
-  // Checkout giỏ hàng: cập nhật isCheckedOut = true cho giỏ hàng có id tương ứng
-  // Vì checkout là hành động luôn đặt isCheckedOut thành true, nên không cần truyền body.
   @Patch(':id/checkout')
-  checkout(@Param('id') id: string) {
-    return this.cartsService.checkout(+id);
-  }
-
-  @Get('/user/:user_id')
-  findByUserId(@Param('user_id') user_id: string) {
-    return this.cartsService.findByUserId(+user_id);
-  }
+    checkout(@Param('id') id: string, @Body('isCheckedOut') isCheckedOut: boolean) {
+    return this.cartService.checkout(+id, isCheckedOut);
+}
 }

@@ -15,8 +15,8 @@ export class Message extends BaseEntity {
   sender: User;
 
   @Column({ type: 'text' })
-  content: string;
+  message: string;
 
-  @Column({ default: false })
+  @Column({default: false})
   isRevoked: boolean;
 }

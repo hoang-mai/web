@@ -1,4 +1,3 @@
-// File: backend/src/main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
@@ -6,8 +5,8 @@ import { LoggerMiddleware } from './middleware/logger/logger.middleware';
 import { winstonLogger } from './logger/winston.logger';
 import { HttpExceptionFilter } from './exceptions/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
+
   // Create the app with the logger
   const app = await NestFactory.create(AppModule, {
     logger: winstonLogger,
@@ -17,12 +16,6 @@ async function bootstrap() {
   // Add the global filter
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-    }),
-  );
 
   // Swagger
   const config = new DocumentBuilder()
@@ -35,6 +28,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   app.enableCors();
-  await app.listen(process.env.PORT ?? 8080);
+  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

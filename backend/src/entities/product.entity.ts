@@ -1,4 +1,3 @@
-
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { CartProduct } from "./cart_product.entity";
@@ -8,46 +7,42 @@ import { Category } from "./category.enum";
 
 @Entity("products")
 export class Product extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({ unique: true })
-  name: string;
+    @Column()
+    name: string;
 
-  @Column('decimal')
-  price: number;
+    @Column("decimal")
+    price: number;
 
-  @Column({ default: 0 })
-  stock: number;
+    @Column({ default: 0 })
+    stock: number;
 
-  @Column({ nullable: true })
-  description: string;
+    @Column({ nullable: true })
+    description: string;
 
-  @Column({ nullable: true })
-  imageUrl: string;
+    @Column({ nullable: true })
+    imageUrl: string;
 
-  @Column({
-    default: false,
-    type: 'tinyint',
-    transformer: {
-      to: (value: boolean) => (value ? 1 : 0),
-      from: (value: number) => value === 1,
-    },
-  })
-  isDeleted: boolean;
+    @Column()
+    totalRating: number;
 
-  @Column({ nullable: true })
-  discount: number;
+    @Column({ default: false })
+    isDeleted: boolean;
 
-  @Column({ type: 'enum', enum: Category })
-  category: Category;
+    @Column()
+    discount: number;
 
-  @OneToMany(() => CartProduct, (cartProduct) => cartProduct.product)
-  cartProducts: CartProduct[];
+    @Column({type:'enum', enum: Category})
+    category: Category;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
-  orderItems: OrderItem[];
+    @OneToMany(() => CartProduct, (cartProduct) => cartProduct.product)
+    cartProducts: CartProduct[];
 
-  @OneToMany(() => Review, (review) => review.product)
-  reviews: Review[];
+    @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+    orderItems: OrderItem[];
+
+    @OneToMany(() => Review, (review) => review.product)
+    reviews: Review[];
 }

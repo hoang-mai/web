@@ -11,12 +11,6 @@ import { OrderItemsModule } from './modules/order_item/order_item.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PushNotificationModule } from './modules/push_notification/push_notification.module';
-import { PostModule } from './modules/post/post.module';
-import { ReviewModule } from './modules/review/review.module';
-import { ReviewCommentModule } from './modules/review_comment/review_comment.module';
-import { DatabaseModule } from './database/database.module';
-import { join } from 'path';
-import { StatisticsModule } from './modules/statistics/statistics.module';
 
 @Module({
   imports: [
@@ -44,11 +38,6 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
     OrdersModule,
     OrderItemsModule,
     PushNotificationModule,
-    PostModule,
-    ReviewModule,
-    ReviewCommentModule,
-    StatisticsModule,
-    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

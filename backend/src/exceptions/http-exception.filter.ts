@@ -8,6 +8,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
+
     response
       .status(status)
       .json({
@@ -15,9 +16,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         message: exception.message,
         timestamp: new Date().toISOString(),
         path: request.url,
-        errors: typeof exception.getResponse() === 'object' && exception.getResponse() !== null
-          ? (exception.getResponse() as any).message ?? []
-          : [],
       });
   }
 }
