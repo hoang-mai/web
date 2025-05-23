@@ -21,7 +21,6 @@ function Layout() {
         <div className="bg-white text-black min-h-screen flex flex-col">
             <Navbar />
             {/* Muon link den page nao thi them route vao day*/}
-            <Outlet />
             <main className="flex-grow">
               <Outlet />
             </main>

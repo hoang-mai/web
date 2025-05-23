@@ -1,3 +1,4 @@
+// backend/src/modules/carts/carts.service.ts
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -37,6 +38,18 @@ export class CartsService {
   async findOne(id: number): Promise<Cart> {
     const cart = await this.cartRepository.findOne({
       where: { id },
+      relations: ['cartProducts', 'cartProducts.product'],
+    });
+    if (!cart) {
+      throw new HttpException('Cart not found', HttpStatus.NOT_FOUND);
+    }
+    return cart;
+  }
+
+  // Lấy thông tin giỏ hàng theo user id
+  async findByUserId(user_id: number): Promise<Cart> {
+    const cart = await this.cartRepository.findOne({
+      where: { user: { id: user_id } },
       relations: ['cartProducts', 'cartProducts.product'],
     });
     if (!cart) {
