@@ -20,6 +20,8 @@ import TagIcon from "@mui/icons-material/LocalOfferOutlined";
 import DoneIcon from "@mui/icons-material/CheckCircleOutline";
 import ReplyIcon from "@mui/icons-material/ReplyOutlined";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import TextField from "@mui/material/TextField";
@@ -28,6 +30,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/vi";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.locale("vi");
 
 const ReviewList = ({ reviews, onView, onDelete }) => {
@@ -287,7 +291,9 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
                     </Box>
                   </Box>
                   <Typography variant="body2" color="text.secondary">
-                    {dayjs(review.createdAt).format("DD/MM/YYYY")}
+                    {dayjs(review.createdAt)
+                      .tz("Asia/Ho_Chi_Minh")
+                      .format("DD/MM/YYYY HH:mm")}
                   </Typography>
                 </Box>
 
