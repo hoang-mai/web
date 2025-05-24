@@ -19,6 +19,7 @@ const ViewPostModal: React.FC<ViewPostModalProps> = ({
     <Modal open={open} onClose={onClose}>
       <Box
         sx={{
+          outline: "none",
           position: "absolute",
           top: "50%",
           left: "50%",

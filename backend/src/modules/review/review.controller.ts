@@ -14,8 +14,6 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ProductsService } from '../products/products.service';
-import { Role } from 'src/entities/role.enum';
-import { Roles } from 'src/guard/roles.decorator';
 import { CreateProductDto } from '../products/dto/request/createProduct.dto';
 
 @Controller('reviews')
@@ -32,7 +30,7 @@ export class ReviewController {
   }
 
   @Get('products')
-  async getByProduct(@Body() productInfo: CreateProductDto) {
+  async getByProduct(@Body() productInfo) {
     return this.reviewService.getReviewsByProduct(productInfo.name);
   }
   @Get('products/stats')

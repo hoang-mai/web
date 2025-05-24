@@ -28,7 +28,14 @@ export class PostController {
     return this.postService.create(createPostDto, req.user);
   }
 
-  @Get()
+  @Get('user-side')
+  findVisiblePosts() {
+    return this.postService.findVisiblePosts();
+  }
+
+  @Get('admin-side')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles([Role.ADMIN])
   findAll() {
     return this.postService.findAll();
   }

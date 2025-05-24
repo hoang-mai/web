@@ -20,6 +20,9 @@ export class Post extends BaseEntity {
   @Column()
   imgUrl: string;
 
+  @Column({ default: true })
+  isVisible: boolean;
+
   @ManyToOne(() => User, (user) => user.posts, { eager: true })
   author: User;
 }
