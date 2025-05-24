@@ -36,7 +36,7 @@ dayjs.extend(timezone);
 dayjs.locale("vi");
 
 const ReviewList = ({ reviews, onView, onDelete }) => {
-  var { drawerWidth } = useOutletContext<{ drawerWidth: number }>();
+  const { drawerWidth } = useOutletContext<{ drawerWidth: number }>();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [productFilter, setProductFilter] = useState("");
