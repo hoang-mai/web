@@ -29,12 +29,14 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useOutletContext } from "react-router-dom";
 import "dayjs/locale/vi";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale("vi");
 
 const ReviewList = ({ reviews, onView, onDelete }) => {
+  var { drawerWidth } = useOutletContext<{ drawerWidth: number }>();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [productFilter, setProductFilter] = useState("");
@@ -111,8 +113,8 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
       <Box
         position="fixed"
         top={0}
-        left={256}
-        width="calc(100% - 256px)"
+        left={drawerWidth}
+        width={`calc(100% - ${drawerWidth}px)`}
         zIndex={10}
         bgcolor="#fff"
         boxShadow={1}
