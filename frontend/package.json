@@ -16,7 +16,7 @@
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
     "@mui/x-charts": "^8.2.0",
-    "@mui/x-date-pickers": "^8.1.0",
+    "@mui/x-date-pickers": "^8.4.0",
     "@tailwindcss/vite": "^4.0.10",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.8.4",

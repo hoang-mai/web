@@ -16,6 +16,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { del, get, patch, post } from "@/services/callApi";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const ReviewDetailModal = ({ open, onClose, review }) => {
   const [comments, setComments] = useState([]);
@@ -33,8 +35,8 @@ const ReviewDetailModal = ({ open, onClose, review }) => {
   const handleSubmit = async () => {
     if (!newComment.trim()) return;
     await post(`/review-comment`, {
-        reviewId: review.id,
-        parentId:  review.id,
+      reviewId: review.id,
+      parentId: review.id,
       comment: newComment,
     });
     setNewComment("");
@@ -62,6 +64,15 @@ const ReviewDetailModal = ({ open, onClose, review }) => {
     setEditingContent("");
     fetchComments();
   };
+  const renderStars = (count: number) => {
+    const full = Array(count).fill(
+      <StarIcon fontSize="small" sx={{ color: "#fbbc04" }} />
+    );
+    const empty = Array(5 - count).fill(
+      <StarBorderIcon fontSize="small" sx={{ color: "#fbbc04" }} />
+    );
+    return [...full, ...empty];
+  };
 
   useEffect(() => {
     if (open) fetchComments();
@@ -71,18 +82,53 @@ const ReviewDetailModal = ({ open, onClose, review }) => {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", bgcolor: "white", p: 4, borderRadius: 2, width: 600, maxHeight: "90vh", overflowY: "auto" }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          bgcolor: "white",
+          p: 4,
+          borderRadius: 2,
+          width: 600,
+          maxHeight: "90vh",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": { display: "none" },
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+        >
           <Typography variant="h6">Chi tiết đánh giá</Typography>
-          <IconButton onClick={onClose}><CloseIcon /></IconButton>
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
         </Box>
 
-        <Typography><b>Người đánh giá:</b> {review.user?.email}</Typography>
-        <Typography><b>Sản phẩm:</b> {review.product?.name}</Typography>
-        <Typography sx={{ mt: 1 }}><b>Nội dung:</b> {review.review}</Typography>
+        <Typography>
+          <b>Người đánh giá:</b> {review.user?.email}
+        </Typography>
+        <Typography>
+          <b>Sản phẩm:</b> {review.product?.name}
+        </Typography>
+        <Box mt={1} display="flex" alignItems="center" gap={0.5}>
+          {renderStars(review.rating || 0)}
+        </Box>
+        <Typography sx={{ mt: 1 }}>
+          <b>Nội dung:</b> {review.review}
+        </Typography>
         {review.imageUrl && (
           <Box mt={1}>
-            <img src={review.imageUrl} alt="Ảnh đánh giá" style={{ width: "100%", borderRadius: 4 }} />
+            <img
+              src={review.imageUrl}
+              alt="Ảnh đánh giá"
+              style={{ width: "100%", borderRadius: 4 }}
+            />
           </Box>
         )}
 
@@ -93,16 +139,24 @@ const ReviewDetailModal = ({ open, onClose, review }) => {
 
         <List dense>
           {comments.map((c) => (
-            <ListItem key={c.id} alignItems="flex-start" secondaryAction={
-              <Box>
-                <Tooltip title="Sửa">
-                  <IconButton onClick={() => handleEdit(c.id, c.comment)}><EditIcon fontSize="small" /></IconButton>
-                </Tooltip>
-                <Tooltip title="Xoá">
-                  <IconButton onClick={() => handleDelete(c.id)}><DeleteIcon fontSize="small" /></IconButton>
-                </Tooltip>
-              </Box>
-            }>
+            <ListItem
+              key={c.id}
+              alignItems="flex-start"
+              secondaryAction={
+                <Box>
+                  <Tooltip title="Sửa">
+                    <IconButton onClick={() => handleEdit(c.id, c.comment)}>
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Xoá">
+                    <IconButton onClick={() => handleDelete(c.id)}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              }
+            >
               {editingId === c.id ? (
                 <Box width="100%">
                   <TextField
@@ -111,7 +165,13 @@ const ReviewDetailModal = ({ open, onClose, review }) => {
                     value={editingContent}
                     onChange={(e) => setEditingContent(e.target.value)}
                   />
-                  <Button size="small" onClick={handleUpdate} sx={{ mt: 1 }}>Lưu</Button>
+                  <Button
+                    size="small"
+                    onClick={handleUpdate}
+                    sx={{ mt: 1, color: "#ffc300", fontWeight: "600" }}
+                  >
+                    Lưu
+                  </Button>
                 </Box>
               ) : (
                 <ListItemText primary={c.user?.email} secondary={c.comment} />
@@ -131,8 +191,7 @@ const ReviewDetailModal = ({ open, onClose, review }) => {
         />
         <Button
           variant="contained"
-          color="primary"
-          sx={{ mt: 1 }}
+          sx={{ mt: 1, bgcolor: "var(--color-primary)", color: "#1c1c1c" }}
           fullWidth
           onClick={handleSubmit}
         >

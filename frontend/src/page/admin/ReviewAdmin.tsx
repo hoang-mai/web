@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Container,
-  Paper,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { Container, Paper, Box, CircularProgress } from "@mui/material";
 import ReviewList from "@/components/Review/ReviewList";
 import ReviewDetailModal from "@/components/Review/ReviewDetailModal";
 import { del, get } from "@/services/callApi";
@@ -44,10 +39,27 @@ const ReviewAdmin = () => {
   }, []);
 
   return (
-    <Container maxWidth="lg"  sx={{ boxShadow: 'none', border: 'none' }}>
-      <Paper sx={{ boxShadow: 'none', border: 'none' }}>
+    <Container
+      disableGutters
+      maxWidth={false}
+      sx={{
+        margin: "0",
+        padding: "0",
+        width: "100%",
+        boxShadow: "none",
+        border: "none",
+      }}
+    >
+      <Paper
+        sx={{
+          margin: "0",
+          padding: "0",
+          boxShadow: "none",
+          border: "none",
+        }}
+      >
         {loading ? (
-          <Box display="flex" justifyContent="center" p={4}>
+          <Box display="flex" justifyContent="center">
             <CircularProgress />
           </Box>
         ) : (
