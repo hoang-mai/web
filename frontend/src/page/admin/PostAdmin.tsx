@@ -19,7 +19,7 @@ const PostAdmin: React.FC = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await get(postsRoute);
+      const response = await get(postsRoute + "/admin-side");
       setPosts(response.data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);

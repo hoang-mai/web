@@ -14,7 +14,10 @@ import UserAdmin from "./page/admin/UserAdmin";
 import OrderManagement from "./page/admin/OrderAdmin";
 import PostAdmin from "./page/admin/PostAdmin";
 import ProfileAdmin from "./page/admin/ProfileAdmin";
+import ProductList from "./components/ProductList";
+import ReviewAdminPage from "./page/admin/ReviewAdmin";
 import CartPage from "./page/user/Cart";
+
 
 function App() {
   return (
@@ -37,6 +40,7 @@ function App() {
         <Route path="products/:id" element={<DetailProductAdmin />} />
         <Route path="users" element={<UserAdmin />} />
         <Route path="orders" element={<OrderManagement />} />
+        <Route path="reviews" element={<ReviewAdminPage/>} />
         <Route path="posts" element={<PostAdmin />} />
         <Route path='profile' element={<ProfileAdmin />} />
       </Route>
