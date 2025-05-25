@@ -13,19 +13,21 @@ import UserAdmin from "./page/admin/UserAdmin";
 import OrderManagement from "./page/admin/OrderAdmin";
 import PostAdmin from "./page/admin/PostAdmin";
 import ProfileAdmin from "./page/admin/ProfileAdmin";
+import ProductList from "./components/ProductList";
+import ReviewAdminPage from "./page/admin/ReviewAdmin";
 import CartPage from "./page/user/Cart";
-import ReviewAdmin from "./page/admin/ReviewAdmin";
+
 
 function App() {
   return (
-    <Routes>
-      {/* Đường dẫn cho người dùng*/}
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="login" element={<Login />} />
-        <Route path="userdetail" element={<UserDetail />} />
-        <Route path="cart" element={<CartPage />} />
-      </Route>
+      <Routes>
+        {/* Đường dẫn cho người dùng*/}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="userdetail" element={<UserDetail />} />
+          <Route path="cart" element={<CartPage />} />
+        </Route>
 
       {/* Đường dẫn cho admin*/}
       <Route path="/admin/login" element={<LoginAdmin />} />
