@@ -1,4 +1,3 @@
-// frontend/src/App.tsx
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./page/user/Home";
 import Login from "./page/user/Login";
@@ -40,12 +39,11 @@ function App() {
         <Route path="products/:id" element={<DetailProductAdmin />} />
         <Route path="users" element={<UserAdmin />} />
         <Route path="orders" element={<OrderManagement />} />
-        <Route path="reviews" element={<ReviewAdminPage/>} />
+        <Route path="reviews" element={<ReviewAdmin />} />
         <Route path="posts" element={<PostAdmin />} />
-        <Route path='profile' element={<ProfileAdmin />} />
+        <Route path="profile" element={<ProfileAdmin />} />
       </Route>
     </Routes>
-
   );
 }
 export default App;
