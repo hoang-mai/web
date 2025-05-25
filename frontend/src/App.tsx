@@ -16,6 +16,8 @@ import PostAdmin from "./page/admin/PostAdmin";
 import ProfileAdmin from "./page/admin/ProfileAdmin";
 import ProductList from "./components/ProductList";
 import ReviewAdminPage from "./page/admin/ReviewAdmin";
+import CartPage from "./page/user/Cart";
+
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="userdetail" element={<UserDetail />} />
+          <Route path="cart" element={<CartPage />} />
         </Route>
 
       {/* Đường dẫn cho admin*/}
