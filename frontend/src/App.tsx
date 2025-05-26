@@ -26,7 +26,6 @@ function App() {
           <Route path="userdetail" element={<UserDetail />} />
           <Route path="cart" element={<CartPage />} />
         </Route>
-
       {/* Đường dẫn cho admin*/}
       <Route path="/admin/login" element={<LoginAdmin />} />
       {/* Thêm các route khác ở đây */}
