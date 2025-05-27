@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 
 interface Product {
   id: number;
@@ -26,11 +27,16 @@ interface Cart {
   isCheckedOut: boolean;
 }
 
+const token = localStorage.getItem("access_token");
+let userId = null;
+if (token) {
+  const decodedToken = jwtDecode(token); // Sử dụng hàm jwtDecode
+  userId = decodedToken.sub; // Lấy user ID từ trường sub
+}
+
 const CartPage: React.FC = () => {
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const userId = 2; // sau này bạn thay bằng ID lấy từ localStorage hoặc context
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -58,6 +64,49 @@ const CartPage: React.FC = () => {
       const finalPrice = price * (1 - discount / 100);
       return sum + finalPrice * item.quantity;
     }, 0);
+  };
+
+  //Cái này vứt nhé, tại vì hàm này xóa cart, mà mình cần xóa cartProduct
+  const handleCancelCart = async  () => {
+    if (!cart) return;
+    try {
+      await axios.delete(`http://localhost:8080/carts/${cart.id}`);
+      alert("Đã xóa giỏ hàng thành công!");
+      setCart(null); // Xóa giỏ hàng sau khi hủy
+    } catch (error) {
+      console.error("Lỗi khi hủy cart:", error);
+      alert("Lỗi khi hủy cart, xem ở Cart.tsx");
+    }
+  }
+
+  const handleCheckout = async () => {
+    if (!cart) return;
+    try {
+      await axios.patch(`http://localhost:8080/carts/${cart.id}/checkout`);
+      alert("Đã thanh toán giỏ hàng thành công!");
+      setCart(null); // Xóa giỏ hàng sau khi thanh toán
+    } catch (error) {
+      console.error("Lỗi khi thanh toán giỏ hàng:", error);
+      alert("Lỗi khi thanh toán giỏ hàng, xem ở Cart.tsx");
+    }
+  };
+
+  const deleteProduct = async () => {
+    if (!cart) return;
+    try {
+      // Giả sử bạn muốn xóa sản phẩm đầu tiên trong giỏ hàng
+      const productId = cart.cartProducts[0].product.id;
+      await axios.delete(`http://localhost:8080/cart-products/user/${userId}/product/${productId}`);
+      alert("Đã xóa sản phẩm khỏi giỏ hàng thành công!");
+      // Cập nhật lại giỏ hàng sau khi xóa sản phẩm
+      setCart((prevCart) => ({
+        ...prevCart,
+        cartProducts: prevCart.cartProducts.filter(item => item.product.id !== productId)
+      }));
+    } catch (error) {
+      console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
+      alert("Lỗi khi xóa sản phẩm khỏi giỏ hàng, xem ở Cart.tsx");
+    }
   };
 
   if (loading) return <p>Đang tải giỏ hàng...</p>;
@@ -101,6 +150,13 @@ const CartPage: React.FC = () => {
                   )}
                 </p>
                 <p>Số lượng: {item.quantity}</p>
+                <div className="flex justify-end">
+                  <button 
+                    onClick={() => deleteProduct()}
+                    className="mt-2 ml-auto px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600 transition"
+                  >Xóa sản phẩm</button>
+                </div>
+
                 <p className="font-semibold text-right">
                   Tổng: {subtotal.toLocaleString()} đ
                 </p>
@@ -112,8 +168,24 @@ const CartPage: React.FC = () => {
 
       <hr className="my-4" />
 
-      <div className="text-right text-xl font-bold">
+      <div className="text-red-500 text-right text-xl font-bold">
         Tổng cộng: {calculateTotal().toLocaleString()} đ
+      </div>
+      {/* Nút thanh toán */}
+      <div className="flex justify-end">
+        <button 
+          onClick={() => handleCheckout()}
+          className="mt-2 ml-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        >Xác nhận thanh toán</button>
+      </div>
+      {/* Nút hủy đơn hàng */}
+      <div className="mt-6 flex justify-end">
+        <button
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+          onClick={() => alert("Hoàng ơi còn cái này chưa xong nèeee")}
+        >
+          Xóa giỏ hàng
+        </button>
       </div>
     </div>
   );
