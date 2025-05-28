@@ -1,10 +1,9 @@
 // frontend/src/page/user/Login.tsx
 import { useState, useEffect } from "react";
-import { post } from "../../services/callApi"; 
+import { post, get } from "@/services/callApi";
 import { loginRoute,registerRoute } from "@/services/api";
 import { useNavigate } from "react-router-dom";
 
-import { get } from "@/services/callApi";
 import { checkTokenRoute } from "@/services/api";
 import { toast } from "react-toastify";
 const Login = () => {

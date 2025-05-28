@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { get, del, patch } from "../../../../services/callApi";
+import { get, del, patch } from "@/services/callApi";
 import { toast } from "react-toastify";
 import {
   Box,

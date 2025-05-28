@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./page/user/Home";
 import Login from "./page/user/Login";
 import Layout from "./page/user/Layout";
@@ -12,7 +12,6 @@ import UserAdmin from "./page/admin/UserAdmin";
 import OrderManagement from "./page/admin/OrderAdmin";
 import PostAdmin from "./page/admin/PostAdmin";
 import ProfileAdmin from "./page/admin/ProfileAdmin";
-import ProductList from "./components/ProductList";
 import ReviewAdmin from "./page/admin/ReviewAdmin";
 import CartPage from "./page/user/Cart";
 
