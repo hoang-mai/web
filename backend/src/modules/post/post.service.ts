@@ -23,15 +23,10 @@ export class PostService {
       ...createPostDto,
       author: admin,
     });
+    console.log(post);
     return await this.postRepository.save(post);
   }
 
-  async findVisiblePosts() {
-    return this.postRepository.find({
-      where: { isVisible: true },
-      order: { createdAt: 'DESC' },
-    });
-  }
   async findAll() {
     return await this.postRepository.find({
       order: { createdAt: 'DESC' },

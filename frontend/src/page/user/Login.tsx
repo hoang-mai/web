@@ -1,7 +1,7 @@
 // frontend/src/page/user/Login.tsx
 import { useState, useEffect } from "react";
 import { post } from "../../services/callApi"; 
-import { loginRoute,registerRoute } from "@/services/api";
+import { loginRoute,registerRoute,findUserByIdRoute } from "@/services/api";
 import { useNavigate } from "react-router-dom";
 
 import { get } from "@/services/callApi";

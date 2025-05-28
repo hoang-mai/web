@@ -17,7 +17,6 @@ import { ReviewCommentModule } from './modules/review_comment/review_comment.mod
 import { DatabaseModule } from './database/database.module';
 import { join } from 'path';
 import { StatisticsModule } from './modules/statistics/statistics.module';
-import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [

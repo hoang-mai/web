@@ -1,13 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Box,
-  Button,
-  Modal,
-  TextField,
-  Typography,
-  FormControlLabel,
-  Switch,
-} from "@mui/material";
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { Post } from "@/types/post";
 
 interface EditPostModalProps {
@@ -27,19 +19,17 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageFile] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (post) {
       setTitle(post.title);
       setDescription(post.description);
-      setUploadedImageUrl(null);
-      setPreviewUrl(post.imgUrl || null);
-      setIsVisible(post.isVisible ?? true);
+      setImageFile(null);
+      setPreviewUrl(post.imgUrl || null); // Lấy ảnh hiện có từ post
     }
   }, [post]);
 
@@ -48,8 +38,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    if (uploadedImageUrl) formData.append("imgUrl", uploadedImageUrl);
-    formData.append("isVisible", isVisible.toString());
+    if (imageUrl) formData.append("imgUrl", imageUrl);
 
     await onSubmit(post.id, formData);
     onUpdated();
@@ -64,7 +53,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
       data.append("file", file);
       data.append("upload_preset", "Posts_imgs");
       data.append("cloud_name", "dhituyxjn");
-
       const res = await fetch(
         "https://api.cloudinary.com/v1_1/dhituyxjn/image/upload",
         {
@@ -72,9 +60,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
           body: data,
         }
       );
-      const uploaded = await res.json();
-
-      setUploadedImageUrl(uploaded.url);
+      const uploadedImageUrl = await res.json();
+      setImageFile(uploadedImageUrl.url);
       setPreviewUrl(URL.createObjectURL(file));
       setLoading(false);
     }
@@ -95,45 +82,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({
           p: 4,
           width: 500,
           boxShadow: 24,
-          maxHeight: "90vh",
-          overflow: "auto",
-          scrollbarWidth: "none",
-          "&::-webkit-scrollbar": { display: "none" },
         }}
       >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          gap={2}
-          mb={2}
-        >
-          <Typography variant="h6" gutterBottom>
-            Chỉnh sửa bài viết
-          </Typography>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={isVisible}
-                onChange={(e) => setIsVisible(e.target.checked)}
-                sx={{
-                  "& .MuiSwitch-switchBase.Mui-checked": {
-                    color: "#ffc107",
-                  },
-                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                    backgroundColor: "#ffc107",
-                  },
-                  "& .MuiSwitch-track": {
-                    backgroundColor: "#ccc",
-                  },
-                }}
-              />
-            }
-            label="Hiển thị"
-            labelPlacement="start"
-            sx={{ whiteSpace: "nowrap" }}
-          />
-        </Box>
+        <Typography variant="h6" gutterBottom>
+          Chỉnh sửa bài viết
+        </Typography>
 
         <TextField
           fullWidth

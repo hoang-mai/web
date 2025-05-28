@@ -26,11 +26,11 @@ export class Review extends BaseEntity {
   imageUrl: string;
 
   @JoinColumn({ name: 'product_id' })
-  @ManyToOne(() => Product, (product) => product.reviews, { nullable: false })
+  @ManyToOne(() => Product, (product) => product.reviews)
   product: Product;
 
   @JoinColumn({ name: 'user_id' })
-  @ManyToOne(() => User, (user) => user.reviews, { nullable: false })
+  @ManyToOne(() => User, (user) => user.reviews)
   user: User;
 
   @OneToMany(() => ReviewComment, (reviewComment) => reviewComment.review)

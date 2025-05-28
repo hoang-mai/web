@@ -17,7 +17,6 @@ export class ReviewComment extends BaseEntity {
 
   @JoinColumn({ name: 'review_id' })
   @ManyToOne(() => Review, (review) => review.reviewComments, {
-    nullable: true,
     onDelete: 'CASCADE',
   })
   review: Review;
