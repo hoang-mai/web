@@ -182,7 +182,7 @@ const CartPage: React.FC = () => {
       <div className="mt-6 flex justify-end">
         <button
           className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-          onClick={() => alert("Hoàng ơi còn cái này chưa xong nèeee")}
+          onClick={() => alert("Xin hãy xóa các sản phẩm trong giỏ hàng")}
         >
           Xóa giỏ hàng
         </button>

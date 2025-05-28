@@ -1,8 +1,12 @@
+
+import ProductList from "@/components/ProductList";
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Typography } from "@mui/material";
 import ViewPostModal from "@/components/Post/ViewPostModal";
 import UserPostBannerCarousel from "@/components/Post/UserPostBannerCarousel";
+
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -17,6 +21,7 @@ const Home = () => {
   }, []);
 
   return (
+
     <Container maxWidth="lg" sx={{ mt: 3 }}>
       <UserPostBannerCarousel
         posts={posts}
@@ -31,6 +36,7 @@ const Home = () => {
         post={selectedPost}
       />
     </Container>
+
   );
 };
 

@@ -13,6 +13,19 @@ type Product = {
   category: string;
 };
 
+const handleAddToCart = (productId: number) => {
+  axios.post('http://localhost:8080/cart-products', {
+    productId: productId,
+    quantity: 1, // Mặc định thêm 1 sản phẩm
+  })
+  .then(() => {
+    alert('Sản phẩm đã được thêm vào giỏ hàng');
+  })
+  .catch((err) => {
+    console.error('Lỗi khi thêm sản phẩm vào giỏ hàng', err);
+  });
+}
+
 const ProductList = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -64,8 +77,11 @@ const ProductList = () => {
           <h3 className="font-semibold text-lg truncate">{product.name}</h3>
           <p className="text-sm text-gray-600 flex-grow mt-2">{product.description}</p>
           <div className="mt-4">{formatPrice(product.price, product.discount)}</div>
-          <button className="mt-4 bg-yellow-400 text-white font-medium py-2 rounded-xl hover:bg-yellow-500 transition">
-            Mua ngay
+          <button 
+            className="mt-4 bg-yellow-400 text-white font-medium py-2 rounded-xl hover:bg-yellow-500 transition"
+            onClick={() => handleAddToCart(product.id)}
+          >
+            Thêm vào giỏ hàng
           </button>
         </div>
       ))}
