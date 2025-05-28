@@ -3,14 +3,14 @@ import ProductList from "@/components/ProductList";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 import ViewPostModal from "@/components/Post/ViewPostModal";
 import UserPostBannerCarousel from "@/components/Post/UserPostBannerCarousel";
-
+import {Post} from "@/types/post";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [openView, setOpenView] = useState(false);
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const Home = () => {
         onClose={() => setOpenView(false)}
         post={selectedPost}
       />
+        <ProductList/>
     </Container>
 
   );

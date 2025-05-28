@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { get } from "../../../../services/callApi";
+import { get } from "@/services/callApi";
 import { statisticRevenueProduct } from "@/services/api";
 import { Box, Button, Typography, alpha, useTheme } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";

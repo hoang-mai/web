@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { get, patch } from "../../services/callApi";
+import { get, patch } from "@/services/callApi";
 import { findUserByIdRoute,updateUserRoute,findOrdersRoute,checkTokenRoute,updateOrderRoute } from "@/services/api";
 import {
   UserIcon,
