@@ -1,12 +1,10 @@
-
-import ProductList from "@/components/ProductList";
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Container } from "@mui/material";
 import ViewPostModal from "@/components/Post/ViewPostModal";
 import UserPostBannerCarousel from "@/components/Post/UserPostBannerCarousel";
 import {Post} from "@/types/post";
+import ProductList from "@/components/ProductList";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -35,7 +33,7 @@ const Home = () => {
         onClose={() => setOpenView(false)}
         post={selectedPost}
       />
-        <ProductList/>
+      <ProductList />
     </Container>
 
   );
