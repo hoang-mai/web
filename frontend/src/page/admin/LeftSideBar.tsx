@@ -1,7 +1,6 @@
 
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
-  Dashboard,
   Inventory2,
   People,
   ShoppingCart,
@@ -29,11 +28,10 @@ const LeftSideBar = ({ collapsed, setCollapsed }: LeftSideBarProps) => {
   const admin = useProfileAdmin((state) => state.admin);
 
   const navItems: NavItem[] = [
-    { label: "Trang chủ", path: "/admin", icon: <Dashboard /> },
+    { label: "Thống kê", path: "/admin", icon: <Assessment /> },
     { label: "Sản phẩm", path: "/admin/products", icon: <Inventory2 /> },
     { label: "Người dùng", path: "/admin/users", icon: <People /> },
     { label: "Đơn hàng", path: "/admin/orders", icon: <ShoppingCart /> },
-    { label: "Thống kê", path: "/admin/statistics", icon: <Assessment /> },
     { label: "Đánh giá", path: "/admin/reviews", icon: <ChatBubbleOutline /> },
     { label: "Đăng bài", path: "/admin/posts", icon: <JoinFull /> }
   ];
