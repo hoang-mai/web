@@ -1,5 +1,13 @@
 import React, { useState, useRef } from "react";
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  TextField,
+  Typography,
+  FormControlLabel,
+  Switch,
+} from "@mui/material";
 
 interface CreatePostModalProps {
   open: boolean;
@@ -16,23 +24,25 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageFile] = useState<string | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSubmit = async () => {
-    if (!title || !description || !imageUrl) return;
+    if (!title || !description || !uploadedImageUrl) return;
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("imgUrl", imageUrl);
-
+    formData.append("imgUrl", uploadedImageUrl);
+    formData.append("isVisible", isVisible.toString());
     await onSubmit(formData);
     setTitle("");
     setDescription("");
-    setImageFile(null);
+    setUploadedImageUrl(null);
     setPreviewUrl(null);
+    setIsVisible(true);
     onCreated();
     onClose();
   };
@@ -52,8 +62,9 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
           body: data,
         }
       );
-      const uploadedImageUrl = await res.json();
-      setImageFile(uploadedImageUrl.url);
+      const uploaded = await res.json();
+
+      setUploadedImageUrl(uploaded.url);
       setPreviewUrl(URL.createObjectURL(file));
       setLoading(false);
     }
@@ -72,6 +83,10 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
           p: 4,
           width: 500,
           boxShadow: 24,
+          maxHeight: "90vh",
+          overflow: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": { display: "none" },
         }}
       >
         <Typography variant="h6" gutterBottom>
@@ -95,7 +110,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
           sx={{ mb: 2 }}
         />
 
-        {/* Khung chọn ảnh */}
+        {/* Chọn ảnh */}
         <Box display="flex" alignItems="center" gap={3} mb={2}>
           <Box
             sx={{
@@ -149,6 +164,29 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
             </Button>
           </Box>
         </Box>
+
+        {/* Switch bật/tắt hiển thị */}
+        <FormControlLabel
+          control={
+            <Switch
+              checked={isVisible}
+              onChange={(e) => setIsVisible(e.target.checked)}
+              sx={{
+                "& .MuiSwitch-switchBase.Mui-checked": {
+                  color: "var(--color-primary)",
+                },
+                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                  backgroundColor: "#ffc107",
+                },
+                "& .MuiSwitch-track": {
+                  backgroundColor: "#ccc",
+                },
+              }}
+            />
+          }
+          label="Hiển thị trên trang người dùng"
+          sx={{ mb: 2 }}
+        />
 
         <Button
           variant="contained"

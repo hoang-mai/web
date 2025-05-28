@@ -13,15 +13,15 @@ function LayoutAdmin() {
   const { isSessionExpired, hideSessionExpiredModal } = useSessionExpired();
   const [collapsed, setCollapsed] = useState(false);
   const { clearAdmin } = useProfileAdmin.getState();
+  var drawerWidth = collapsed ? 80 : 256;
   useEffect(() => {
-    get(checkTokenRoute)
-      .then((res) => {
-        if (res.data.data.role === "user") {
-          navigate("/", { replace: true });
-          return;
-        }
-        useProfileAdmin.getState().setAdmin(res.data.data);
-      })
+    get(checkTokenRoute).then((res) => {
+      if (res.data.data.role === "user") {
+        navigate("/", { replace: true });
+        return;
+      }
+      useProfileAdmin.getState().setAdmin(res.data.data);
+    });
   }, []);
 
   if (!localStorage.getItem("access_token")) {
@@ -54,14 +54,13 @@ function LayoutAdmin() {
           </div>
         </Box>
       </Modal>
-      <div className="flex">
+      <div className="flex min-h-screen">
         <LeftSideBar collapsed={collapsed} setCollapsed={setCollapsed} />
         <div
-          className={`${
-            collapsed ? "ml-20" : "ml-64"
-          } w-full p-6 transition-all duration-300`}
+          style={{ marginLeft: `${drawerWidth}px` }}
+          className="w-full p-6 transition-all duration-300"
         >
-          <Outlet />
+          <Outlet context={{ drawerWidth }} />
         </div>
       </div>
     </>
