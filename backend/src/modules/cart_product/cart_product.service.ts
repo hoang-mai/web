@@ -7,7 +7,6 @@ import { Cart } from 'src/entities/cart.entity';
 import { CreateCartProductDto } from './dtos/createCart_Product.dto';
 import { UpdateCartProductDto } from './dtos/updateCart_Product.dto';
 
-
 @Injectable()
 export class CartProductService {
   constructor(
@@ -62,16 +61,18 @@ export class CartProductService {
     }
 
     // Cập nhật số lượng (nếu có)
-    if (dto.quantity !== undefined) {
-      item.quantity = dto.quantity;
-    }
+      if (dto.quantity !== undefined && dto.quantity !== null) {
+        if ( dto.quantity > 0 ) {
+        item.quantity = item.quantity + dto.quantity;
+        }
+      }
 
     return this.cartProductRepo.save(item);
   }
 
   async removeFromCart(id: number): Promise<void> {
     const result = await this.cartProductRepo.delete(id);
-    if (result.affected === 0) {
+    if (result.affected === 0 ) {
       throw new NotFoundException(`Cart item with ID ${id} not found`);
     }
   }
