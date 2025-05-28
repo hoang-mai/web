@@ -1,5 +1,5 @@
-import { pushNotificationSubscribe } from "./api";
-import { post } from "./callApi";
+import { pushNotificationSubscribe } from "./api.ts";
+import { post } from "./callApi.ts";
 
 export function serviceWorkerRegistration() {
   if ("serviceWorker" in navigator) {

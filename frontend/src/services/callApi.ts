@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { refreshTokenRoute } from "./api";
+import { refreshTokenRoute } from "./api.ts"
 import { useSessionExpired } from "@/store/useSessionExpired";
 
 const axiosInstance = axios.create({
