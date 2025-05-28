@@ -10,6 +10,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class CartProductController {
   constructor(private readonly cartProductService: CartProductService) {}
 
+  // tạo mới sản phẩm trong giỏ hàng
   @Post()
   async create(@Body() createCartProductDto: CreateCartProductDto) {
     const data = await this.cartProductService.addToCart(createCartProductDto);
@@ -20,6 +21,7 @@ export class CartProductController {
     };
   }
 
+  // Lấy tất cả sản phẩm trong giỏ hàng
   @Get()
   async findAll() {
     const data = await this.cartProductService.findAll();
@@ -30,6 +32,7 @@ export class CartProductController {
     };
   }
 
+  // tìm kiếm sản phẩm trong giỏ hàng theo id
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.cartProductService.findOne(+id);
@@ -40,6 +43,7 @@ export class CartProductController {
     };
   }
 
+  // Cập nhật sản phẩm trong giỏ hàng theo id
   @Patch(':id')
   async update(
     @Param('id') id: string,

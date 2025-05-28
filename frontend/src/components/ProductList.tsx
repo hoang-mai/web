@@ -1,6 +1,8 @@
 // frontend/src/components/ProductList.tsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { post } from '@service/api';
 
 type Product = {
   id: number;
@@ -13,12 +15,21 @@ type Product = {
   category: string;
 };
 
+const token = localStorage.getItem('access_token');
+let userId = null;
+if (token){
+  const decodedToken = jwtDecode(token); // Sử dụng hàm jwtDecode
+  userId = decodedToken.sub; // Lấy user ID từ trường sub
+}
+
+//hàm xử lý thêm sản phẩm vào giỏ hàng
 const handleAddToCart = (productId: number) => {
   axios.post('http://localhost:8080/cart-products', {
+    cartId: userId, // Sử dụng userId làm cartId
     productId: productId,
     quantity: 1, // Mặc định thêm 1 sản phẩm
   })
-  .then(() => {
+  .then(() => { 
     alert('Sản phẩm đã được thêm vào giỏ hàng');
   })
   .catch((err) => {
