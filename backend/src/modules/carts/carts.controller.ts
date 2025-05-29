@@ -70,7 +70,7 @@ export class CartsController {
       req.connection.remoteAddress ||
       req.socket.remoteAddress ||
       (req.connection.socket ? req.connection.socket.remoteAddress : null);
-
+    console.log(ipAddr)
     return await this.cartsService.createPayment(
       createPayment,
       ipAddr,

@@ -173,7 +173,7 @@ export class CartsService {
     vnp_Params['vnp_ExpireDate'] = dayjs(date)
       .add(15, 'minute')
       .format('YYYYMMDDHHmmss');
-
+    console.log('vnp_Params:', vnp_Params);
     vnp_Params = this.sortObject(vnp_Params);
 
     const querystring = qs;
