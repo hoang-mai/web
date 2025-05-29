@@ -267,8 +267,11 @@ export class CartsService {
     // 5. Cập nhật đơn hàng
     if (rspCode === '00') {
       order.status = OrderStatus.COMPLETED;
+      console.log(order.status)
     } else {
+
       order.status = OrderStatus.CANCELLED;
+      console.log(order.status)
     }
     await this.orderRepository.save(order);
 
