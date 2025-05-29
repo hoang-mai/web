@@ -4,6 +4,8 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { post } from '@service/api';
 import { useNavigate } from 'react-router-dom';
+import { get } from '@/services/callApi';
+import { productRoute } from '@/services/api';
 
 type Product = {
   id: number;
@@ -18,7 +20,7 @@ type Product = {
 
 const token = localStorage.getItem('access_token');
 let userId = null;
-if (token){
+if (token) {
   const decodedToken = jwtDecode(token); // Sử dụng hàm jwtDecode
   userId = decodedToken.sub; // Lấy user ID từ trường sub
 }
@@ -30,12 +32,12 @@ const handleAddToCart = (productId: number) => {
     productId: productId,
     quantity: 1, // Mặc định thêm 1 sản phẩm
   })
-  .then(() => { 
-    alert('Sản phẩm đã được thêm vào giỏ hàng');
-  })
-  .catch((err) => {
-    console.error('Lỗi khi thêm sản phẩm vào giỏ hàng', err);
-  });
+    .then(() => {
+      alert('Sản phẩm đã được thêm vào giỏ hàng');
+    })
+    .catch((err) => {
+      console.error('Lỗi khi thêm sản phẩm vào giỏ hàng', err);
+    });
 }
 
 const ProductList = () => {
@@ -43,11 +45,10 @@ const ProductList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8080/products')
-      .then((res) => {
-        setProducts(res.data.data.data);
-      })
+
+    get(productRoute).then((res) => {
+      setProducts(res.data.data.data);
+    })
       .catch((err) => {
         console.error('Lỗi khi tải sản phẩm', err);
       });
@@ -76,7 +77,7 @@ const ProductList = () => {
   };
 
   return (
-      <div className="bg-gray-100 py-4">
+    <div className="bg-gray-100 py-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 px-2 sm:px-4 max-w-7xl mx-auto">
         {products.map((product) => (
           <div
@@ -90,7 +91,7 @@ const ProductList = () => {
                 GIẢM {product.discount}%
               </div>
             )}
-            
+
             {/* Product image */}
             <div className="p-4 pb-2 relative">
               <img
@@ -101,10 +102,10 @@ const ProductList = () => {
                   (e.target as HTMLImageElement).src = "https://cdn.tgdd.vn/Products/Images/42/default.png";
                 }}
               />
-              
+
               {/* Quick actions */}
               <div className="absolute bottom-2 right-2 flex space-x-1">
-                <button 
+                <button
                   className="bg-gray-100 hover:bg-gray-200 p-1.5 rounded-full"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -115,7 +116,7 @@ const ProductList = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
-                <button 
+                <button
                   className="bg-gray-100 hover:bg-gray-200 p-1.5 rounded-full"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -128,14 +129,14 @@ const ProductList = () => {
                 </button>
               </div>
             </div>
-            
+
             {/* Product info */}
             <div className="px-3 pb-3 flex-grow flex flex-col">
               {/* Product name */}
               <h3 className="font-medium text-sm line-clamp-2 min-h-[40px] mb-1">
                 {product.name}
               </h3>
-              
+
               {/* Rating */}
               <div className="flex items-center mb-1.5">
                 <div className="flex text-yellow-400">
@@ -157,12 +158,12 @@ const ProductList = () => {
                 </div>
                 <span className="text-xs text-gray-500 ml-1">({Math.floor(Math.random() * 100) + 10})</span>
               </div>
-              
+
               {/* Short description - optional */}
               <p className="text-xs text-gray-500 line-clamp-2 mb-2 flex-grow">
                 {product.description}
               </p>
-              
+
               {/* Price */}
               <div className="mt-auto">
                 {product.discount > 0 ? (
@@ -180,7 +181,7 @@ const ProductList = () => {
                   </span>
                 )}
               </div>
-              
+
               {/* Stock status */}
               {product.stock <= 5 && product.stock > 0 && (
                 <div className="mt-1 text-xs text-orange-600">
@@ -192,14 +193,13 @@ const ProductList = () => {
                   Tạm hết hàng
                 </div>
               )}
-              
+
               {/* Add to cart button */}
-              <button 
-                className={`mt-2 w-full py-2 rounded-md text-sm font-medium flex items-center justify-center ${
-                  product.stock > 0 
-                    ? 'bg-[#fdd835] hover:bg-[#fbc02d] text-[#333]' 
+              <button
+                className={`mt-2 w-full py-2 rounded-md text-sm font-medium flex items-center justify-center ${product.stock > 0
+                    ? 'bg-[#fdd835] hover:bg-[#fbc02d] text-[#333]'
                     : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                }`}
+                  }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (product.stock > 0) {
@@ -213,7 +213,7 @@ const ProductList = () => {
                 </svg>
                 {product.stock > 0 ? 'Thêm vào giỏ' : 'Hết hàng'}
               </button>
-              
+
               {/* Promotion tag - randomly shown on some products */}
               {Math.random() > 0.5 && (
                 <div className="mt-2 bg-blue-50 border border-blue-100 rounded p-1.5 text-xs text-blue-800 flex items-start">

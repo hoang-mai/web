@@ -23,6 +23,7 @@ export const paymentRoute = "/carts/create-payment-url";
 //admin
 
 //product
+export const productRoute = "/products";
 export const productAdmin = "/products/admin";
 export const productStatistic = "/products/admin/statistic";
 
