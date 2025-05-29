@@ -38,7 +38,7 @@ export class CartsService {
       vnp_Url: string;
       vnp_ReturnUrl: string;
     },
-  ) {}
+  ) { }
 
   // Tạo mới giỏ hàng.
   // Lưu ý: Trong thực tế, giỏ hàng thường được tạo tự động khi người dùng đăng ký,
@@ -276,6 +276,34 @@ export class CartsService {
       console.log(order.status)
     }
     await this.orderRepository.save(order);
+
+    const orderItems = await this.orderItemRepository.find({
+      where: { order: { id: order.id } },
+      relations: ['product'],
+    });
+
+    await this.productRepository.save(
+      orderItems.map(item => {
+        const product = item.product;
+        product.stock -= item.quantity; // Giảm số lượng tồn kho
+        return product;
+      }),
+    );
+
+    const cartProducts = await this.cartProductRepository
+      .createQueryBuilder('cartProduct')
+      .leftJoin('cartProduct.cart', 'cart')
+      .leftJoin('cart.user', 'user')
+      .leftJoin('user.order', 'order')
+      .where('order.id = :orderId', { orderId: order.id })
+      .getMany();
+
+    const cartProductIds = cartProducts.map(cp => cp.id);
+
+    if (cartProductIds.length > 0) {
+      await this.cartProductRepository.delete(cartProductIds);
+    }
+
 
     // 6. Trả kết quả
     return { RspCode: '00', Message: 'Success' };
