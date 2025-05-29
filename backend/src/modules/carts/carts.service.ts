@@ -167,7 +167,7 @@ export class CartsService {
     vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + orderId;
     vnp_Params['vnp_OrderType'] = 'other';
     vnp_Params['vnp_Amount'] = amount * 100; // VNPAY yêu cầu số tiền tính bằng đồng xu
-    vnp_Params['vnp_ReturnUrl'] = this.vnp.vnp_ReturnUrl;
+    vnp_Params['vnp_ReturnUrl'] = this.vnp.vnp_ReturnUrl.replace(/;$/, '');
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = createDate;
     vnp_Params['vnp_ExpireDate'] = dayjs(date)
