@@ -17,6 +17,9 @@ export const updateUserRoute = "/users/:id";
 export const findOrdersRoute = "/orders/filter";
 export const updateOrderRoute = "/orders/update/:id";
 
+//payment
+export const paymentRoute = "/carts/create-payment-url";
+
 //admin
 
 //product

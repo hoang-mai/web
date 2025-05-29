@@ -25,7 +25,7 @@ export class Order extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
 
-  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.SHIPPING })
+  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
@@ -33,5 +33,4 @@ export class Order extends BaseEntity {
 
   @Column({ type: 'varchar', nullable: false, default: ' ' })
   address: string;
-
 }
