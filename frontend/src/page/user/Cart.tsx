@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
-import {post} from "@/services/callApi.ts";
+import {get, post} from "@/services/callApi.ts";
 import {paymentRoute} from "@/services/api.ts";
 
 interface Product {
@@ -43,8 +43,8 @@ const CartPage: React.FC = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await axios.get<Cart>(
-          `http://localhost:8080/carts/user/${userId}`
+        const res = await get(
+          `/carts/user/${userId}`
         );
         setCart(res.data);
       } catch (error) {
