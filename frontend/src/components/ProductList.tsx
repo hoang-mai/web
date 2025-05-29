@@ -2,10 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { post } from '@service/api';
 import { useNavigate } from 'react-router-dom';
-import { get } from '@/services/callApi';
-import { productRoute } from '@/services/api';
+import { get, post } from '@/services/callApi';
+import { addProductToCartRoute, productRoute } from '@/services/api';
 
 type Product = {
   id: number;
@@ -27,7 +26,7 @@ if (token) {
 
 //hàm xử lý thêm sản phẩm vào giỏ hàng
 const handleAddToCart = (productId: number) => {
-  axios.post('http://localhost:8080/cart-products', {
+  post(addProductToCartRoute, {
     cartId: userId, // Sử dụng userId làm cartId
     productId: productId,
     quantity: 1, // Mặc định thêm 1 sản phẩm
@@ -197,8 +196,8 @@ const ProductList = () => {
               {/* Add to cart button */}
               <button
                 className={`mt-2 w-full py-2 rounded-md text-sm font-medium flex items-center justify-center ${product.stock > 0
-                    ? 'bg-[#fdd835] hover:bg-[#fbc02d] text-[#333]'
-                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                  ? 'bg-[#fdd835] hover:bg-[#fbc02d] text-[#333]'
+                  : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                   }`}
                 onClick={(e) => {
                   e.stopPropagation();
