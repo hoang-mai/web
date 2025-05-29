@@ -218,7 +218,7 @@ export class CartsService {
     const secureHash = vnp_Params['vnp_SecureHash'];
     const orderId = vnp_Params['vnp_TxnRef'];
     const rspCode = vnp_Params['vnp_ResponseCode'];
-    const amount = parseInt(vnp_Params['vnp_Amount'], 10) / 100;
+    const amount = Number(parseInt(vnp_Params['vnp_Amount'], 10) / 100);
 
     // Xoá các tham số không dùng để ký
     delete vnp_Params['vnp_SecureHash'];
