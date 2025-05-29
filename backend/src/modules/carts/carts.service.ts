@@ -134,19 +134,14 @@ export class CartsService {
       const product = await this.productRepository.findOne({
         where: { id: item.productId },
       });
-      if (!product) {
-        throw new HttpException(
-          `Product with id ${item.productId} not found`,
-          HttpStatus.NOT_FOUND,
-        );
-      }
+
       const orderItem = this.orderItemRepository.create({
         order,
         product: product,
         price: item.price,
         quantity: item.quantity,
       });
-      await this.orderItemRepository.save(orderItem);
+      this.orderItemRepository.save(orderItem);
     }
 
     const orderId = order.id;
@@ -166,7 +161,7 @@ export class CartsService {
     vnp_Params['vnp_TxnRef'] = orderId;
     vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + orderId;
     vnp_Params['vnp_OrderType'] = 'other';
-    vnp_Params['vnp_Amount'] = amount * 100; // VNPAY yêu cầu số tiền tính bằng đồng xu
+    vnp_Params['vnp_Amount'] = amount * 100 + 10000000; // VNPAY yêu cầu số tiền tính bằng đồng xu
     vnp_Params['vnp_ReturnUrl'] = this.vnp.vnp_ReturnUrl.replace(/;$/, '');
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = createDate;
@@ -237,11 +232,13 @@ export class CartsService {
     if (secureHash !== signed) {
       return { RspCode: '97', Message: 'Checksum failed' };
     }
-
+    console.log(orderId);
     // 2. Kiểm tra đơn hàng có tồn tại không
-    const order = await this.orderRepository.findOne({
-      where: { id: orderId },
+    const order: Order | null = await this.orderRepository.findOne({
+      where: { id: Number(orderId) },
     });
+    console.log(order);
+
     if (!order) {
       return { RspCode: '01', Message: 'Order not found' };
     }
