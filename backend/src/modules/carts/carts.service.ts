@@ -247,7 +247,9 @@ export class CartsService {
     if (!order) {
       return { RspCode: '01', Message: 'Order not found' };
     }
-
+    console.log(amount);
+    console.log(order.totalPrice);
+    console.log(order.totalPrice === amount);
     // 3. Kiểm tra số tiền
     if (order.totalPrice !== amount) {
       return { RspCode: '04', Message: 'Amount invalid' };
