@@ -134,7 +134,12 @@ export class CartsService {
       const product = await this.productRepository.findOne({
         where: { id: item.productId },
       });
-
+      if (!product) {
+        throw new HttpException(
+          `Product with id ${item.productId} not found`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
       const orderItem = this.orderItemRepository.create({
         order,
         product: product,
