@@ -23,6 +23,20 @@ const UserListPanel = ({ userList, selected, onSelect }) => {
             <ListItemButton
               selected={selected === item.id}
               onClick={() => onSelect(item)}
+              sx={{
+                borderTopLeftRadius: "10px",
+                borderBottomLeftRadius: "10px",
+                "&.Mui-selected": {
+                  bgcolor: "#ffe169",
+                  color: "#1c1c1c",
+                },
+                "&:hover": {
+                  bgcolor: "#f5f5f5",
+                },
+                "&.Mui-selected:hover": {
+                  bgcolor: "#fad643",
+                },
+              }}
             >
               <ListItemText
                 primary={item.user?.userName || "Không rõ tên"}

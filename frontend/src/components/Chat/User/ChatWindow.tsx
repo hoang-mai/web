@@ -93,7 +93,7 @@ const ChatWindow = ({
     <Box
       sx={{
         position: "fixed",
-        bottom: 80,
+        bottom: 90,
         right: 24,
         width: 300,
         height: 400,
@@ -109,15 +109,17 @@ const ChatWindow = ({
       <Box
         sx={{
           p: 1,
-          bgcolor: "#007bff",
-          color: "white",
+          bgcolor: "#ffe150",
+          color: "#2a2e34",
+          fontSize: "1rem",
+          fontWeight: "600",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
         <span>Hỗ trợ khách hàng</span>
-        <Button onClick={onClose} sx={{ color: "white", minWidth: 0 }}>
+        <Button onClick={onClose} sx={{ color: "#2a2e34", minWidth: 0 }}>
           ×
         </Button>
       </Box>
@@ -134,7 +136,7 @@ const ChatWindow = ({
             >
               <Box
                 sx={{
-                  bgcolor: msg.senderId === userId ? "#e1f5fe" : "#fce4ec",
+                  bgcolor: msg.senderId === userId ? "#ffc300" : "#ebebeb",
                   px: 2,
                   py: 1,
                   borderRadius: 2,
@@ -157,11 +159,25 @@ const ChatWindow = ({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "&:hover fieldset": {
+                borderColor: "#ffd000",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#ffd000",
+              },
+            },
+          }}
         />
         <Button
           variant="contained"
           onClick={handleSend}
           disabled={!input.trim()}
+          sx = {{
+              bgcolor: "#ffc60a",
+              color: "#646464",
+          }}
         >
           Gửi
         </Button>

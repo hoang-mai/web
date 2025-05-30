@@ -109,7 +109,7 @@ const ChatBoxPanel = ({ chatBox }) => {
               mb={1}
             >
               <Box
-                bgcolor={msg.senderId === adminId ? "#e1f5fe" : "#fce4ec"}
+                bgcolor={msg.senderId === adminId ? "#ffc300" : "#ebebeb"}
                 display="inline-block"
                 px={2}
                 py={1}
@@ -130,11 +130,27 @@ const ChatBoxPanel = ({ chatBox }) => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "&:hover fieldset": {
+                borderColor: "#ffd000",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#ffd000",
+              },
+            },
+          }}
         />
         <Button
           variant="contained"
           onClick={handleSend}
           disabled={!input.trim()}
+          sx = {
+            {
+              bgcolor: "#ffc60a",
+              color: "#646464",
+            }
+          }
         >
           Gửi
         </Button>
