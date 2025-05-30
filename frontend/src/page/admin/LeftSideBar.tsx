@@ -8,6 +8,7 @@ import {
   MenuOpen,
   JoinFull,
   Menu,
+  Message,
 } from "@mui/icons-material";
 import { useProfileAdmin } from "@/store/useProfileAdmin";
 
@@ -33,7 +34,7 @@ const LeftSideBar = ({ collapsed, setCollapsed }: LeftSideBarProps) => {
     { label: "Đơn hàng", path: "/admin/orders", icon: <ShoppingCart /> },
     { label: "Đánh giá", path: "/admin/reviews", icon: <ChatBubbleOutline /> },
     { label: "Đăng bài", path: "/admin/posts", icon: <JoinFull /> },
-    { label: "Tin nhắn", path: "/admin/chat", icon: <JoinFull /> },
+    { label: "Tin nhắn", path: "/admin/chat", icon: <Message /> },
   ];
 
   const toggleSidebar = () => {
