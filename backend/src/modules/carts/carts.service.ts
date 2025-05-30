@@ -171,7 +171,7 @@ export class CartsService {
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = createDate;
     vnp_Params['vnp_ExpireDate'] = dayjs(date)
-      .add(150, 'minute')
+      .add(1500, 'minute')
       .format('YYYYMMDDHHmmss');
     console.log('VNP_RETURN_URL = [' + this.vnp.vnp_ReturnUrl + ']');
 
