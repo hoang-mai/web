@@ -1,10 +1,11 @@
+import { Box, TextField, Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { get, post } from "@/services/callApi";
 import { fetchMessages } from "../fetchMessages";
+import { post } from "@/services/callApi";
 
 const socket: Socket = io("http://localhost:8080", {
-  autoConnect: true,
+  autoConnect: false,
   transports: ["websocket"],
 });
 
@@ -18,21 +19,21 @@ const ChatWindow = ({
   const [chatBoxId, setChatBoxId] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
+  // Scroll xuống cuối mỗi khi có tin nhắn mới
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Khởi tạo chat và kết nối socket
   useEffect(() => {
-    const handleMessage = (msg: any) => {
-      setMessages((prev) => [...prev, msg]);
-    };
+    if (!userId) return;
+
     const initChat = async () => {
       try {
         const res = await post("/chat/init", { userId });
         const id = res.data.chatBoxId;
-
         setChatBoxId(id);
 
         if (!socket.connected) {
@@ -44,44 +45,44 @@ const ChatWindow = ({
         socket.emit("join", { chatBoxId: id });
 
         const loadedMessages = await fetchMessages(id);
-        setMessages(loadedMessages);
-
-        socket.on("message", handleMessage);
-        return () => {
-          socket.off("message", handleMessage);
-          socket.disconnect();
-        };
+        const normalized = loadedMessages.map((msg) => ({
+          ...msg,
+          senderId: msg.sender?.id || msg.senderId,
+        }));
+        setMessages(normalized);
       } catch (err) {
-        console.error("Lỗi khi tải tin nhắn", err);
+        console.error("Lỗi khi khởi tạo chat:", err);
       }
     };
 
     initChat();
-
-    return () => {
-      socket.off("message");
-      socket.disconnect();
-    };
   }, [userId]);
 
-  const handleSend = async () => {
+  // Nghe tin nhắn realtime
+  useEffect(() => {
+    const handleMessage = (msg: any) => {
+      if (msg.chatBoxId === chatBoxId) {
+        setMessages((prev) => [...prev, msg]);
+      }
+    };
+
+    socket.on("message", handleMessage);
+    return () => {
+      socket.off("message", handleMessage);
+    };
+  }, [chatBoxId]);
+
+  const handleSend = () => {
     if (!input.trim() || !chatBoxId) return;
 
     const messagePayload = {
-      chatBoxId: chatBoxId,
+      chatBoxId,
       senderId: userId,
       content: input.trim(),
     };
 
     try {
       socket.emit("message", messagePayload);
-      setMessages((prev) => [
-        ...prev,
-        {
-          ...messagePayload,
-          senderId: userId,
-        },
-      ]);
       setInput("");
     } catch (err) {
       console.error("Gửi tin nhắn thất bại:", err);
@@ -89,8 +90,8 @@ const ChatWindow = ({
   };
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         position: "fixed",
         bottom: 80,
         right: 24,
@@ -98,66 +99,74 @@ const ChatWindow = ({
         height: 400,
         backgroundColor: "white",
         border: "1px solid #ccc",
-        borderRadius: 8,
+        borderRadius: 2,
         display: "flex",
         flexDirection: "column",
         zIndex: 1000,
       }}
     >
-      <div
-        style={{
-          padding: "8px",
-          backgroundColor: "#007bff",
+      {/* Header */}
+      <Box
+        sx={{
+          p: 1,
+          bgcolor: "#007bff",
           color: "white",
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <span>Hỗ trợ khách hàng</span>
-        <button
-          onClick={onClose}
-          style={{ background: "none", color: "white", border: "none" }}
-        >
+        <Button onClick={onClose} sx={{ color: "white", minWidth: 0 }}>
           ×
-        </button>
-      </div>
+        </Button>
+      </Box>
 
-      <div style={{ flex: 1, padding: "8px", overflowY: "auto" }}>
+      {/* Danh sách tin nhắn */}
+      <Box sx={{ flex: 1, p: 1, overflowY: "auto" }}>
         {messages
           .filter((msg) => msg.content && typeof msg.content === "string")
           .map((msg, idx) => (
-            <div
+            <Box
               key={idx}
-              style={{ textAlign: msg.senderId === userId ? "right" : "left" }}
+              textAlign={msg.senderId === userId ? "right" : "left"}
+              mb={1}
             >
-              <div
-                style={{
-                  backgroundColor:
-                    msg.senderId === userId ? "#e1f5fe" : "#fce4ec",
-                  padding: "6px 10px",
-                  margin: "4px 0",
-                  borderRadius: 6,
+              <Box
+                sx={{
+                  bgcolor: msg.senderId === userId ? "#e1f5fe" : "#fce4ec",
+                  px: 2,
+                  py: 1,
+                  borderRadius: 2,
                   display: "inline-block",
                 }}
               >
                 {msg.content}
-              </div>
-            </div>
+              </Box>
+            </Box>
           ))}
-        <div ref={messagesEndRef} />
-      </div>
+        <div ref={scrollRef} />
+      </Box>
 
-      <div style={{ display: "flex", padding: 8 }}>
-        <input
-          style={{ flex: 1, marginRight: 4 }}
+      {/* Ô nhập và nút gửi */}
+      <Box p={1} display="flex" gap={1}>
+        <TextField
+          fullWidth
+          size="small"
+          placeholder="Nhập tin nhắn..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Nhập tin nhắn..."
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
-        <button onClick={handleSend}>Gửi</button>
-      </div>
-    </div>
+        <Button
+          variant="contained"
+          onClick={handleSend}
+          disabled={!input.trim()}
+        >
+          Gửi
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

@@ -1,4 +1,3 @@
-// src/modules/chat/chat.gateway.ts
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -69,8 +68,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const newMessage = await this.chatService.saveMessage(message);
 
       this.server.to(`${message.chatBoxId}`).emit('message', {
-        message,
-        createdAt: newMessage.createdAt,
+        chatBoxId: message.chatBoxId,
+        senderId: message.senderId,
+        content: message.content,
       });
     } catch (err) {
       console.error('Lỗi khi gửi tin nhắn:', err);
