@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
@@ -9,6 +9,8 @@ import ListItemText from "@mui/material/ListItemText";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import { post } from "./services/callApi";
+import { pushNotificationToAdminRoute } from "./services/api";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -43,7 +45,16 @@ const OrderSuccess: React.FC = () => {
     const sec = dateStr.slice(12, 14);
     return `${hour}:${min}:${sec} ${day}/${month}/${year} `;
   };
-
+  useEffect(() => {
+    post(pushNotificationToAdminRoute, {
+      title: "Đặt hàng thành công",
+      body: `Đơn hàng mới từ khách hàng. Số tiền: ${formatAmount(amount)}`
+    }).then(() => {
+      console.log("Thông báo đã được gửi đến quản trị viên");
+    }).catch((error) => {
+      console.error("Lỗi khi gửi thông báo:", error);
+    });
+  }, []);
   return (
     <Container maxWidth="sm" sx={{ mt: 8 }}>
       <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
