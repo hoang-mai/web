@@ -18,6 +18,7 @@ import { DatabaseModule } from './database/database.module';
 import { join } from 'path';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { Message } from './entities/message.entity';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ChatModule } from './modules/chat/chat.module';
     ProductsModule,
     CartsModule,
     CartProductModule,
+    ChatModule,
     OrdersModule,
     OrderItemsModule,
     PushNotificationModule,

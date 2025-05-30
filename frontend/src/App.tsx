@@ -16,6 +16,7 @@ import ReviewAdmin from "./page/admin/ReviewAdmin";
 import CartPage from "./page/user/Cart";
 import ProductDetailUser from "./components/ProductDetailUser";
 import OrderSuccess from "./OrderSuccess";
+import AdminChatPage from "./page/admin/AdminChatPage";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path="reviews" element={<ReviewAdmin />} />
         <Route path="posts" element={<PostAdmin />} />
         <Route path="profile" element={<ProfileAdmin />} />
+        <Route path="chat" element={<AdminChatPage />} />
       </Route>
     </Routes>
   );

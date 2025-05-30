@@ -1,52 +1,103 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Chat } from 'src/entities/chat.entity';
-import { Message } from 'src/entities/message.entity';
-import { Role } from 'src/entities/role.enum';
-import { User } from 'src/entities/user.entity';
+import { CreateMessageDto } from './dto/create-message.dto';
 import { Repository } from 'typeorm';
+import { User } from 'src/entities/user.entity';
+import { Message } from 'src/entities/message.entity';
+import { Chat } from 'src/entities/chat.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ChatService {
   constructor(
-    @InjectRepository(Chat) private chatRepo: Repository<Chat>,
-    @InjectRepository(Message) private msgRepo: Repository<Message>,
-    @InjectRepository(User) private userRepo: Repository<User>,
+    @InjectRepository(Chat)
+    private chatRepository: Repository<Chat>,
+
+    @InjectRepository(Message)
+    private messageRepository: Repository<Message>,
+
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
-  async findOrCreateChat(userId: number, adminId: number): Promise<Chat> {
-    let chat = await this.chatRepo.findOne({
-      where: { user: { id: userId }, admin: { id: adminId } },
-      relations: ['user', 'admin'],
+  async getOrCreateChatBox(userId: string) {
+    let chatBox = await this.chatRepository.findOne({
+      where: { user: { id: +userId } },
+      relations: ['user'],
     });
 
-    if (!chat) {
-      const user = await this.userRepo.findOneBy({ id: userId });
-      const admin = await this.userRepo.findOneBy({ id: adminId });
-      if (!user || !admin) throw new Error('User or Admin not found');
-
-      chat = this.chatRepo.create({ user, admin });
-      await this.chatRepo.save(chat);
+    if (!chatBox) {
+      const user = await this.userRepository.findOneBy({ id: +userId });
+      if (!user) {
+        throw new Error(`User ID ${userId} không tồn tại`);
+      }
+      chatBox = this.chatRepository.create({ user });
+      await this.chatRepository.save(chatBox);
     }
-    return chat;
+
+    return chatBox;
   }
 
-  async createMessage(senderId: number, receiverId: number, content: string) {
-    const sender = await this.userRepo.findOneBy({ id: senderId });
-    const receiver = await this.userRepo.findOneBy({ id: receiverId });
-    if (!sender || !receiver)
-      throw new Error('Không tìm thấy người dùng hoặc Quản trị viên');
+  async getMessagesByChatBoxId(chatBoxId: number) {
+    return this.messageRepository.find({
+      where: { chat: { id: chatBoxId } },
+      relations: ['sender'],
+      order: { createdAt: 'ASC' },
+    });
+  }
 
-    const isSenderAdmin = sender.role === Role.ADMIN;
-    const isReceiverAdmin = receiver.role === Role.USER;
-    if (isSenderAdmin === isReceiverAdmin)
-      throw new Error('Chỉ có thể gửi tin nhắn với Quản trị viên');
+  async saveMessage(dto: CreateMessageDto) {
+    const chat = await this.chatRepository.findOneBy({ id: dto.chatBoxId });
+    if (!chat) throw new Error('ChatBox không tồn tại');
+    const sender = await this.userRepository.findOneBy({ id: +dto.senderId });
+    if (!sender) throw new Error('Người gửi không tồn tại');
+    const message = this.messageRepository.create({
+      chat,
+      sender,
+      content: dto.content,
+    });
+    return await this.messageRepository.save(message);
+  }
 
-    const user = isSenderAdmin ? receiver : sender;
-    const admin = isSenderAdmin ? sender : receiver;
+  async listUserChatBoxes(): Promise<
+    {
+      id: number;
+      user: {
+        id: number;
+        userName: string;
+        email: string;
+      };
+      latestMessage?: {
+        content: string;
+        createdAt: Date;
+      };
+    }[]
+  > {
+    const chatBoxes = await this.chatRepository.find({
+      relations: ['user', 'messages'],
+      order: { updatedAt: 'DESC' },
+    });
 
-    const chat = await this.findOrCreateChat(user.id, admin.id);
-    const message = this.msgRepo.create({ chat, sender, content });
-    return await this.msgRepo.save(message);
+    const result = chatBoxes
+      .filter((chat) => chat.messages && chat.messages.length > 0)
+      .map((chat) => {
+        const latest = [...chat.messages].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        )[0];
+
+        return {
+          id: chat.id,
+          user: {
+            id: chat.user.id,
+            userName: chat.user.firstName + ' ' + chat.user.lastName,
+            email: chat.user.email,
+          },
+          latestMessage: latest
+            ? { content: latest.content, createdAt: latest.createdAt }
+            : undefined,
+        };
+      });
+
+    return result;
   }
 }
