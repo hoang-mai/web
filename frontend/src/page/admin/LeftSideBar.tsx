@@ -1,4 +1,3 @@
-
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
   Inventory2,
@@ -33,7 +32,8 @@ const LeftSideBar = ({ collapsed, setCollapsed }: LeftSideBarProps) => {
     { label: "Người dùng", path: "/admin/users", icon: <People /> },
     { label: "Đơn hàng", path: "/admin/orders", icon: <ShoppingCart /> },
     { label: "Đánh giá", path: "/admin/reviews", icon: <ChatBubbleOutline /> },
-    { label: "Đăng bài", path: "/admin/posts", icon: <JoinFull /> }
+    { label: "Đăng bài", path: "/admin/posts", icon: <JoinFull /> },
+    { label: "Tin nhắn", path: "/admin/chat", icon: <JoinFull /> },
   ];
 
   const toggleSidebar = () => {
