@@ -41,4 +41,8 @@ export class RegisterDto {
     example: Role.USER,
   })
   role?: Role;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Địa chỉ không được để trống' })
+  address: string;
 }

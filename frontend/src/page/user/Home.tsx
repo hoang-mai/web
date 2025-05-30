@@ -43,6 +43,6 @@ const Home = () => {
       {userId && <ChatButton userId={userId} />}
     </Container>
   );
-};
+}
 
 export default Home;

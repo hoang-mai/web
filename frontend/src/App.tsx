@@ -14,18 +14,22 @@ import PostAdmin from "./page/admin/PostAdmin";
 import ProfileAdmin from "./page/admin/ProfileAdmin";
 import ReviewAdmin from "./page/admin/ReviewAdmin";
 import CartPage from "./page/user/Cart";
-import AdminChatRoute from "./page/admin/AdminChatPage";
+import ProductDetailUser from "./components/ProductDetailUser";
+import OrderSuccess from "./OrderSuccess";
+import AdminChatPage from "./page/admin/AdminChatPage";
 
 function App() {
   return (
-    <Routes>
-      {/* Đường dẫn cho người dùng*/}
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="login" element={<Login />} />
-        <Route path="userdetail" element={<UserDetail />} />
-        <Route path="cart" element={<CartPage />} />
-      </Route>
+      <Routes>
+        {/* Đường dẫn cho người dùng*/}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="userdetail" element={<UserDetail />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="products/:id" element={<ProductDetailUser />} />
+          <Route path="/order/vnpay_return" element={<OrderSuccess />} />
+        </Route>
       {/* Đường dẫn cho admin*/}
       <Route path="/admin/login" element={<LoginAdmin />} />
       {/* Thêm các route khác ở đây */}
@@ -38,7 +42,7 @@ function App() {
         <Route path="reviews" element={<ReviewAdmin />} />
         <Route path="posts" element={<PostAdmin />} />
         <Route path="profile" element={<ProfileAdmin />} />
-        <Route path="chat" element={<AdminChatRoute />} />
+        <Route path="chat" element={<AdminChatPage />} />
       </Route>
     </Routes>
   );
