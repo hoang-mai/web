@@ -281,7 +281,7 @@ export class CartsService {
       where: { order: { id: order.id } },
       relations: ['product'],
     });
-
+    console.log(orderItems);
     await this.productRepository.save(
       orderItems.map(item => {
         const product = item.product;
@@ -289,15 +289,15 @@ export class CartsService {
         return product;
       }),
     );
-
+    console.log(orderItems);
     const cartProducts = await this.cartProductRepository
       .createQueryBuilder('cartProduct')
       .leftJoin('cartProduct.cart', 'cart')
       .leftJoin('cart.user', 'user')
-      .leftJoin('user.order', 'order')
+      .leftJoin('user.orders', 'order')
       .where('order.id = :orderId', { orderId: order.id })
       .getMany();
-
+    console.log(cartProducts);
     const cartProductIds = cartProducts.map(cp => cp.id);
 
     if (cartProductIds.length > 0) {
