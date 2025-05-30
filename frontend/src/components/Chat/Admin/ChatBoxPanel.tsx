@@ -5,7 +5,7 @@ import { getUserIdFromToken } from "@/services/getUserId";
 import { fetchMessages } from "../fetchMessages";
 
 const socket: Socket = io("http://localhost:8080", {
-  autoConnect: true,
+  autoConnect: false,
   transports: ["websocket"],
 });
 
@@ -15,18 +15,16 @@ const ChatBoxPanel = ({ chatBox }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const adminId = getUserIdFromToken();
 
+  // Scroll xuống cuối mỗi khi có tin nhắn mới
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Khởi tạo socket và fetch tin nhắn khi chọn chatBox mới
   useEffect(() => {
     if (!chatBox || !adminId) return;
 
-    const handleMessage = (msg: any) => {
-      setMessages((prev) => [...prev, msg]);
-    };
-
-    const init = async () => {
+    const initSocket = async () => {
       try {
         if (!socket.connected) {
           socket.io.opts.query = { userId: adminId, role: "admin" };
@@ -37,20 +35,32 @@ const ChatBoxPanel = ({ chatBox }) => {
         socket.emit("join", { chatBoxId: chatBox.id });
 
         const loadedMessages = await fetchMessages(chatBox.id);
-        setMessages(loadedMessages);
-
-        socket.on("message", handleMessage);
+        const normalized = loadedMessages.map((msg) => ({
+          ...msg,
+          senderId: msg.sender?.id || msg.senderId,
+        }));
+        setMessages(normalized);
       } catch (err) {
-        console.error("Lỗi khi tải tin nhắn:", err);
+        console.error("Lỗi khi khởi tạo tin nhắn:", err);
       }
     };
 
-    init();
+    initSocket();
+  }, [chatBox, adminId]);
 
+  // Nghe tin nhắn realtime từ socket
+  useEffect(() => {
+    const handleMessage = (msg: any) => {
+      if (msg.chatBoxId === chatBox?.id) {
+        setMessages((prev) => [...prev, msg]);
+      }
+    };
+
+    socket.on("message", handleMessage);
     return () => {
       socket.off("message", handleMessage);
     };
-  }, [chatBox, adminId]);
+  }, [chatBox]);
 
   const handleSend = () => {
     if (!input.trim() || !chatBox?.id) return;
@@ -63,10 +73,6 @@ const ChatBoxPanel = ({ chatBox }) => {
 
     try {
       socket.emit("message", messagePayload);
-      setMessages((prev) => [
-        ...prev,
-        { ...messagePayload, senderId: adminId },
-      ]);
       setInput("");
     } catch (err) {
       console.error("Gửi tin nhắn thất bại:", err);
