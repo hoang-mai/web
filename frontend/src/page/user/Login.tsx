@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { post, get } from "@/services/callApi";
 import { loginRoute,registerRoute } from "@/services/api";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import { checkTokenRoute } from "@/services/api";
 import { toast } from "react-toastify";
 const Login = () => {
@@ -14,7 +14,7 @@ const Login = () => {
     return response.data.data; // chứa access_token
   };
 
-   const register = async (data: {
+  const register = async (data: {
     firstName: string;
     lastName: string;
     email: string;
@@ -25,7 +25,6 @@ const Login = () => {
     const response = await post(registerRoute, data);
     return response.data;
   };
-  
 
   // Form state dùng chung
   const [formData, setFormData] = useState({
@@ -58,7 +57,6 @@ const Login = () => {
         }
   }, []);
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -67,10 +65,8 @@ const Login = () => {
         const data = await login(formData.email, formData.password);
         localStorage.setItem("access_token", data.access_token);
        
-       
         navigate("/"); // Chuyển hướng về trang chính sau khi đăng nhập thành công
         toast.success("Đăng nhập thành công!");
-
       } else {
         // 🔵 Gọi hàm register từ auth.api
         const data = await register({
@@ -81,11 +77,18 @@ const Login = () => {
           phone: formData.phone,
           address: formData.address,
         });
+        axios.post("http://localhost:8080/carts/user/" + data.data.id).then(() => {
+          console.log("Giỏ hàng đã được tạo cho người dùng mới");
+        }
+        ).catch((error) => {
+          console.error("Lỗi khi tạo giỏ hàng:", error);
+        });
         toast.success("Đăng ký thành công!");
+        alert("Đăng ký thành công, vui lòng đăng nhập!");
         setIsLogin(true);
       }
     } catch (err: any) {
-     toast.error(err.response.data.message);
+      toast.error(err.response.data.message);
     }
   };
   return (

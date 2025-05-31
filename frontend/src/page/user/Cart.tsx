@@ -84,7 +84,8 @@ const CartPage: React.FC = () => {
     try {
       await axios.patch(`http://localhost:8080/carts/${cart.id}/checkout`);
       alert("Đã thanh toán giỏ hàng thành công!");
-      setCart(null); // Xóa giỏ hàng sau khi thanh toán
+      //setCart(null); // Xóa giỏ hàng sau khi thanh toán
+      // Cập nhật cart thành isCheckedOut = true, cartProducts sẽ thành orderItems, sau đó cart được làm mới, isCheckedOut = false
     } catch (error) {
       console.error("Lỗi khi thanh toán giỏ hàng:", error);
       alert("Lỗi khi thanh toán giỏ hàng, xem ở Cart.tsx");

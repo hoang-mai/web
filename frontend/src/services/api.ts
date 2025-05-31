@@ -29,7 +29,6 @@ export const statisticProductDetail = "statistics/admin/product";
 export const statisticRevenueProduct = "statistics/admin/revenue/product";
 
 // user
-
 export const getUserRoute = "/users";
 export const getOrderRoute = "/orders/all/:userId";
 

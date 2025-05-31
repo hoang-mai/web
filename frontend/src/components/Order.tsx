@@ -4,9 +4,6 @@ import { updateOrderRoute} from "@/services/api";
 import {toast} from 'react-toastify';
 import { Box, Button, Modal, Typography } from '@mui/material';
 
-
-
-
 // TypeScript interfaces
 interface Product {
   id: string;

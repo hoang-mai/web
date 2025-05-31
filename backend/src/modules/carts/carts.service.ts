@@ -27,6 +27,16 @@ export class CartsService {
     return await this.cartRepository.save(cart);
   }
 
+  async createCartForUser(userId: number): Promise<Cart> {
+    // Tạo giỏ hàng mới cho người dùng với isCheckedOut = false
+    const cart = this.cartRepository.create({
+      id: userId, //cartId = userId
+      user: { id: userId }, // Giả sử Cart có quan hệ với User
+      isCheckedOut: false,
+    });
+    return await this.cartRepository.save(cart);
+  }
+
   // Lấy danh sách tất cả giỏ hàng, bao gồm các sản phẩm trong giỏ (qua quan hệ CartProduct)
   async findAll(): Promise<Cart[]> {
     return await this.cartRepository.find({
