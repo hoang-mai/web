@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { PushNotificationService } from './push_notification.service';
 import { PushNotificationController } from './push_notification.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { NotificationToken } from 'src/entities/notification_token.entity';
+import { User } from 'src/entities/user.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   controllers: [PushNotificationController],
@@ -16,6 +19,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     },
   ],
-  imports: [ConfigModule],
+  imports: [
+    TypeOrmModule.forFeature([NotificationToken, User]),
+    ConfigModule,
+    NotificationToken,
+    User,
+  ],
 })
 export class PushNotificationModule {}

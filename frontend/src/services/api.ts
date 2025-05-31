@@ -43,3 +43,5 @@ export const getAllOrderRoute = "/orders";
 //  Post
 export const postsRoute = "/posts";
 
+//push notification
+export const pushNotificationToAdminRoute = "push-notification/notify-admin";
