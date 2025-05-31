@@ -18,7 +18,6 @@ import { RolesGuard } from 'src/guard/roles.guard';
 import { Role } from 'src/entities/role.enum';
 import { Roles } from 'src/guard/roles.decorator';
 
-@UseGuards(JwtAuthGuard)
 @Controller('review-comment')
 export class ReviewCommentController {
   constructor(private readonly commentService: ReviewCommentService) {}
@@ -27,13 +26,13 @@ export class ReviewCommentController {
   getByReview(@Param('reviewId') reviewId: number) {
     return this.commentService.getCommentsByReview(reviewId);
   }
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([Role.ADMIN])
   @Post()
   create(@Req() req, @Body() dto: CreateReviewCommentDto) {
     return this.commentService.createComment(req.user.id, dto);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Patch('edit/:reviewId')
   edit(
     @Param('reviewId') id: number,
@@ -42,7 +41,7 @@ export class ReviewCommentController {
   ) {
     return this.commentService.editComment(+id, req.user.id, dto);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id') id: number, @Req() req) {
     return this.commentService.deleteComment(+id, req.user.id);

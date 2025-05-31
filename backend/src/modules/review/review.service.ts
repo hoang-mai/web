@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -11,6 +12,7 @@ import { Product } from 'src/entities/product.entity';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Role } from 'src/entities/role.enum';
+import { Order } from 'src/entities/order.entity';
 
 @Injectable()
 export class ReviewService {
@@ -23,6 +25,9 @@ export class ReviewService {
 
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+
+    @InjectRepository(Order)
+    private readonly orderRepo: Repository<Order>,
   ) {}
 
   async create(user: User, createReviewDto: CreateReviewDto) {
@@ -30,6 +35,35 @@ export class ReviewService {
       name: createReviewDto.productName,
     });
 
+    // Kiểm tra đã từng mua sản phẩm
+    const hasPurchased = await this.orderRepo
+      .createQueryBuilder('order')
+      .innerJoin('order.user', 'user')
+      .innerJoin('order.orderItems', 'item')
+      .innerJoin('item.product', 'product')
+      .where('user.id = :userId', { userId: user.id })
+      .andWhere('product.id = :productId', { productId: product.id })
+      .getCount();
+
+    if (!hasPurchased) {
+      throw new ForbiddenException(
+        'Quý khách cần mua sản phẩm trước khi đánh giá.',
+      );
+    }
+
+    // Kiểm tra đã review chưa
+    const existing = await this.reviewRepo.findOne({
+      where: {
+        user: { id: user.id },
+        product: { id: product.id },
+      },
+    });
+
+    if (existing) {
+      throw new ConflictException('Quý khách đã đánh giá sản phẩm này.');
+    }
+
+    // Tạo đánh giá mới
     const review = this.reviewRepo.create({
       rating: createReviewDto.rating,
       review: createReviewDto.review,
@@ -37,6 +71,7 @@ export class ReviewService {
       user,
       product,
     });
+
     return await this.reviewRepo.save(review);
   }
 
@@ -55,11 +90,29 @@ export class ReviewService {
 
     const total = reviews.length;
     const average =
-      total > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / total : 0;
+      total > 0
+        ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / total
+        : 0;
+
+    const starBreakdown: Record<number, number> = {
+      5: 0,
+      4: 0,
+      3: 0,
+      2: 0,
+      1: 0,
+    };
+
+    reviews.forEach((r) => {
+      const rating = r.rating;
+      if (rating && rating >= 1 && rating <= 5) {
+        starBreakdown[rating]++;
+      }
+    });
 
     return {
       totalReviews: total,
       averageRating: parseFloat(average.toFixed(1)),
+      starBreakdown,
     };
   }
 
