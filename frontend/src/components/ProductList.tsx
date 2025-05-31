@@ -94,12 +94,10 @@ const ProductList = () => {
             {/* Product image */}
             <div className="p-4 pb-2 relative">
               <img
-                src={product.imageUrl}
+                src={product.imageUrl||"https://karanzi.websites.co.in/obaju-turquoise/img/product-placeholder.png"}
                 alt={product.name}
                 className="w-full h-40 object-contain mx-auto"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = "https://cdn.tgdd.vn/Products/Images/42/default.png";
-                }}
+               
               />
 
               {/* Quick actions */}

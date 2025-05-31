@@ -146,7 +146,7 @@ const OrderManagement: React.FC = () => {
         const orderIndex = orders.findIndex(o => o.id === currentOrderId);
         if (orderIndex !== -1) {
             const order = orders[orderIndex];
-            if (order.status === 'delivered' || order.status === 'canceled'||order.status === 'returned') {
+            if (order.status === 'delivered' || order.status === 'canceled') {
                 toast.error(`Đơn hàng #${currentOrderId} không thể hủy vì đã được giao hoặc đã hủy.`);
                 return;
             }
@@ -191,10 +191,16 @@ const OrderManagement: React.FC = () => {
             statusChartInstance.current = new Chart(statusChartRef.current, {
                 type: 'pie',
                 data: {
-                    labels: ['Chờ xử lý', 'Đã xác nhận', 'Đang giao hàng', 'Đã giao hàng', 'Đã hủy','Đã trả hàng'],
+                    labels: ['Chờ xử lý','Đã thanh toán', 'Đang giao hàng', 'Đã giao hàng', 'Đã hủy',],
                     datasets: [{
-                        data: [0, 0, 0, 0, 0, 0],
-                        backgroundColor: ['#FCD34D', '#93C5FD', '#A5B4FC', '#6EE7B7', '#FCA5A5', '#FBBF24'],
+                        data: [0, 0, 0, 0, 0],
+                      backgroundColor: [
+                        '#facc15', 
+                        '#fb923c', 
+                        '#6366f1', 
+                        '#10b981', 
+                        '#f87171', 
+                        ]
                     }]
                 },
                 options: {
@@ -236,20 +242,20 @@ const OrderManagement: React.FC = () => {
         if (statusChartInstance.current) {
             const statusCounts = {
                 pending: 0,
-                processing: 0,
+                completed: 0,
                 shipping: 0,
                 delivered: 0,
-                canceled: 0,
-                returned: 0
+                cancelled: 0
+               
             };
             filteredOrders.forEach(order => statusCounts[order.status as keyof typeof statusCounts]++);
             statusChartInstance.current.data.datasets[0].data = [
                 statusCounts.pending,
-                statusCounts.processing,
+                statusCounts.completed,
                 statusCounts.shipping,
                 statusCounts.delivered,
-                statusCounts.canceled,
-                statusCounts.returned
+                statusCounts.cancelled,
+              
             ];
             statusChartInstance.current.update();
         }
@@ -340,11 +346,10 @@ const OrderManagement: React.FC = () => {
     const getStatusText = (status: string) => {
         const statusMap: { [key: string]: string } = {
             pending: 'Chờ xử lý',
-            confirmed: 'Đã xác nhận',
+            completed: 'Đã thanh toán',
             shipping: 'Đang giao hàng',
             delivered: 'Đã giao hàng',
             canceled: 'Đã hủy',
-            returned: 'Đã trả hàng',
         };
         return statusMap[status] || status;
     };
@@ -416,30 +421,27 @@ const OrderManagement: React.FC = () => {
                     font-size: 0.75rem;
                     font-weight: 500;
                 }
-                .status-pending {
-                    background-color: #fef9c3;
-                    color: #854d0e;
+               .status-pending {
+                    background-color: #facc15; /* vàng đậm */
+                    color: #78350f;
                 }
-                .status-confirmed {
-                    background-color: #dbeafe;
-                    color: #1e40af;
+                .status-completed {
+                    background-color: #fb923c; /* cam đậm */
+                    color: #7c2d12;
                 }
                 .status-shipping {
-                    background-color: #e0e7ff;
-                    color: #3730a3;
+                    background-color: #6366f1; /* tím xanh đậm */
+                    color: #eef2ff;
                 }
                 .status-delivered {
-                    background-color: #d1fae5;
-                    color: #065f46;
+                    background-color: #10b981; /* xanh ngọc đậm */
+                    color: #ecfdf5;
                 }
                 .status-canceled {
-                    background-color: #fee2e2;
-                    color: #991b1b;
+                    background-color: #f87171; /* đỏ nhạt đậm */
+                    color: #7f1d1d;
                 }
-                .status-returned {
-                    background-color: #fef3c7;
-                    color: #92400e;
-                }
+              
                 .product-image {
                     width: 48px;
                     height: 48px;
@@ -493,11 +495,10 @@ const OrderManagement: React.FC = () => {
                         >
                             <option value="">Tất cả</option>
                             <option value="pending">Chờ xử lý</option>
-                            <option value="confirmed">Đã xác nhận</option>
+                            <option value="completed">Đã thanh toán</option>
                             <option value="shipping">Đang giao hàng</option>
                             <option value="delivered">Đã giao hàng</option>
                             <option value="canceled">Đã hủy</option>
-                            <option value="returned">Đã trả hàng</option>
                         </select>
                     </div>
                 </div>
@@ -676,11 +677,10 @@ const OrderManagement: React.FC = () => {
                                                     defaultValue={orders.find(o => o.id === currentOrderId)?.status}
                                                 >
                                                     <option value="pending">Chờ xử lý</option>
-                                                    <option value="confirmed">Đã xác nhận </option>
                                                     <option value="shipping">Đang giao hàng</option>
                                                     <option value="delivered">Đã giao hàng</option>
                                                     <option value="canceled">Đã hủy</option>
-                                                    <option value="returned">Đã trả hàng</option>
+                                                    <option value="completed">Đã thanh toán</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -741,9 +741,7 @@ const OrderManagement: React.FC = () => {
                                                         src={item.product.imageUrl}
                                                         alt={item.product.name}
                                                         className="product-image"
-                                                        onError={(e) => {
-                                                            e.currentTarget.src = 'https://via.placeholder.com/48';
-                                                        }}
+                                        
                                                     />
                                                 ) : (
                                                     <div className="h-12 w-12 rounded-md bg-gray-100 flex items-center justify-center">
