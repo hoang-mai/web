@@ -17,6 +17,9 @@ import CartPage from "./page/user/Cart";
 import ProductDetailUser from "./components/ProductDetailUser";
 import OrderSuccess from "./OrderSuccess";
 import AdminChatPage from "./page/admin/AdminChatPage";
+import AboutPage from "./components/AboutPage";
+import HelpPage from "./components/Help";
+import PromotionsPage from "./components/Promotions";
 
 function App() {
   return (
@@ -29,6 +32,10 @@ function App() {
           <Route path="cart" element={<CartPage />} />
           <Route path="products/:id" element={<ProductDetailUser />} />
           <Route path="/order/vnpay_return" element={<OrderSuccess />} />
+          <Route path="/about" element={<AboutPage/>} />
+          <Route path="/help" element={<HelpPage/>} />
+          <Route path="/promotions" element={<PromotionsPage/>} />
+          {/* Thêm các route khác ở đây */}
         </Route>
       {/* Đường dẫn cho admin*/}
       <Route path="/admin/login" element={<LoginAdmin />} />

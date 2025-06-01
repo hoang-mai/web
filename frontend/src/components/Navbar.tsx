@@ -12,7 +12,9 @@ import LocationSelector from './LocationSelector';
 import logo from '../assets/images/logo2.png';
 import { get } from '@/services/callApi';
 import { checkTokenRoute, findUserByIdRoute } from '@/services/api';
-
+import AboutPage from './AboutPage';
+import HelpPage from './HelpPage';
+import PromotionsPage from './PromotionsPage';
 
 
 export default function Navbar() {
@@ -91,16 +93,11 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Search Bar (hidden on small screens) */}
-          <div className="hidden md:flex w-1/2 bg-white rounded-full">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Bạn tìm gì..."
-                className="w-full py-2 px-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <MagnifyingGlassIcon className="absolute right-3 top-2.5 h-5 w-5 text-gray-500" />
-            </div>
+          {/* Quick links */}
+          <div className="hidden md:flex w-1/2 items-center justify-evenly text-black">
+            <Link to="/about" className="hover:underline">Về chúng tôi</Link>
+            <Link to="/help" className="hover:underline">Trợ giúp</Link>
+            <Link to="/promotions" className="hover:underline">Khuyến mãi</Link>
           </div>
 
           {/* Right: User + Cart */}
