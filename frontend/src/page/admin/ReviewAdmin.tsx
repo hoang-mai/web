@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { Container, Paper, Box, CircularProgress } from "@mui/material";
-import ReviewList from "@/components/Review/ReviewList";
-import ReviewDetailModal from "@/components/Review/ReviewDetailModal";
-import { del, get } from "@/services/callApi";
+import { useEffect, useState } from 'react';
+import { Container, Paper, Box, CircularProgress } from '@mui/material';
+import ReviewList from '@/components/Review/Admin/ReviewList';
+import ReviewDetailModal from '@/components/Review/Admin/ReviewDetailModal';
+import { del, get } from '@/services/callApi';
 const ReviewAdmin = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,10 +12,10 @@ const ReviewAdmin = () => {
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const res = await get("http://localhost:8080/admin/reviews");
+      const res = await get('http://localhost:8080/admin/reviews');
       setReviews(res.data);
     } catch (err) {
-      console.error("Lỗi khi tải danh sách đánh giá:", err);
+      console.error('Lỗi khi tải danh sách đánh giá:', err);
     } finally {
       setLoading(false);
     }
@@ -27,7 +27,7 @@ const ReviewAdmin = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm("Bạn có chắc muốn xoá đánh giá này?")) {
+    if (window.confirm('Bạn có chắc muốn xoá đánh giá này?')) {
       await del(`http://localhost:8080/admin/reviews/${id}`);
       fetchReviews();
     }
@@ -42,19 +42,19 @@ const ReviewAdmin = () => {
       disableGutters
       maxWidth={false}
       sx={{
-        margin: "0",
-        padding: "0",
-        width: "100%",
-        boxShadow: "none",
-        border: "none",
+        margin: '0',
+        padding: '0',
+        width: '100%',
+        boxShadow: 'none',
+        border: 'none',
       }}
     >
       <Paper
         sx={{
-          margin: "0",
-          padding: "0",
-          boxShadow: "none",
-          border: "none",
+          margin: '0',
+          padding: '0',
+          boxShadow: 'none',
+          border: 'none',
         }}
       >
         {loading ? (

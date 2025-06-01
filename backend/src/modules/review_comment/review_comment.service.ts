@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 
@@ -77,9 +81,9 @@ export class ReviewCommentService {
       relations: ['user', 'review', 'replies'],
     });
 
-    if (!comment || comment.user.id !== userId) {
+    if (!comment) throw new NotFoundException('Bình luận không tồn tại');
+    if (comment.user.id !== userId)
       throw new ForbiddenException('Bạn không thể sửa bình luận này.');
-    }
 
     Object.assign(comment, dto);
     return this.commentRepo.save(comment);
@@ -93,10 +97,14 @@ export class ReviewCommentService {
 
     const userReq = await this.userRepo.findOne({ where: { id: userId } });
 
-    if (comment && userReq && userReq.role === Role.ADMIN) {
-      return this.commentRepo.delete(id);
-    } else if (!comment || comment.user.id !== userId) {
-      throw new ForbiddenException('Bạn không thể xoá bình luận này.');
+    if (!comment) throw new NotFoundException('Bình luận không tồn tại');
+    if (!userReq) throw new NotFoundException('Người dùng không tồn tại');
+
+    const isOwner = comment.user.id === userId;
+    const isAdmin = userReq.role === Role.ADMIN;
+
+    if (!isOwner && !isAdmin) {
+      throw new ForbiddenException('Bạn không có quyền xoá bình luận này');
     }
 
     return this.commentRepo.delete(id);

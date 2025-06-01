@@ -11,14 +11,15 @@ const ChatButton = ({ userId }: { userId: string }) => {
   return (
     <>
       <Fab
-        color="primary"
         sx={{
+          bgcolor: "#fec34c",
+          color: "#fff",
           position: "fixed",
           bottom: 24,
           right: 24,
           zIndex: 1300,
         }}
-        onClick={() => setOpen(true)}
+        onClick={() => setOpen(open? false : true)}
       >
         <ChatIcon />
       </Fab>

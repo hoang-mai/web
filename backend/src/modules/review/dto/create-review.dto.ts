@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Length,
   Max,
   Min,
 } from 'class-validator';
@@ -23,6 +24,7 @@ export class CreateReviewDto {
 
   @IsNotEmpty({ message: 'Nội dung bình không được để trống' })
   @IsString({ message: 'Nội dung bình luận phải là một chuỗi ký tự' })
+  @Length(1, 1000, { message: 'Bình luận phải từ 1 đến 1000 ký tự' })
   @ApiProperty({
     description: 'Nội dung bình luận/đánh giá',
     example: 'Sản phẩm này rất tốt',
