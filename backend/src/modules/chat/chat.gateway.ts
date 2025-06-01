@@ -1,53 +1,80 @@
-// src/modules/chat/chat.gateway.ts
 import {
   WebSocketGateway,
   WebSocketServer,
   SubscribeMessage,
   MessageBody,
   ConnectedSocket,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import { CreateMessageDto } from './dto/create-message.dto';
 
-@WebSocketGateway({ cors: true })
-export class ChatGateway {
+@WebSocketGateway({ cors: { origin: 'http://localhost:5173/' } })
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
   constructor(private readonly chatService: ChatService) {}
 
-  @SubscribeMessage('join')
-  async handleJoin(
-    @MessageBody() userId: number,
+  private adminSockets: Map<string, Socket> = new Map();
+  private userRooms: Map<string, string> = new Map();
+  private socketRoles: Map<string, { userId: string; role: string }> =
+    new Map();
+
+  handleConnection(socket: Socket) {}
+
+  handleDisconnect(socket: Socket) {
+    const user = this.socketRoles.get(socket.id);
+    if (user?.role === 'admin') {
+      this.adminSockets.delete(user.userId);
+    }
+    this.userRooms.delete(socket.id);
+    this.socketRoles.delete(socket.id);
+  }
+
+  @SubscribeMessage('register')
+  handleRegister(
+    @MessageBody() { userId, role }: { userId: string; role: string },
     @ConnectedSocket() socket: Socket,
   ) {
-    const room = `chat-${userId}`;
-    await socket.join(room);
-    socket.data.userId = userId;
+    this.socketRoles.set(socket.id, { userId, role });
+
+    if (role === 'admin') {
+      this.adminSockets.set(userId, socket);
+    }
+  }
+
+  @SubscribeMessage('join')
+  async handleJoin(
+    @MessageBody() { chatBoxId }: { chatBoxId: number },
+    @ConnectedSocket() socket: Socket,
+  ) {
+    await socket.join(`${chatBoxId}`);
+    this.userRooms.set(socket.id, `${chatBoxId}`);
+
+    for (const adminSocket of this.adminSockets.values()) {
+      await adminSocket.join(`${chatBoxId}`);
+    }
   }
 
   @SubscribeMessage('message')
   async handleMessage(
-    @MessageBody()
-    data: {
-      senderId: number;
-      receiverId: number;
-      content: string;
-    },
+    @MessageBody() message: CreateMessageDto,
+    @ConnectedSocket() socket: Socket,
   ) {
     try {
-      const message = await this.chatService.createMessage(
-        data.senderId,
-        data.receiverId,
-        data.content,
-      );
-      this.server.to(`chat-${data.senderId}`).emit('message', message);
-      this.server.to(`chat-${data.receiverId}`).emit('message', message);
-    } catch (error) {
-      console.error('Error creating message:', error);
-      this.server
-        .to(`chat-${data.senderId}`)
-        .emit('error', 'Đã xảy ra lỗi khi gửi tin nhắn');
+      const newMessage = await this.chatService.saveMessage(message);
+
+      this.server.to(`${message.chatBoxId}`).emit('message', {
+        chatBoxId: message.chatBoxId,
+        senderId: message.senderId,
+        content: message.content,
+      });
+    } catch (err) {
+      console.error('Lỗi khi gửi tin nhắn:', err);
+      socket.emit('error', 'Gửi tin nhắn thất bại');
     }
   }
 }

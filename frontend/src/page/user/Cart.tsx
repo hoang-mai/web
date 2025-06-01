@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
+import {get, post} from "@/services/callApi.ts";
+import {paymentRoute} from "@/services/api.ts";
 
 interface Product {
   id: number;
@@ -41,8 +43,8 @@ const CartPage: React.FC = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await axios.get<Cart>(
-          `http://localhost:8080/carts/user/${userId}`
+        const res = await get(
+          `/carts/user/${userId}`
         );
         setCart(res.data);
       } catch (error) {
@@ -81,15 +83,26 @@ const CartPage: React.FC = () => {
 
   const handleCheckout = async () => {
     if (!cart) return;
-    try {
-      await axios.patch(`http://localhost:8080/carts/${cart.id}/checkout`);
-      alert("Đã thanh toán giỏ hàng thành công!");
-      //setCart(null); // Xóa giỏ hàng sau khi thanh toán
-      // Cập nhật cart thành isCheckedOut = true, cartProducts sẽ thành orderItems, sau đó cart được làm mới, isCheckedOut = false
-    } catch (error) {
-      console.error("Lỗi khi thanh toán giỏ hàng:", error);
-      alert("Lỗi khi thanh toán giỏ hàng, xem ở Cart.tsx");
-    }
+    // try {
+    //   await axios.patch(`http://localhost:8080/carts/${cart.id}/checkout`);
+    //   alert("Đã thanh toán giỏ hàng thành công!");
+    //   setCart(null); // Xóa giỏ hàng sau khi thanh toán
+    // } catch (error) {
+    //   console.error("Lỗi khi thanh toán giỏ hàng:", error);
+    //   alert("Lỗi khi thanh toán giỏ hàng, xem ở Cart.tsx");
+    // }
+    post(paymentRoute, {
+      cartItems: cart.cartProducts.map(item => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+        price: parseFloat(item.product.price)* (1 - (item.product.discount || 0) / 100),
+        name: item.product.name,
+      })),
+      cartId: cart.id,
+    }).then((res)=>{
+      window.location.href = res.data.url;
+    });
+
   };
 
   const deleteProduct = async () => {

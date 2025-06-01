@@ -15,6 +15,7 @@ import { ReviewComment } from './review_comment.entity';
 import { Chat } from './chat.entity';
 import { Message } from './message.entity';
 import { Post } from './post.entity';
+import { NotificationToken } from './notification_token.entity';
 @Entity('users')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -69,5 +70,8 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
+
+  @OneToOne(()=> NotificationToken, (notificationToken) => notificationToken.user)
+  notificationToken: NotificationToken;
 
 }

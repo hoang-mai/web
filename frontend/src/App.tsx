@@ -15,6 +15,8 @@ import ProfileAdmin from "./page/admin/ProfileAdmin";
 import ReviewAdmin from "./page/admin/ReviewAdmin";
 import CartPage from "./page/user/Cart";
 import ProductDetailUser from "./components/ProductDetailUser";
+import OrderSuccess from "./OrderSuccess";
+import AdminChatPage from "./page/admin/AdminChatPage";
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
           <Route path="userdetail" element={<UserDetail />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="products/:id" element={<ProductDetailUser />} />
+          <Route path="/order/vnpay_return" element={<OrderSuccess />} />
         </Route>
       {/* Đường dẫn cho admin*/}
       <Route path="/admin/login" element={<LoginAdmin />} />
@@ -39,6 +42,7 @@ function App() {
         <Route path="reviews" element={<ReviewAdmin />} />
         <Route path="posts" element={<PostAdmin />} />
         <Route path="profile" element={<ProfileAdmin />} />
+        <Route path="chat" element={<AdminChatPage />} />
       </Route>
     </Routes>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -13,42 +13,42 @@ import {
   InputLabel,
   FormControl,
   Button,
-} from "@mui/material";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import TagIcon from "@mui/icons-material/LocalOfferOutlined";
-import DoneIcon from "@mui/icons-material/CheckCircleOutline";
-import ReplyIcon from "@mui/icons-material/ReplyOutlined";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useOutletContext } from "react-router-dom";
-import "dayjs/locale/vi";
+} from '@mui/material';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import TagIcon from '@mui/icons-material/LocalOfferOutlined';
+import DoneIcon from '@mui/icons-material/CheckCircleOutline';
+import ReplyIcon from '@mui/icons-material/ReplyOutlined';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useOutletContext } from 'react-router-dom';
+import 'dayjs/locale/vi';
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.locale("vi");
+dayjs.locale('vi');
 
 const ReviewList = ({ reviews, onView, onDelete }) => {
   const { drawerWidth } = useOutletContext<{ drawerWidth: number }>();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [productFilter, setProductFilter] = useState("");
-  const [starFilter, setStarFilter] = useState("");
-  const [tagFilter, setTagFilter] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [productFilter, setProductFilter] = useState('');
+  const [starFilter, setStarFilter] = useState('');
+  const [tagFilter, setTagFilter] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
 
   const handleMenuClick = (
     event: React.MouseEvent<HTMLElement>,
-    id: number
+    id: number,
   ) => {
     setAnchorEl(event.currentTarget);
     setSelectedId(id);
@@ -61,16 +61,16 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
 
   const renderStars = (count: number) => {
     const full = Array(count).fill(
-      <StarIcon fontSize="small" sx={{ color: "#fbbc04" }} />
+      <StarIcon fontSize="small" sx={{ color: '#fbbc04' }} />,
     );
     const empty = Array(5 - count).fill(
-      <StarBorderIcon fontSize="small" sx={{ color: "#fbbc04" }} />
+      <StarBorderIcon fontSize="small" sx={{ color: '#fbbc04' }} />,
     );
     return [...full, ...empty];
   };
 
   const uniqueProducts = Array.from(
-    new Set(reviews.map((r) => r.product?.name).filter(Boolean))
+    new Set(reviews.map((r) => r.product?.name).filter(Boolean)),
   );
 
   const filteredReviews = reviews.filter((review) => {
@@ -81,21 +81,21 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
       ? review.rating === parseInt(starFilter)
       : true;
     const matchTag = tagFilter
-      ? tagFilter === "report"
+      ? tagFilter === 'report'
         ? review.reported === true
-        : tagFilter === "resolved"
+        : tagFilter === 'resolved'
         ? review.isResolved === true
         : true
       : true;
     const matchKeyword =
-      searchKeyword.trim() !== ""
+      searchKeyword.trim() !== ''
         ? review.review?.toLowerCase().includes(searchKeyword.toLowerCase())
         : true;
     const matchFrom = fromDate
-      ? dayjs(review.createdAt).isAfter(dayjs(fromDate).startOf("day"))
+      ? dayjs(review.createdAt).isAfter(dayjs(fromDate).startOf('day'))
       : true;
     const matchTo = toDate
-      ? dayjs(review.createdAt).isBefore(dayjs(toDate).endOf("day"))
+      ? dayjs(review.createdAt).isBefore(dayjs(toDate).endOf('day'))
       : true;
 
     return (
@@ -120,7 +120,7 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
         boxShadow={1}
         padding="18.3px"
       >
-        <Box display="flex" justifyContent={"space-between"}>
+        <Box display="flex" justifyContent={'space-between'}>
           <Typography
             fontSize="var(--text-xl)"
             fontWeight="var(--font-weight-bold)"
@@ -129,7 +129,7 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
           </Typography>
           <Box display="flex" gap={4}>
             <TextField
-              sx={{ width: "200px" }}
+              sx={{ width: '200px' }}
               size="small"
               placeholder="Tìm kiếm nội dung đánh giá"
               value={searchKeyword}
@@ -144,27 +144,27 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                sx={{ width: "200px", height: "40px" }}
+                sx={{ width: '200px', height: '40px' }}
                 label="Từ ngày"
                 value={fromDate}
                 onChange={(newValue) => setFromDate(newValue)}
                 slotProps={{
                   textField: {
-                    size: "small",
-                    placeholder: "Chọn ngày bắt đầu",
+                    size: 'small',
+                    placeholder: 'Chọn ngày bắt đầu',
                     fullWidth: true,
                   },
                 }}
               />
               <DatePicker
-                sx={{ width: "200px", height: "40px" }}
+                sx={{ width: '200px', height: '40px' }}
                 label="Đến ngày"
                 value={toDate}
                 onChange={(newValue) => setToDate(newValue)}
                 slotProps={{
                   textField: {
-                    size: "small",
-                    placeholder: "Chọn ngày kết thúc",
+                    size: 'small',
+                    placeholder: 'Chọn ngày kết thúc',
                     fullWidth: true,
                   },
                 }}
@@ -173,9 +173,9 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
           </Box>
         </Box>
 
-        <Box display="flex" mt={2} justifyContent={"space-between"}>
+        <Box display="flex" mt={2} justifyContent={'space-between'}>
           <Box display="flex" gap={4}>
-            <FormControl size="small" sx={{ width: "200px" }}>
+            <FormControl size="small" sx={{ width: '200px' }}>
               <InputLabel>Sản phẩm</InputLabel>
               <Select
                 value={productFilter}
@@ -190,7 +190,7 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
                 ))}
               </Select>
             </FormControl>
-            <FormControl size="small" sx={{ width: "200px" }}>
+            <FormControl size="small" sx={{ width: '200px' }}>
               <InputLabel>Sao</InputLabel>
               <Select
                 value={starFilter}
@@ -206,14 +206,14 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
                         <StarIcon
                           key={i}
                           fontSize="small"
-                          sx={{ color: "#fbbc04" }}
+                          sx={{ color: '#fbbc04' }}
                         />
                       ))}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-            <FormControl size="small" sx={{ width: "200px" }}>
+            <FormControl size="small" sx={{ width: '200px' }}>
               <InputLabel>Thẻ</InputLabel>
               <Select
                 value={tagFilter}
@@ -231,18 +231,18 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
               size="small"
               variant="outlined"
               sx={{
-                color: "#333533",
-                fontSize: ".8rem",
-                fontWeight: "600",
-                borderColor: "#f5bd1f",
-                bgcolor: "#f5bd1f",
+                color: '#333533',
+                fontSize: '.8rem',
+                fontWeight: '600',
+                borderColor: '#f5bd1f',
+                bgcolor: '#f5bd1f',
               }}
               startIcon={<RestartAltIcon />}
               onClick={() => {
-                setProductFilter("");
-                setStarFilter("");
-                setTagFilter("");
-                setSearchKeyword("");
+                setProductFilter('');
+                setStarFilter('');
+                setTagFilter('');
+                setSearchKeyword('');
                 setFromDate(null);
                 setToDate(null);
               }}
@@ -254,7 +254,7 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
       </Box>
 
       <Box flex={1} display="flex" justifyContent="center" mt={15}>
-        <Stack spacing={2} sx={{ width: "100%", maxWidth: "60%", py: 4 }}>
+        <Stack spacing={2} sx={{ width: '100%', maxWidth: '60%', py: 4 }}>
           {filteredReviews.length === 0 ? (
             <Typography textAlign="center" color="text.secondary" mt={4}>
               Không có kết quả tìm kiếm phù hợp.
@@ -265,11 +265,11 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
                 key={review.id}
                 elevation={2}
                 sx={{
-                  position: "relative",
-                  bgcolor: "#fff",
-                  borderRadius: "6px",
-                  border: "1px solid",
-                  borderColor: "#ced4da",
+                  position: 'relative',
+                  bgcolor: '#fff',
+                  borderRadius: '6px',
+                  border: '1px solid',
+                  borderColor: '#ced4da',
                 }}
               >
                 <Box
@@ -277,7 +277,7 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
                   justifyContent="space-between"
                   alignItems="center"
                   borderBottom={1}
-                  borderColor={"#ced4da"}
+                  borderColor={'#ced4da'}
                   paddingX={2}
                   paddingY={1}
                 >
@@ -285,17 +285,17 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
                     <Avatar src={review.user?.imageUrl} />
                     <Box>
                       <Typography fontWeight={600}>
-                        {review.user?.email || "Ẩn danh"}
+                        {review.user?.email || 'Ẩn danh'}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {review.product?.name || "[SP đã xoá]"}
+                        {review.product?.name || '[SP đã xoá]'}
                       </Typography>
                     </Box>
                   </Box>
                   <Typography variant="body2" color="text.secondary">
                     {dayjs(review.createdAt)
-                      .tz("Asia/Ho_Chi_Minh")
-                      .format("DD/MM/YYYY HH:mm")}
+                      .tz('Asia/Ho_Chi_Minh')
+                      .format('DD/MM/YYYY HH:mm')}
                   </Typography>
                 </Box>
 
@@ -318,7 +318,7 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
                     <img
                       src={review.imageUrl}
                       alt="review-img"
-                      style={{ maxWidth: "250px", borderRadius: 8 }}
+                      style={{ maxWidth: '250px', borderRadius: 8 }}
                     />
                   </Box>
                 )}

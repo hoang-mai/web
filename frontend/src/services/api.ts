@@ -17,11 +17,16 @@ export const updateUserRoute = "/users/:id";
 export const findOrdersRoute = "/orders/filter";
 export const updateOrderRoute = "/orders/update/:id";
 
+//payment
+export const paymentRoute = "/carts/create-payment-url";
+
 //admin
 
 //product
+export const productRoute = "/products";
 export const productAdmin = "/products/admin";
 export const productStatistic = "/products/admin/statistic";
+export const addProductToCartRoute = "/cart-products";
 
 // statistics
 export const statisticRevenue = "statistics/admin/revenue";
@@ -37,3 +42,5 @@ export const getAllOrderRoute = "/orders";
 //  Post
 export const postsRoute = "/posts";
 
+//push notification
+export const pushNotificationToAdminRoute = "push-notification/notify-admin";

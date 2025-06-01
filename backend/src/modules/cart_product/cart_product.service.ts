@@ -19,7 +19,7 @@ export class CartProductService {
 
   async addToCart(dto: CreateCartProductDto): Promise<CartProduct> {
     // 1. Kiểm tra Cart tồn tại
-    const cart = await this.cartRepo.findOne({ 
+    const cart = await this.cartRepo.findOne({
       where: { id: dto.cartId }
     });
     if (!cart) {

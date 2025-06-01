@@ -7,6 +7,7 @@ import { winstonLogger } from './logger/winston.logger';
 import { HttpExceptionFilter } from './exceptions/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 async function bootstrap() {
   // Create the app with the logger
   const app = await NestFactory.create(AppModule, {
@@ -35,6 +36,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   app.enableCors();
+  app.useWebSocketAdapter(new IoAdapter(app));
   await app.listen(process.env.PORT ?? 8080);
 }
 bootstrap();

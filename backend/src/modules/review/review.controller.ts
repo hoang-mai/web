@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -30,12 +31,12 @@ export class ReviewController {
   }
 
   @Get('products')
-  async getByProduct(@Body() productInfo) {
-    return this.reviewService.getReviewsByProduct(productInfo.name);
+  getByProduct(@Query('name') name: string) {
+    return this.reviewService.getReviewsByProduct(name);
   }
   @Get('products/stats')
-  getStats(@Body() productInfo: CreateProductDto) {
-    return this.reviewService.getProductReviewStats(productInfo.name);
+  getStats(@Query('name') name: string) {
+    return this.reviewService.getProductReviewStats(name);
   }
 
   @Get(':id')
