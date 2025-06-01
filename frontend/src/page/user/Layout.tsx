@@ -14,7 +14,6 @@ function Layout() {
             if (res.data.data.role === "admin") {
               navigate("/admin", { replace: true });
             }
- 
           });
     }, [navigate]);
     return (
@@ -25,7 +24,6 @@ function Layout() {
               <Outlet />
             </main>
             <Footer />
-
         </div>
     );
 }

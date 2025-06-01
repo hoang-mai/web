@@ -27,6 +27,12 @@ export class CartsController {
     return this.cartsService.create();
   }
 
+  // Tạo giỏ hàng mới cho người dùng theo user_id, dùng khi đăng ký mới
+  @Post('/user/:user_id')
+  createCartForUser(@Param('user_id') user_id: string) {
+    return this.cartsService.createCartForUser(+user_id);
+  }
+
   // Lấy danh sách tất cả các giỏ hàng (dành cho admin)
   @Get('carts')
   findAll() {
