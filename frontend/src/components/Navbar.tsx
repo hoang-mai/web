@@ -180,9 +180,7 @@ export default function Navbar() {
             </button>
           </div>
           {/* Location Selector (hidden on mobile) */}
-          <div className="hidden md:block">
-            <LocationSelector />
-          </div>
+         
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <Link to="/" className="flex items-center space-x-2">

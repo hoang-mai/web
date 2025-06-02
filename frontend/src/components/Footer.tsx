@@ -5,7 +5,7 @@ const Footer = () => {
           <p className="font-semibold">© 2025 Thế Giới Công Nghệ</p>
           
           <p>
-            Địa chỉ: 1 Võ Văn Ngân, Thủ Đức, TP.HCM. Gọi mua hàng: <span className="font-semibold">1800.1060</span>
+            Địa chỉ: Tân Mai, Hoàng Mai, Hà Nội. Số điện thoại: <span className="font-semibold">0867254603</span>
           </p>
         </div>
   
