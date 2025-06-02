@@ -146,15 +146,15 @@ const OrderManagement: React.FC = () => {
         const orderIndex = orders.findIndex(o => o.id === currentOrderId);
         if (orderIndex !== -1) {
             const order = orders[orderIndex];
-            if (order.status === 'delivered' || order.status === 'canceled') {
+            if (order.status === 'delivered' || order.status === 'cancelled') {
                 toast.error(`Đơn hàng #${currentOrderId} không thể hủy vì đã được giao hoặc đã hủy.`);
                 return;
             }
             if (window.confirm(`Bạn có chắc chắn muốn hủy đơn hàng #${currentOrderId}?`)) {
-                orders[orderIndex].status = 'canceled';
+                orders[orderIndex].status = 'cancelled';
                 orders[orderIndex].updatedAt = new Date().toISOString();
-                updateOrder(currentOrderId, 'canceled');
-                (document.getElementById('detail-status') as HTMLSelectElement).value = 'canceled';
+                updateOrder(currentOrderId, 'cancelled');
+                (document.getElementById('detail-status') as HTMLSelectElement).value = 'cancelled';
                 toast.success(`Đơn hàng #${currentOrderId} đã được hủy.`);
                 applyFilters();
             }
@@ -336,12 +336,11 @@ const OrderManagement: React.FC = () => {
     };
 
     const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          maximumFractionDigits: 2,
-        }).format(value);
-      };
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    }).format(value);
+    };
 
     const getStatusText = (status: string) => {
         const statusMap: { [key: string]: string } = {
@@ -349,7 +348,7 @@ const OrderManagement: React.FC = () => {
             completed: 'Đã thanh toán',
             shipping: 'Đang giao hàng',
             delivered: 'Đã giao hàng',
-            canceled: 'Đã hủy',
+            cancelled: 'Đã hủy',
         };
         return statusMap[status] || status;
     };
@@ -437,7 +436,7 @@ const OrderManagement: React.FC = () => {
                     background-color: #10b981; /* xanh ngọc đậm */
                     color: #ecfdf5;
                 }
-                .status-canceled {
+                .status-cancelled {
                     background-color: #f87171; /* đỏ nhạt đậm */
                     color: #7f1d1d;
                 }
@@ -498,7 +497,7 @@ const OrderManagement: React.FC = () => {
                             <option value="completed">Đã thanh toán</option>
                             <option value="shipping">Đang giao hàng</option>
                             <option value="delivered">Đã giao hàng</option>
-                            <option value="canceled">Đã hủy</option>
+                            <option value="cancelled">Đã hủy</option>
                         </select>
                     </div>
                 </div>
@@ -679,7 +678,7 @@ const OrderManagement: React.FC = () => {
                                                     <option value="pending">Chờ xử lý</option>
                                                     <option value="shipping">Đang giao hàng</option>
                                                     <option value="delivered">Đã giao hàng</option>
-                                                    <option value="canceled">Đã hủy</option>
+                                                    <option value="cancelled">Đã hủy</option>
                                                     <option value="completed">Đã thanh toán</option>
                                                 </select>
                                             </div>
@@ -706,9 +705,9 @@ const OrderManagement: React.FC = () => {
                                             </button>
                                             <button
                                                 id="cancel-order-btn"
-                                                className={`bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center ${orders.find(o => o.id === currentOrderId)?.status === 'delivered' || orders.find(o => o.id === currentOrderId)?.status === 'canceled' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                className={`bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center ${orders.find(o => o.id === currentOrderId)?.status === 'delivered' || orders.find(o => o.id === currentOrderId)?.status === 'cancelled' ? 'opacity-50 cursor-not-allowed' : ''}`}
                                                 onClick={cancelOrder}
-                                                disabled={orders.find(o => o.id === currentOrderId)?.status === 'delivered' || orders.find(o => o.id === currentOrderId)?.status === 'canceled'}
+                                                disabled={orders.find(o => o.id === currentOrderId)?.status === 'delivered' || orders.find(o => o.id === currentOrderId)?.status === 'cancelled'}
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

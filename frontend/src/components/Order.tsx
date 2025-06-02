@@ -66,12 +66,13 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) 
     }).format(date);
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
-  };
+ const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(value);
+};
+
 
   const statusTranslations: { [key: string]: string } = {
     pending: "Chờ xác nhận",
