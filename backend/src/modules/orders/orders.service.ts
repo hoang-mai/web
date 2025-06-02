@@ -185,7 +185,7 @@ export class OrdersService {
         'quantityDelivered',
       )
       .addSelect(
-        'SUM(CASE WHEN order.status = "pending" THEN orderItem.quantity ELSE 0 END)',
+        'SUM(CASE WHEN order.status = "shipping" THEN orderItem.quantity ELSE 0 END)',
         'quantityPending',
       )
       .addSelect(
@@ -250,7 +250,7 @@ export class OrdersService {
         'quantityDelivered',
       )
       .addSelect(
-        'SUM(CASE WHEN order.status = "pending" THEN orderItem.quantity ELSE 0 END)',
+        'SUM(CASE WHEN order.status = "shipping" THEN orderItem.quantity ELSE 0 END)',
         'quantityPending',
       )
       .addSelect(
