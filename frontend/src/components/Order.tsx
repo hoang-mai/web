@@ -84,7 +84,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) 
   const cancelOrderApi = (orderId: string | number) => {
     // Chuyển đổi orderId thành string nếu nó là number
     return patch(updateOrderRoute.replace(':id', orderId.toString()), {
-      status: 'canceled',
+      status: 'cancelled',
     });
   };
  const handleCancel = async () => {

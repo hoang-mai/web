@@ -137,7 +137,7 @@ const UserDetail = () => {
   const handleCancelOrder = async (orderId: string) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
-        order.id === orderId ? { ...order, status: "canceled" } : order
+        order.id === orderId ? { ...order, status: "cancelled" } : order
       )
     );
     toast.success("Đơn hàng đã được hủy!");
@@ -230,7 +230,7 @@ const UserDetail = () => {
             <option value="confirmed">Đã xác nhận</option>
             <option value="shipping">Đang giao</option>
             <option value="delivered">Đã giao</option>
-            <option value="canceled">Đã hủy</option>
+            <option value="cancelled">Đã hủy</option>
             <option value="returned">Hoàn trả</option>
           </select>
           <button

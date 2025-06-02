@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
+import {paymentRoute} from "@/services/api.ts";
+import { useNavigate } from "react-router-dom";
 import { del, get, post } from "@/services/callApi.ts";
-import { paymentRoute } from "@/services/api.ts";
+
 
 interface Product {
   id: number;
@@ -32,6 +34,9 @@ interface Cart {
 const CartPage: React.FC = () => {
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
   const token = localStorage.getItem("access_token");
   let userId = null;
   if (token) {
@@ -124,8 +129,28 @@ const CartPage: React.FC = () => {
   if (loading) return <p>Đang tải giỏ hàng...</p>;
 
   if (!cart || cart.cartProducts.length === 0) {
-    return <p>Giỏ hàng trống.</p>;
-  }
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-16 h-16 mb-4 text-gray-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m5-9v9m4-9v9m1-14h6" />
+      </svg>
+      <p className="text-lg font-semibold">Giỏ hàng trống.</p>
+      <p className="mt-2 text-sm text-gray-400">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm.</p>
+      <button
+        onClick={() =>  navigate('/')} // hoặc dùng router push
+        className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        Xem sản phẩm
+      </button>
+    </div>
+  );
+}
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
