@@ -282,7 +282,7 @@ const ReviewList = ({ reviews, onView, onDelete }) => {
                   paddingY={1}
                 >
                   <Box display="flex" gap={2} alignItems="center">
-                    <Avatar src={review.user?.imageUrl} />
+                    <Avatar src={review.user?.imageUrl ||'https://static-00.iconduck.com/assets.00/avatar-default-icon-512x512-4mctvw9j.png'} />
                     <Box>
                       <Typography fontWeight={600}>
                         {review.user?.email || 'Ẩn danh'}

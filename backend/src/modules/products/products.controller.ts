@@ -156,6 +156,21 @@ export class ProductsController {
       status_code: HttpStatus.OK,
     };
   }
+  
+  /**
+   * Tìm kiếm sản phẩm theo tên
+   * @param name Tên sản phẩm cần tìm kiếm
+   */
+  @Get('search')
+  async search(@Query('name') name: string) {
+    console.log('Tìm kiếm sản phẩm với tên:', name);
+    const products = await this.productsService.search(name);
+    return {
+      message: 'Tìm kiếm sản phẩm thành công',
+      status_code: HttpStatus.OK,
+      data: products,
+    };
+  }
   @Get(':id')
   findOne(@Param('id') id: number): Promise<Product> {
     return this.productsService.findOne(id);

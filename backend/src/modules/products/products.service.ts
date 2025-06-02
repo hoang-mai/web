@@ -1,7 +1,7 @@
 // File: backend/src/modules/products/products.service.ts
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not } from 'typeorm';
+import { Repository, Not, Like } from 'typeorm';
 import { Product } from 'src/entities/product.entity';
 import { CreateProductDto } from './dto/request/createProduct.dto';
 import { UpdateProductDto } from './dto/request/updateProduct.dto';
@@ -246,5 +246,17 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException(`Sản phẩm với ID ${productId} không tồn tại`);
     }
+  }
+
+  /**
+   * Tìm kiếm sản phẩm theo tên.
+   * @param name Tên sản phẩm cần tìm kiếm.
+   */
+  async search(name: string): Promise<Product[]> {
+    console.log(`Tìm kiếm sản phẩm với tên: ${name}`);
+    const products = await this.productRepository.find({
+      where: { name: Like(`%${name}%`), isDeleted: false },
+    });
+    return products;
   }
 }

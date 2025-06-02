@@ -151,7 +151,7 @@ const UserDetail = () => {
         <div className="text-center">
           <div className="w-24 h-24 mx-auto rounded-full bg-gray-300 mb-2 overflow-hidden">
             <img
-              src={user?.imageUrl || "https://via.placeholder.com/150"}
+              src={user?.imageUrl || "https://static-00.iconduck.com/assets.00/avatar-default-icon-512x512-4mctvw9j.png"}
               alt="avatar"
             />
           </div>

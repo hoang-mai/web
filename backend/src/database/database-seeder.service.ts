@@ -156,7 +156,7 @@ export class DatabaseSeederService {
     const products = await this.productRepository.save([
       {
         name: 'iPhone 15 Pro',
-        price: 999.99,
+        price: 21000000,
         stock: 50,
         description: 'Latest iPhone with advanced features',
         imageUrl: 'https://cdn.tgdd.vn/Products/Images/42/303833/iphone-15-pro-blue-thumbnew-600x600.jpg',
@@ -165,7 +165,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'MacBook Pro M3',
-        price: 1999.99,
+        price: 25000000,
         stock: 30,
         description: 'Powerful laptop for professionals',
         imageUrl: 'https://cdn.tgdd.vn/Products/Images/44/327690/macbook-pro-16-inch-m3-max-64gb-1tb-40gpu-den-thumb-600x600.jpg',
@@ -174,7 +174,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'iPad Pro 13"',
-        price: 799.99,
+        price: 17000000,
         stock: 40,
         description: 'Premium tablet with Apple Pencil support',
         imageUrl: 'https://cdnv2.tgdd.vn/mwg-static/common/News/1575647/thumb%20ipad%20air%20M3.jpg',
@@ -183,7 +183,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Samsung Galaxy S23',
-        price: 899.99,
+        price: 234000000,
         stock: 45,
         description: 'Feature-rich Android smartphone',
         imageUrl: 'https://cdn.xtmobile.vn/vnt_upload/product/10_2023/thumbs/(600x600)_crop_samsung-galaxy-s23-fe-xtmobile.png',
@@ -192,7 +192,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Dell XPS 15',
-        price: 1599.99,
+        price: 17999000,
         stock: 25,
         description: 'Premium Windows laptop',
         imageUrl: 'https://mayinlaser.vn/wp-content/uploads/2021/07/XPS-15_left-angle-open.jpg',
@@ -201,7 +201,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Apple Watch Series 9',
-        price: 399.99,
+        price: 3999000,
         stock: 60,
         description: 'Smartwatch with health tracking features',
         imageUrl: 'https://product.hstatic.net/200000850199/product/3_cae3c290c1304ada9b5dbb1c72748027_4a963c3f875a44c9b0aa57d35edf4c86.jpg',
@@ -210,7 +210,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Sony WH-1000XM5',
-        price: 349.99,
+        price: 350000000,
         stock: 70,
         description: 'Noise-canceling headphones',
         imageUrl: 'https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/54/313694/tai-nghe-bluetooth-chup-tai-sony-wh-ch520-210425-043507-151-600x600.jpg',
@@ -219,7 +219,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Apple AirPods Pro 2nd Gen',
-        price: 249.99,
+        price: 2500000,
         stock: 80,
         description: 'Wireless earbuds with noise cancellation',
         imageUrl: 'https://cdn.tgdd.vn/Products/Images/54/315014/tai-nghe-bluetooth-airpods-pro-2nd-gen-usb-c-charge-apple-thumb-1-600x600.jpg',
@@ -228,7 +228,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Samsung Galaxy Tab S9',
-        price: 699.99,
+        price: 7999000,
         stock: 35,
         description: 'High-performance Android tablet',
         imageUrl: 'https://cdn.tgdd.vn/Products/Images/522/303299/TimerThumb/samsung-galaxy-tab-s9-(68).jpg',
@@ -237,7 +237,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Microsoft Surface Pro 9',
-        price: 1299.99,
+        price: 14990000,
         stock: 20,
         description: 'Versatile 2-in-1 laptop/tablet',
         imageUrl: 'https://cdn.tgdd.vn/Products/Images/42/76957/microsoft-surface-phone-300x300.jpg',
@@ -246,7 +246,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Google Pixel Buds Pro',
-        price: 199.99,
+        price: 1399000,
         stock: 90,
         description: 'Wireless earbuds with Google Assistant',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcT6VMinTsUNF-oa8oFgDeS6LDKzuhaUv8UurzlVF9LtcpvJZJwARURaJAbz_HvJTN3T1YFNTyhG9TAPA7FwFbNy8la5Kd6UHMo7YQoNzLclhwFgKHpLpB5JR8l4x-9Al2xO7_YG9Ks&usqp=CAc',
@@ -255,7 +255,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Fitbit Charge 5',
-        price: 149.99,
+        price: 14999000,
         stock: 100,
         description: 'Fitness tracker with heart rate monitor',
         imageUrl: 'https://chiaki.vn/upload/product/2024/08/dong-ho-thong-minh-fitbit-charge-5-xanh-p120917-66bdb892a5e58-15082024151306.png',
@@ -264,7 +264,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Razer Blade 15',
-        price: 2499.99,
+        price: 24999000,
         stock: 15,
         description: 'Gaming laptop with high performance',
         imageUrl: 'https://static.hungphatlaptop.com/wp-content/uploads/2021/07/Razer-Blade-15-Advanced-Model-2021-H1.jpeg',
@@ -273,7 +273,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Oculus Quest 3',
-        price: 399.99,
+        price: 5499000,
         stock: 50,
         description: 'Virtual reality headset',
         imageUrl: 'https://product.hstatic.net/200000255149/product/20006782_12ff42e55def41dda5c83d22affa31c2_master.jpg',
@@ -282,7 +282,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Logitech MX Master 3S',
-        price: 99.99,
+        price: 799000,
         stock: 120,
         description: 'Wireless mouse with ergonomic design',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI2K3_eNl-dx-elGLLszWk-3ELU-nb9P2KJg&s',
@@ -291,7 +291,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Anker PowerCore 26800',
-        price: 49.99,
+        price: 349000,
         stock: 200,
         description: 'Portable charger with high capacity',
         imageUrl: 'https://chiaki.vn/upload/product/2022/07/sac-du-phong-anker-powercore-26800-power-delivery-a1375-62c25d20886be-04072022102312.png',
@@ -300,7 +300,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Bose QuietComfort 45',
-        price: 329.99,
+        price: 329000,
         stock: 40,
         description: 'Noise-canceling headphones with superior sound quality',
         imageUrl: 'https://product.hstatic.net/200000409445/product/qc-45-trang_4bf86b14c70541a0b5a79db47bd9300e_master.jpg',

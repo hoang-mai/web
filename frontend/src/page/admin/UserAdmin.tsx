@@ -15,8 +15,6 @@ interface User {
   imageUrl: string;
 }
 
-
-
 const itemsPerPage = 10;
 
 const UserAdmin: React.FC = () => {
@@ -155,7 +153,7 @@ const UserAdmin: React.FC = () => {
                       >
                         <td className="py-4 px-6">{user.id}</td>
                         <td className="py-4 px-6 flex flex-row items-center gap-2">
-                          <img src={user.imageUrl} alt=" " className="w-10 h-10 rounded-full" />
+                          <img src={user.imageUrl||'https://static-00.iconduck.com/assets.00/avatar-default-icon-512x512-4mctvw9j.png'} alt=" " className="w-10 h-10 rounded-full" />
                           <span>{`${user.firstName} ${user.lastName}`}</span>
                         </td>
                         <td className="py-4 px-6">{user.email}</td>

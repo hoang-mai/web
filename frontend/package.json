@@ -24,6 +24,7 @@
     "axios": "^1.8.4",
     "chart.js": "^4.4.9",
     "dayjs": "^1.11.13",
+    "debounce": "^2.2.0",
     "front-end": "file:",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",

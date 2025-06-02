@@ -43,10 +43,17 @@ export class CartsService {
   // Tạo mới giỏ hàng.
   // Lưu ý: Trong thực tế, giỏ hàng thường được tạo tự động khi người dùng đăng ký,
   // nhưng endpoint này có thể dùng cho admin hoặc mục đích test.
-  async create(): Promise<Cart> {
-    // Nếu Cart có quan hệ bắt buộc với User, bạn cần cung cấp userId tại đây.
-    // Ở đây tạo đơn giản với isCheckedOut = false.
+  async create(userId: string): Promise<Cart> {
+    const user = await this.userRepository.findOne({
+      where: { id: +userId },
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    // Tạo giỏ hàng mới với isCheckedOut = false
     const cart = this.cartRepository.create({
+      id: +userId, // Giả sử cartId = userId
+      user: user, // Giả sử Cart có quan hệ với User
       isCheckedOut: false,
     });
     return await this.cartRepository.save(cart);
