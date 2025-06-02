@@ -9,8 +9,8 @@ const Footer = () => {
           </p>
         </div>
   
-        <div className="mt-3 text-blue-600 underline">
-          <a href="#">Chính sách bảo mật</a> | <a href="#">Điều khoản sử dụng</a>
+        <div className="mt-3 text-blue-600 underline flex">
+          <p>Chính sách bảo mật</p> <span className="mx-2">|</span> <p>Điều khoản sử dụng</p>
         </div>
       </footer>
     )
