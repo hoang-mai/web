@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useDebounce } from "use-debounce";
 import LocationSelector from "./LocationSelector";
-import logo from "../assets/images/logo2.png";
+import logo from "../assets/images/logo.png";
 import { get } from "@/services/callApi";
 import {
   checkTokenRoute,
