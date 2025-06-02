@@ -104,28 +104,20 @@ const UserAdmin: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Header */}
           <div className="p-6 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
-            <p className="text-gray-600 mt-1">View and manage user accounts</p>
+            <h1 className="text-2xl font-bold text-gray-800">Quản lý người dùng</h1>
+            
           </div>
 
           {/* Filters */}
           <div className="p-6 bg-gray-50 border-b border-gray-200 flex flex-col md:flex-row gap-4">
             <input
               type="text"
-              placeholder="Search by name, email, phone, or address..."
+              placeholder="Tìm theo tên, email hoặc số điện thoại ..."
               className="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <select
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-            >
-              <option value="">All Roles</option>
-              <option value="User">User</option>
-              <option value="Admin">Admin</option>
-            </select>
+           
           </div>
 
           {/* Table */}
@@ -134,11 +126,11 @@ const UserAdmin: React.FC = () => {
               <thead>
                 <tr className="bg-gray-50">
                   <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">ID</th>
-                  <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Name</th>
+                  <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Tên</th>
                   <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Email</th>
-                  <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Role</th>
-                  <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Phone</th>
-                  <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Address</th>
+                  <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Vai trò</th>
+                  <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Số điện thoại</th>
+                  <th className="py-3 px-6 text-xs font-medium text-gray-500 uppercase">Địa chỉ</th>
                 </tr>
               </thead>
               <tbody>
@@ -179,15 +171,15 @@ const UserAdmin: React.FC = () => {
                         <tr>
                           <td colSpan={6} className="bg-gray-50 px-6 py-4">
                             <div className="text-sm text-gray-700">
-                              <p><strong>Full name:</strong> {user.firstName} {user.lastName}</p>
+                              <p><strong>Họ tên:</strong> {user.firstName} {user.lastName}</p>
                               <p><strong>Email:</strong> {user.email}</p>
-                              <p><strong>Phone:</strong> {user.phone}</p>
-                              <p><strong>Address:</strong> {user.address}</p>
-                              <p><strong>Role:</strong> {user.role}</p>
+                              <p><strong>Điện thoại:</strong> {user.phone}</p>
+                              <p><strong>Địa chỉ:</strong> {user.address}</p>
+                              <p><strong>Vai trò:</strong> {user.role}</p>
                               <div className="mt-4">
-                                <h3 className="font-semibold mb-2">Orders:</h3>
+                                <h3 className="font-semibold mb-2">Đơn hàng đã đặt:</h3>
                                 {orders.length === 0 ? (
-                                  <p className="text-gray-500">No orders found.</p>
+                                  <p className="text-gray-500">Chưa đặt đơn hàng nào.</p>
                                 ) : (
                                   orders.map((order) => (
                                     <OrderComponent key={order.id} order={order} />
@@ -208,7 +200,7 @@ const UserAdmin: React.FC = () => {
           {/* Pagination */}
           <div className="p-4 border-t border-gray-200 bg-white flex justify-between items-center">
             <span className="text-sm text-gray-600">
-              Page {currentPage} of {totalPages}
+              Trang {currentPage} trên {totalPages}
             </span>
             <div className="space-x-2">
               <button
@@ -216,14 +208,14 @@ const UserAdmin: React.FC = () => {
                 disabled={currentPage === 1}
                 className="px-3 py-1 border rounded text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
               >
-                Previous
+                Trang trước
               </button>
               <button
                 onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                 disabled={currentPage === totalPages}
                 className="px-3 py-1 border rounded text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
               >
-                Next
+                Trang sau
               </button>
             </div>
           </div>
