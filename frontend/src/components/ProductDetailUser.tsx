@@ -2,6 +2,8 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductReview from './Review/User/ProductReview';
+import { get, post } from '@/services/callApi';
+import { jwtDecode } from 'jwt-decode';
 
 type Product = {
   id: number;
@@ -21,8 +23,7 @@ const ProductDetailUser = () => {
 
   useEffect(() => {
     if (!id) return;
-    axios
-      .get(`http://localhost:8080/products/${id}`)
+    get(`/products/${id}`)
       .then((res) => {
         setProduct(res.data);
         setLoading(false);
@@ -96,9 +97,14 @@ const ProductDetailUser = () => {
             className="mt-6 bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-3 px-6 rounded-xl text-lg transition"
             onClick={() => {
               // xử lý thêm vào giỏ
-              axios
-                .post('http://localhost:8080/cart-products', {
-                  cartId: localStorage.getItem('access_token'), // xử lý đúng sau
+              let userId = null;
+              const token = localStorage.getItem('access_token');
+              if (token) {
+                const decodedToken = jwtDecode(token);
+                userId = decodedToken.sub;
+              }
+              post('/cart-products', {
+                  cartId: userId, // xử lý đúng sau
                   productId: product.id,
                   quantity: 1,
                 })
