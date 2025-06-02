@@ -4,7 +4,7 @@ import { io, Socket } from "socket.io-client";
 import { getUserIdFromToken } from "@/services/getUserId";
 import { fetchMessages } from "../fetchMessages";
 
-const socket: Socket = io("http://localhost:8080", {
+const socket: Socket = io(import.meta.env.VITE_API_HOST, {
   autoConnect: false,
   transports: ["websocket"],
 });

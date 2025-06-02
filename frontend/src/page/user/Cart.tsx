@@ -108,7 +108,7 @@ const CartPage: React.FC = () => {
     try {
       // Giả sử bạn muốn xóa sản phẩm đầu tiên trong giỏ hàng
       const productId = cart.cartProducts[0].product.id;
-      await axios.delete(`http://localhost:8080/cart-products/user/${userId}/product/${productId}`);
+      await del(`/cart-products/user/${userId}/product/${productId}`);
       alert("Đã xóa sản phẩm khỏi giỏ hàng thành công!");
       // Cập nhật lại giỏ hàng sau khi xóa sản phẩm
       setCart((prevCart) => ({
