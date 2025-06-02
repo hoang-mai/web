@@ -15,8 +15,6 @@ interface User {
   imageUrl: string;
 }
 
-
-
 const itemsPerPage = 10;
 
 const UserAdmin: React.FC = () => {
