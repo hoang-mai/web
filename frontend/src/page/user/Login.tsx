@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { post, get } from "@/services/callApi";
 import { loginRoute,registerRoute } from "@/services/api";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { checkTokenRoute } from "@/services/api";
 import { toast } from "react-toastify";
 const Login = () => {
@@ -77,7 +76,7 @@ const Login = () => {
           phone: formData.phone,
           address: formData.address,
         });
-        axios.post("http://localhost:8080/carts/user/" + data.data.id).then(() => {
+        post("/carts/user/" + data.data.id,{}).then(() => {
           console.log("Giỏ hàng đã được tạo cho người dùng mới");
         }
         ).catch((error) => {

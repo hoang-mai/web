@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
-import {get, post} from "@/services/callApi.ts";
 import {paymentRoute} from "@/services/api.ts";
 import { useNavigate } from "react-router-dom";
+import { del, get, post } from "@/services/callApi.ts";
+
 
 interface Product {
   id: number;
@@ -30,17 +31,18 @@ interface Cart {
   isCheckedOut: boolean;
 }
 
-const token = localStorage.getItem("access_token");
-let userId = null;
-if (token) {
-  const decodedToken = jwtDecode(token); // Sử dụng hàm jwtDecode
-  userId = decodedToken.sub; // Lấy user ID từ trường sub
-}
-
 const CartPage: React.FC = () => {
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
+
+  const token = localStorage.getItem("access_token");
+  let userId = null;
+  if (token) {
+    const decodedToken = jwtDecode(token); // Sử dụng hàm jwtDecode
+    userId = decodedToken.sub; // Lấy user ID từ trường sub
+  }
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -70,10 +72,10 @@ const CartPage: React.FC = () => {
   };
 
   //Cái này vứt nhé, tại vì hàm này xóa cart, mà mình cần xóa cartProduct
-  const handleCancelCart = async  () => {
+  const handleCancelCart = async () => {
     if (!cart) return;
     try {
-      await axios.delete(`http://localhost:8080/carts/${cart.id}`);
+      del(`/carts/${cart.id}`);
       alert("Đã xóa giỏ hàng thành công!");
       setCart(null); // Xóa giỏ hàng sau khi hủy
     } catch (error) {
@@ -96,11 +98,11 @@ const CartPage: React.FC = () => {
       cartItems: cart.cartProducts.map(item => ({
         productId: item.product.id,
         quantity: item.quantity,
-        price: parseFloat(item.product.price)* (1 - (item.product.discount || 0) / 100),
+        price: parseFloat(item.product.price) * (1 - (item.product.discount || 0) / 100),
         name: item.product.name,
       })),
       cartId: cart.id,
-    }).then((res)=>{
+    }).then((res) => {
       window.location.href = res.data.url;
     });
 
@@ -111,7 +113,7 @@ const CartPage: React.FC = () => {
     try {
       // Giả sử bạn muốn xóa sản phẩm đầu tiên trong giỏ hàng
       const productId = cart.cartProducts[0].product.id;
-      await axios.delete(`http://localhost:8080/cart-products/user/${userId}/product/${productId}`);
+      await del(`/cart-products/user/${userId}/product/${productId}`);
       alert("Đã xóa sản phẩm khỏi giỏ hàng thành công!");
       // Cập nhật lại giỏ hàng sau khi xóa sản phẩm
       setCart((prevCart) => ({
@@ -186,7 +188,7 @@ const CartPage: React.FC = () => {
                 </p>
                 <p>Số lượng: {item.quantity}</p>
                 <div className="flex justify-end">
-                  <button 
+                  <button
                     onClick={() => deleteProduct()}
                     className="mt-2 ml-auto px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600 transition"
                   >Xóa sản phẩm</button>
@@ -208,7 +210,7 @@ const CartPage: React.FC = () => {
       </div>
       {/* Nút thanh toán */}
       <div className="flex justify-end">
-        <button 
+        <button
           onClick={() => handleCheckout()}
           className="mt-2 ml-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
         >Xác nhận thanh toán</button>

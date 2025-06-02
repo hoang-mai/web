@@ -89,7 +89,7 @@ export default function Navbar() {
           <div className="flex items-center space-x-2">
             <Link to="/" className="flex items-center space-x-2">
               <img src={logo} alt="TechMart" className="h-8" />
-              <span className="text-lg font-bold">TechMart</span>
+              <span className="text-lg font-bold">Thế giới công nghệ</span>
             </Link>
           </div>
 
