@@ -22,9 +22,9 @@ export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
   // Tạo mới giỏ hàng (thường được tạo tự động cho user mới, nhưng vẫn có endpoint này cho admin nếu cần)
-  @Post('carts')
-  create() {
-    return this.cartsService.create();
+  @Post('carts/user/:user_id')
+  create(@Param('user_id') user_id: string) {
+    return this.cartsService.create(user_id);
   }
 
   // Tạo giỏ hàng mới cho người dùng theo user_id, dùng khi đăng ký mới
