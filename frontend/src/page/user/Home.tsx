@@ -7,6 +7,7 @@ import UserPostBannerCarousel from "@/components/Post/UserPostBannerCarousel";
 import { Post } from "@/types/post";
 import ChatButton from "@/components/Chat/User/ChatButton";
 import { getUserIdFromToken } from "@/services/getUserId";
+import { get } from "@/services/callApi";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -15,8 +16,7 @@ const Home = () => {
   const userId = getUserIdFromToken();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/posts/user-side")
+    get("/posts/user-side")
       .then((res) => {
         setPosts(res.data);
         console.log(res.data);

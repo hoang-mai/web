@@ -12,7 +12,7 @@ const ReviewAdmin = () => {
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const res = await get('http://localhost:8080/admin/reviews');
+      const res = await get('/admin/reviews');
       setReviews(res.data);
     } catch (err) {
       console.error('Lỗi khi tải danh sách đánh giá:', err);
@@ -28,7 +28,7 @@ const ReviewAdmin = () => {
 
   const handleDelete = async (id: number) => {
     if (window.confirm('Bạn có chắc muốn xoá đánh giá này?')) {
-      await del(`http://localhost:8080/admin/reviews/${id}`);
+      await del(`/admin/reviews/${id}`);
       fetchReviews();
     }
   };

@@ -4,7 +4,7 @@ import { io, Socket } from "socket.io-client";
 import { fetchMessages } from "../fetchMessages";
 import { post } from "@/services/callApi";
 
-const socket: Socket = io("http://localhost:8080", {
+const socket: Socket = io(import.meta.env.VITE_API_HOST, {
   autoConnect: false,
   transports: ["websocket"],
 });
