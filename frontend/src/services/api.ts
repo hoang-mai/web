@@ -27,6 +27,7 @@ export const productRoute = "/products";
 export const productAdmin = "/products/admin";
 export const productStatistic = "/products/admin/statistic";
 export const addProductToCartRoute = "/cart-products";
+export const productSearchRoute = "/products/search";
 
 // statistics
 export const statisticRevenue = "statistics/admin/revenue";

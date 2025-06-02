@@ -246,7 +246,7 @@ export class DatabaseSeederService {
       },
       {
         name: 'Google Pixel Buds Pro',
-        price: 1399000
+        price: 1399000,
         stock: 90,
         description: 'Wireless earbuds with Google Assistant',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcT6VMinTsUNF-oa8oFgDeS6LDKzuhaUv8UurzlVF9LtcpvJZJwARURaJAbz_HvJTN3T1YFNTyhG9TAPA7FwFbNy8la5Kd6UHMo7YQoNzLclhwFgKHpLpB5JR8l4x-9Al2xO7_YG9Ks&usqp=CAc',
