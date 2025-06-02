@@ -79,7 +79,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ order, updateStatus }) 
     confirmed: "Đã xác nhận",
     shipping: "Đang giao hàng",
     delivered: "Đã giao hàng",
-    canceled: "Đã hủy",
+    cancelled: "Đã hủy",
     returned: "Đã trả hàng"
   };
   const cancelOrderApi = (orderId: string | number) => {
