@@ -125,6 +125,8 @@ DB_USER=your_username
 DB_PASSWORD=your_password
 DB_NAME=ecommerce_db
 
+PORT=8080
+
 # JWT
 JWT_ACCESS_SECRET=your_access_secret
 JWT_REFRESH_SECRET=your_refresh_secret
@@ -158,8 +160,15 @@ npm run start:dev
 npm run build
 npm run start:prod
 ```
+### 5. Cấu hình Frontend
+Tạo file `.env` trong thư mục `frontend`:
 
-### 5. Cài đặt và chạy Frontend
+```env
+VITE_API_HOST='http://localhost:8080'
+VITE_VAPID_PUBLIC_KEY='your_vapid_public_key'
+```
+
+### 6. Cài đặt và chạy Frontend
 
 ```bash
 cd frontend
@@ -171,7 +180,7 @@ npm run dev
 
 Sau khi chạy backend, truy cập Swagger documentation tại:
 ```
-http://localhost:3000/api
+http://localhost:8080/api
 ```
 
 ## 🔧 Scripts hữu dụng
@@ -196,7 +205,7 @@ npm run lint         # Kiểm tra code style
 
 ## 🌐 Ports
 
-- **Backend**: http://localhost:3000
+- **Backend**: http://localhost:8080
 - **Frontend**: http://localhost:5173
 - **MySQL**: localhost:3306
 
