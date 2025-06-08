@@ -137,7 +137,7 @@ export class DatabaseSeederService {
       {
         firstName: 'Jane',
         lastName: 'Smith',
-        email: 'jane@example.com',
+        email: 'user@example.com',
         password: hashedPassword,
         role: Role.USER,
         phone: '5556667777',
